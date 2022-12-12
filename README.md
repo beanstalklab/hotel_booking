@@ -17,10 +17,10 @@ Giải thích sơ lược về các sử dụng file
 # Hướng dẫn kết nối github
 - Xem video hướng dẫn dưới đây để tải git tại [đây](https://www.youtube.com/watch?v=z-BDl0SBtgo&t=944s)
 - Sau khi tải git, bắt đầu tiến hành kết nối
-B1: Tạo 1 folder mới để kết nối, đặt tên tùy ý
-B2: Di chuyển vào folder, mở terminal gõ lệnh: git init 
-B3: Gõ lệnh sau vào terminal: git remote add origin https://github.com/VanhhNe/hootel_booking.git
-B4: sau khi gõ ko thấy lỗi gì, gõ tiếp lệnh để tải hết các file trên github về để làm việc: git pull origin master 
+B1: Tạo 1 folder mới để kết nối, đặt tên tùy ý <br>
+B2: Di chuyển vào folder, mở terminal gõ lệnh: git init <br>
+B3: Gõ lệnh sau vào terminal: git remote add origin https://github.com/VanhhNe/hootel_booking.git <br>
+B4: sau khi gõ ko thấy lỗi gì, gõ tiếp lệnh để tải hết các file trên github về để làm việc: git pull origin master <br>
 Vậy là bên trên đã hướng dẫn kết nối với github, sau đây là hướng dẫn cách làm việc chung:
 # Hướng dẫn sử dụng github
 Nếu đã xem video hẳn mọi người đã biết workflow của github, mình sẽ k trình bày lại mà muốn thống nhất cách làm việc của nhóm
