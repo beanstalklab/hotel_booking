@@ -15,7 +15,7 @@ Giải thích sơ lược về các sử dụng file
 - 'view.py' và 'auth.py' là file API dùng để tương tác giữa web và database
 
 # Hướng dẫn kết nối github
-- Xem video hướng dẫn dưới đây để tải git: https://www.youtube.com/watch?v=z-BDl0SBtgo&t=944s
+- Xem video hướng dẫn dưới đây để tải git tại [đây](https://www.youtube.com/watch?v=z-BDl0SBtgo&t=944s)
 - Sau khi tải git, bắt đầu tiến hành kết nối
 B1: Tạo 1 folder mới để kết nối, đặt tên tùy ý
 B2: Di chuyển vào folder, mở terminal gõ lệnh: git init 
@@ -30,3 +30,22 @@ Nếu đã xem video hẳn mọi người đã biết workflow của github, mì
 - Vậy là hoàn thành việc cập nhật file từ local lên github. 
 * Lưu ý: Mọi người cần phải cập nhật ghi chú đầy đủ, để thành viên nắm rõ.
 
+# Các chạy các file trên thư mục
+- Chúng ta chỉ chạy một file duy nhất là "application.py" và "set_env.ps1" trong folder
+- Các bước chạy như sau:
+B1: Mở terminal trong VScode, di chuyển đến thư mục chưa file set_env.ps1 và application.py
+B2: Gõ lệnh sau trong terminal: `.\set_env.ps1` (hoặc gõ 'set' rồi ấn tab) và enter
+Lệnh trên thực hiện việc kết nối vs database
+B3: Gõ lệnh: `python application.py`. Được hiện thị bên dưới
+<>
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://localhost:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 389-649-
+ 
+- Bạn giữ ctrl và nhấn vô đường dẫn 'http://localhost:5000' sẽ khởi tạo trình duyệt web của ta.
+Vậy là ta vừa có thể sử dụng các file, phần sau sẽ hướng dẫn về database
