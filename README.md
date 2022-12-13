@@ -37,7 +37,6 @@ B1: Mở terminal trong VScode, di chuyển đến thư mục chưa file set_env
 B2: Gõ lệnh sau trong terminal: `.\set_env.ps1` (hoặc gõ 'set' rồi ấn tab) và enter
 Lệnh trên thực hiện việc kết nối vs database
 B3: Gõ lệnh: `python application.py`. Được hiện thị bên dưới
-<>
  * Serving Flask app 'app'
  * Debug mode: on
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.

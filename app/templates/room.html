@@ -1,7 +1,7 @@
-{% extends 'base.html'%}
+{%extends 'nav_bar.html'%}
 {%block content%}
     <h1> {{data.hotel_name}} </h1>
     <h2> {{data.hotel_address}} </h2>
     <p> {{data.hotel_intro}} </p>
-    <img src="file:\\\D:\hotel_image\id1.png" alt="">
+    <img src="{{url_for('view.image_file', name = data.hotel_image, folder = data.hotel_folder)}}" alt="">
 {%endblock%}
