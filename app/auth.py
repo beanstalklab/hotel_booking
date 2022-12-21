@@ -51,12 +51,16 @@ def resetpass():
     if request.method == 'POST' and 'password' in request.form:
         new_password = request.form['password']
         email = request.form['email']
-        conn = connect_db()
-        cursor = get_cursor(conn)
-        cursor.execute(account['reset_password'],
-                       (generate_password_hash(new_password), email, ))
-        msg = 'You have changed password successfully'
-        conn.commit()
+        repeat_password = request.form['r_password']
+        if (repeat_password ==  new_password):
+            conn = connect_db()
+            cursor = get_cursor(conn)
+            cursor.execute(account['reset_password'],
+                        (generate_password_hash(new_password), email, ))
+            msg = 'You have changed password successfully'
+            conn.commit()
+        else:
+            msg = 'Unconnected password'
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
