@@ -14,14 +14,19 @@
                 </ol>
             </nav> -->
             <!-- End Breadcrumb -->
-
             <div class="row">
                 <div class="col-md-4 my-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
-                                <img src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/316413086_2026887091034059_6346724671807327018_n.jpg?stp=dst-jpg_p240x240&_nc_cat=110&ccb=1-7&_nc_sid=7206a8&_nc_ohc=CDVzTYPPHBoAX9Y9esM&tn=_OxbBXoEgaEpyrzi&_nc_ht=scontent.fhan2-4.fna&oh=00_AfCnpIJ2DP4oK6y_1iXILv-1q6DeCOZ6mx1Uua56u3uouw&oe=6393F12D"
-                                    alt="User" class="rounded-circle" width="150">
+                                {%if img %}
+                                <img src="{{url_for('view.image_file', name=img, folder='user_image')}}"
+                                    alt="User" class="rounded-circle" width="110">
+                                {%else%}
+                                <img src="{{url_for('view.image_file', name='undefine.jpg', folder='user_image')}}"
+                                    alt="User" class="rounded-circle" width="110">
+                                    {%endif%}
+                            </div>
                                 <div class="mt-3">
                                     <h4></h4>
                                     <p class="text-secondary mb-1">Học viện chính Trị</p>
@@ -46,8 +51,8 @@
                                     <h6 class="mb-0">Full Name</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    {% if khachhang.customer_name %}
-                                    {{ khachhang.customer_name }}
+                                    {% if khachhang.first_name %}
+                                    {{ khachhang.first_name}} {{ khachhang.last_name}}
                                     {% else %}
                                     {{ session.username }}
                                     {% endif %}

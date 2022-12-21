@@ -1,9 +1,19 @@
 import re
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash
 from app.db_utils import connect_db, get_cursor
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import timedelta
+from app.sql import *
+auth_blp = Blueprint(
+    "auth", __name__, template_folder='templates', static_folder='static')
 
-auth_blp = Blueprint("auth", __name__,template_folder='templates', static_folder='static')
+
+@auth_blp.before_request
+def make_session_permanent():
+    session.permanent = True
+    auth_blp.permanet_session_lifetime = timedelta(minutes=5)
+
+
 @auth_blp.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -13,20 +23,28 @@ def login():
         password = request.form['password']
         conn = connect_db()
         cursor = get_cursor(conn)
-        cursor.execute('SELECT * FROM taikhoan WHERE email = % s ', (email,))
+        try:
+            cursor.execute(
+                'SELECT * FROM taikhoan WHERE email = % s ', (email,))
+            conn.commit()
+        except:
+            conn.rollback()
         account = cursor.fetchone()
-        conn.commit()
-        # print(account)
+        conn.close()        
         if account and check_password_hash(account[3], password):
             session['loggedin'] = True
             session['id'] = account[0]
             session['username'] = account[2]
             session['role_id'] = account[4]
             msg = 'Logged in successfully !'
+            if (session['role_id'] == 0):
+                return redirect(url_for('admin.admin_home'))
             return redirect(url_for('view.home'))
         else:
             msg = 'Incorrect username / password !'
     return render_template('auth/login.html', msg=msg, title='Login Page')
+
+
 @auth_blp.route('/resetpass', methods=['GET', 'POST'])
 def resetpass():
     msg = ''
@@ -35,12 +53,14 @@ def resetpass():
         email = request.form['email']
         conn = connect_db()
         cursor = get_cursor(conn)
-        cursor.execute('UPDATE taikhoan SET `password` = % s where `email` = % s;',
+        cursor.execute(account['reset_password'],
                        (generate_password_hash(new_password), email, ))
         msg = 'You have changed password successfully'
         conn.commit()
         return render_template('login')
     return render_template('reset_password.html', msg=msg, title='Reset Password Page')
+
+
 @auth_blp.route('/register', methods=['GET', 'POST'])
 def register():
     msg = ''
@@ -74,7 +94,8 @@ def register():
             return render_template('home.html', msg=msg)
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    return render_template('register.html', msg=msg)
+    return render_template('auth/register.html', msg=msg)
+
 
 @auth_blp.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -83,20 +104,28 @@ def edit_profile():
     # Query data from dabases to show on web
     conn = connect_db()
     cursor = get_cursor(conn)
-    cursor.execute(
-        'select * from taikhoan where taikhoan.account_id = % s;', (account_id,))
+    try:
+        cursor.execute(user['get_account_info'], (account_id,))
+        cursor.commit()
+    except:
+        conn.rollback()
     info = cursor.fetchone()
     info = {'account_id': info[0], 'email': info[1], 'user_name': info[2],
             'password': info[3], 'role_id': info[4], 'account_isdelete': info[5]}
-    cursor.execute(
-        'select * from khachhang where khachhang.account_id = % s', (account_id, ))
+    try:
+        cursor.execute(user['get_customer_info'], (account_id, ))
+        conn.commit()
+    except:
+        conn.rollback()
     khachhang = cursor.fetchone()
-    khachhang = {'customer_id': khachhang[0], 'customer_name': khachhang[1], 'account_id': khachhang[2], 'customer_identity': khachhang[3], 'customer_gender': khachhang[4],
-                 'customer_phone': khachhang[5], 'customer_address': khachhang[6], 'customer_date': khachhang[7], 'customer_note': khachhang[8], 'customer_isdelete': khachhang[9]}
-    conn.commit()
+    if khachhang:
+        khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
+                    'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
+    conn.close()
 
     if request.method == 'POST' and 'identify' in request.form and 'address' in request.form and 'birthday' in request.form:
-        fullname = request.form['fullname']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
         username = request.form['username']
         gender = request.form['gender']
         phone_number = request.form['phonenumber']
@@ -105,32 +134,43 @@ def edit_profile():
         birthday = request.form['birthday']
         note = request.form['note']
         conn = connect_db()
-        cursor = get_cursor(conn)        
-        cursor.execute(
-            'SELECT * FROM khachhang where account_id = %s', (account_id, ))
+        cursor = get_cursor(conn)
+        try:
+            cursor.execute(user['get_customer_info'], (account_id, ))
+            conn.commit()
+        except:
+            conn.rollback()
         data = cursor.fetchone()
-        conn.commit()
 
         if data:
             conn = connect_db()
             cursor = get_cursor(conn)
-            cursor.execute('UPDATE khachhang SET `customer_name` = %s, `customer_identity`= %s, `customer_gender`=%s, `customer_phone` = %s, `customer_address`=%s,  `customer_note` = %s where `account_id` = %s',
-                           (fullname, identity, gender, phone_number, address, account_id, birthday, note, account_id,))
-            cursor.execute(
-                'UPDATE taikhoan  SET `user_name` = %s where `account_id` = %s', (username, account_id))
+            try:
+                cursor.execute(user['update_customer_info'],
+                               (firstname, lastname, identity, gender, phone_number, address, birthday, note, account_id,))
+                cursor.execute(user['update_username'], (username, account_id))
+                conn.commit()
+            except:
+                conn.rollback()
+            flash('Update seccuessfully')
         else:
             conn = connect_db()
-            cursor = get_cursor(conn)            
-            cursor.execute('INSERT INTO khachhang values(NULL, %s, %s, %s, %s,%s, %s, %s, %s, 0)', (
-                fullname, account_id, identity, gender, phone_number, address, birthday, note,))
-            cursor.execute(
-                'UPDATE taikhoan  SET user_name = %s where account_id = %s', (username, account_id))
+            cursor = get_cursor(conn)
+            try:
+                cursor.execute(user['insert_customer_info'], (firstname, lastname, account_id, identity, gender, phone_number, address, birthday, note,))
+                cursor.execute(user['update_username'], (username, account_id))
+                conn.commit()
+            except:
+                conn.rollback()
+            flash('Update seccuessfully')
 
         conn.commit()
-        return redirect(url_for('profile'))
+        return redirect(url_for('view.profile'))
     else:
-        msg = 'Edit profile not successful'
+        flash('Update seccuessfully')
     return render_template('user/profile-edit.html', khachhang=khachhang, info=info, msg=msg)
+
+
 @auth_blp.route('/logout')
 def logout():
     session.pop('loggedin', None)

@@ -1,0 +1,55 @@
+{%extends "admin.html"%}
+{%block content%}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <h1>ROOM PAGE</h1>
+        <style>
+            table, th, td {
+                border: 1px solid;
+            }
+        </style>
+    </head>
+    <body>
+        <h3><form action="" method="post" >
+            <input type="text" >
+        </form></h3>
+        {%if data%}
+        <!-- <table>
+            <tr>
+                <form action="" method="post">
+                    <td><input type="text" id="room_id" name="room_id" placeholder="room_id"> </td>
+                    <td> <input type="text" id="room_name" name="room_name"  placeholder="room_name"> </td>
+                    <td><input type="text" id="room_address" name="room_address" placeholder="room_address"></td>
+                    <td><input type="text" id="room_performance" name="room_performance" placeholder="room_performance"></td>
+                    <td><input type="text" id = "room_price" name="room_price" placeholder="room_price"></td>
+                    <td><input type="text" id = "room_province" name="room_province" placeholder="room_province"></td>
+                </form>
+            </tr> -->
+            {%for row in data%}
+            <tr>
+                <form action="" method="post" style="border:1px,solid;">
+                    <td >{{row.room_id}}</td>
+                    <td>{{row.room_name}}</td>
+                    <td>{{row.room_address}}</td>
+                    <td>{{row.room_performance}}</td>
+                    <td>{{row.room_type}}</td>
+                    <td>{{row.room_price}}</td>
+                    <td>{{row.room_province}}</td>
+                    <!-- <td><input type="text" id="room_id" name="room_id" value="{{row.room_id}}" readonly> </td>
+                    <td> <input type="text" id="room_name" name="room_name" value="{{row.room_name}}" readonly> </td>
+                    <td><input type="text" id="room_address" name="room_address" value="{{row.room_address}}" readonly></td>
+                    <td><input type="text" id="room_performance" name="room_performance" value = "{{row.room_performance}}" readonly></td>
+                    <td><input type="text" id = "room_price" name="room_price" value="{{row.room_price}}" readonly></td>
+                    <td><input type="text" id = "room_province" name="room_province" value="{{row.room_province}}" readonly></td> -->
+                    <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td>
+                </form>
+            </tr>
+            {%endfor%}
+        </table>
+        
+        {%endif%}
+    </body>
+</html>
+
+{%endblock%}

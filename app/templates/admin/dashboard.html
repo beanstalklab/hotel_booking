@@ -1,0 +1,14 @@
+{%extends 'admin.html'%}
+{%block content%}
+<ul>
+    <li><a href="{{url_for('admin.room')}}">room</a>
+    </li>
+    <li><a href="{{url_for('admin.customer')}}">customer</a>
+    </li>
+    <li><a href="{{url_for('admin.convenient')}}">convenient</a>
+    </li>
+    <li><a href="{{url_for('admin.service')}}">service</a>
+    </li>
+</ul>
+
+{%endblock%}

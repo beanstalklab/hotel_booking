@@ -89,7 +89,7 @@
                                 <img src="img/testimonial-1.jpg" class="rounded-circle" height="25" />
                             </a>
                             <div class="dropdown-menu">
-                                {% if session.username %}
+                                {% if session.id %}
                                 <a href="{{url_for('view.profile')}}" class="dropdown-item">My Profile</a>
                                 <a href="#" class="dropdown-item">Settings</a>
                                 <a href="{{url_for('auth.logout')}}" class="dropdown-item">Logout</a>

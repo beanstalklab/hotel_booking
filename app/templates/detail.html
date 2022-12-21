@@ -3,7 +3,7 @@
     <!-- Info -->
     <div class="container my-5">
         <div class="">
-            <h1>{{data.hotel_name}}</h1>
+            <h1>{{data['hotel_name']}}</h1>
         </div>
 
         <div class="row">
@@ -29,7 +29,7 @@
                 <div class="mx-4">
                     <a href="" class="text-dark text-decoration-none">
                         <i class="fas fa-heart"></i>
-                        <span>them vao muc ua thich</span>
+                        <span>Love it</span>
                     </a>
                 </div>
             </div>
@@ -37,7 +37,11 @@
 
         <!-- image -->
         <div class="mt-5">
-            <img src="{{url_for('view.image_file', name = data.hotel_image, folder=data.hotel_folder)}}" class="rounded img-fluid" alt="..." style="width: 100px; height: 150px;">
+            {% if img%}
+            {%for item in img%}
+            <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}" class="rounded img-fluid" alt="..." style="width: 100px; height: 150px;">
+            {%endfor%}
+            {%endif%}
         </div>
 
         <!-- general -->
@@ -106,7 +110,7 @@
                             <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                                 <div class="row">
                                     <div class="col-auto">
-                                        <small>$100/Night</small>
+                                        <small>{{data['room_price']}}đ/Đêm</small>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-star"></i>
