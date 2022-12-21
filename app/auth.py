@@ -59,9 +59,10 @@ def resetpass():
                         (generate_password_hash(new_password), email, ))
             msg = 'You have changed password successfully'
             conn.commit()
+            return redirect(url_for('auth.login'))
+
         else:
             msg = 'Unconnected password'
-        return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
 
