@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /venv/*
 venv/
+=======
+venv/*
+>>>>>>> ad130229f9f9b9399e51b8b7d57b604f027967e5
 .vscode/
 __pycache__/
 .svn/
