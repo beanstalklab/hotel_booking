@@ -1,16 +1,6 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>jQuery UI Slider - Default functionality</title>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-</head>
-
 
 <div class="container-xxl py-5">
     <div class="container">
@@ -20,6 +10,14 @@
         </div>
 
         <!-- Select -->
+        <div class="d-flex justify-content-end">
+            <div class="form-floating mb-2 width-select">
+                <a href="{{url_for('view.room', id_filter = 'price_up', page = 1)}}">Giá tăng dần</a>
+                <a href="{{url_for('view.room', id_filter = 'price_down', page = 1)}}">Giá giảm dần</a>
+                <a href="{{url_for('view.room', id_filter = 'most_popular', page = 1)}}">Phổ biến</a>
+                <a href="{{url_for('view.room', id_filter = 'rating', page = 1)}}">Bình chọn</a>
+            </div>
+        </div>
         <!-- Select end -->
 
 
@@ -66,28 +64,28 @@
             {%endif%}
             {%endfor%}
         </div>
-        <div id="price_range">
-
-        </div>
+        <nav>
+            <ul>
+                <li>
+                    {%if prev >= 1%}
+                    <a href="/rooms/pages/{{id_filter}}/{{prev}}">Previous</a>
+                    {%endif%}
+                </li>
+                {% for page in range(page)%}
+                <li>
+                    <span> <a href="/rooms/pages/{{id_filter}}/{{loop.index}}">{{loop.index}}</a></span>
+                </li>
+                {%endfor%}
+                <li>
+                    {% if next <= page %} <a href="/rooms/pages/{{id_filter}}/{{next}}">
+                        Next
+                        </a>
+                        {%endif%}
+                </li>
+    
+            </ul>
+    
+        </nav>
     </div>
-    <script>
-        $(document).ready(function( {
-            $('#price_range'.slider({
-                range:true,
-                min:100000,
-                max:20000000,
-                values:[100000,2000000],
-                step=50000,
-                stop:function(event,ui)
-                {
-                    $('#price_show').html(ui.values[0] + ' - ' + ui.values[1]);
-                    $('hidden_minimum_price').val(ui.values[0]);
-                    $('#hidden_maximum_price').val(ui.vaues[1])
-                }
-            }))
-        }));
-    </script>
-
-    <div id="slider"></div>
 </div>
 {%endblock%}

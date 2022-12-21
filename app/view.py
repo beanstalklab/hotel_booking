@@ -1,6 +1,6 @@
 import math
 import os
-from flask import Blueprint, redirect, render_template, request, session, url_for, send_from_directory
+from flask import Blueprint, redirect, render_template, request, session, url_for, send_from_directory, jsonify
 from app.db_utils import connect_db, get_cursor
 from app.config import HOTEL_IMAGE
 from app.sql import *
@@ -42,13 +42,10 @@ def profile():
     conn.close()
     return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg)
 
-@main_blp.route('/rooms/pages/<page>', defaults={'page': 1})
-@main_blp.route('/rooms/pages/{int:page}', methods=['GET', 'POST'])
-def room(page):
-    filter_id = []
-    if request.method == 'post' and 'filter_type'  in request.form:
-        filter_id = request.form['filter_type']
-    print(filter_id)
+@main_blp.route('/rooms/pages/<id_filter>/<page>', defaults={'page': 1, 'id_filter': 'price_down'})
+@main_blp.route('/rooms/pages/<id_filter>/{int:page}', methods=['GET', 'POST'])
+def room(page,id_filter):
+
     limit = 5
     offset = page * limit - limit
     conn = connect_db()
@@ -70,11 +67,32 @@ def room(page):
         conn.rollback()
     total_row = cursor.rowcount
     total_page = math.ceil(total_row/limit)
-    filter_id = ''
-    if (filter_id):
+    
+    if (id_filter == 'price_down'):
         try:
             cursor.execute(
-                'SELECT * FROM phong ORDER BY %s DESC LIMIT %s OFFSET %s', (filter_id, limit, offset,))
+                'SELECT * FROM phong ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,) )
+            conn.commit()
+        except:
+            conn.rollback()
+    elif (id_filter == 'price_up'):
+        try:
+            cursor.execute(
+                'SELECT * FROM `phong` ORDER BY `phong`.`room_price` DESC LIMIT %s OFFSET %s', (limit, offset,))
+            conn.commit()
+        except:
+            conn.rollback()
+    elif (id_filter == 'rating'):
+        try:
+            cursor.execute(
+                'SELECT * FROM phong ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,))
+            conn.commit()
+        except:
+            conn.rollback()
+    elif (id_filter == 'most_popular'):
+        try:
+            cursor.execute(
+                'SELECT * FROM phong ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,))
             conn.commit()
         except:
             conn.rollback()
@@ -103,8 +121,7 @@ def room(page):
                'name': img[0][index+1:], 'rank': img[1]}
         final_data.append((temp_data, img))
     conn.close()
-    print(img)
-    return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev)
+    return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev, id_filter=id_filter)
 
 
 @main_blp.route('/detail/<room_id>', methods=['GET', 'POST'])
@@ -170,50 +187,15 @@ def search():
             final_data.append((temp_data, img))
     return render_template('room.html', data=final_data)
 
-@main_blp.route('/filter')
-def filter():
-    conn = connect_db()
-    cursor = get_cursor(conn)
-    filter_id = ''
-    try:
-        cursor.execute('SELECT * FROM phong')
-        conn.commit()
-    except:
-        conn.rollback()
-    if (filter_id):
-        try:
-            cursor.execute(
-                'SELECT * FROM phong ORDER BY %s', (filter_id))
-            conn.commit()
-        except:
-            conn.rollback()
-    else:
-        try:
-            cursor.execute(
-                'SELECT * FROM phong ORDER BY room_id DESC')
-            conn.commit()
-        except:
-            conn.rollback()
-    datas = cursor.fetchall()
-    final_data = []
-    for data in datas:
-        temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
-                     'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
-        room_id = int(data[0])
-        try:
-            cursor.execute(
-                'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
-            conn.commit()
-        except:
-            conn.rollback()
-        img = cursor.fetchone()
-        index = img[0].index('/')
-        img = {'folder': img[0][0:index],
-               'name': img[0][index+1:], 'rank': img[1]}
-        final_data.append((temp_data, img))
-    conn.close()
-    print(img)
-    return render_template('filter.html', data=final_data)
+@main_blp.route('/fetchrecords', methods=['POST', 'GET'])
+def fetchrecords():
+    if request.form == "POST":
+        query = request.form['action']
+        minimum_price = request.form['minimum_price']
+        maximum_price = request.form['maximum_price']
+        print(minimum_price)
+        print(maximum_price)
+    return render_template('filter.html')
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
