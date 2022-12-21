@@ -1,18 +1,50 @@
-{% extends 'nav_bar.html' %}
-{% block content %}
-    <h1>Register Page</h1>
-    <form action="" method = 'post'>
-        <label for="email">Email</label>
-        <input type="text" id = 'email' name = 'email'> <br>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username"><br>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password"><br>
-        <label for="repassword">Check pass word 2nd</label>
-        <input type="password" id="repassword" name="repassword"><br>
-        <input type="submit" value="Create Account">
-    </form>
-    <p>{{ msg }}</p>
-    <a href="{{ url_for('auth.login') }} ">Login</a>
+<html>
 
-{% endblock %}
+<head>
+    <link href="{{url_for('static', filename='css/login_signup_reset.css')}}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- partial:index.partial.html -->
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+
+            <h2 class="inactive underlineHover"> <a href="{{ url_for('auth.login') }}"> Sign In </a></h2>
+            <h2 class="active"> Sign Up </h2>
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <img src="{{url_for('view.image_file',name='registration-of-activities-512.png', folder = 'user_image')}}" id="icon" alt="User Icon" />
+            </div>
+
+            <!-- Login Form -->
+            <form method="post">
+                <div class="msg">{{ msg }}</div>
+                <label for="login"><b>USER EMAIL</b></label>
+                <input type="email" class="fadeIn second" id='email' placeholder="Enter Email" name='email'> <br>
+
+                <label for="username"><b>USER NAME</b></label>
+                <input type="text" class="fadeIn third" id="username" placeholder="Enter Email" name="username"><br>
+
+                <label for="user-password"><b>PASSWORD</b></label>
+                <input type="password" class="fadeIn third" id="password" minlength="8" placeholder="Enter Password"
+                    name="password"><br>
+
+                <label for="password-repeat"><b>REPEAT PASSWORD</b></label>
+                <input type="password" class="fadeIn third" id="repassword" placeholder="Repeat Password"
+                    name="repassword"><br>
+
+                <input type="submit" class="fadeIn fourth" value="Create Account">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="{{ url_for('auth.resetpass') }}">Forgot Password?</a>
+            </div>
+
+        </div>
+    </div>
+    <!-- partial -->
+</body>
+
+</html>
