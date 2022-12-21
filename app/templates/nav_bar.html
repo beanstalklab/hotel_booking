@@ -15,7 +15,8 @@
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
      <!-- date picker -->
      <link rel='stylesheet'
      href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker3.standalone.css'>
@@ -25,6 +26,32 @@
     <link href="{{url_for('static', filename='css/search.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/datepicker.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+    <script>
+        $(document).ready(function(){
+          load_data();
+          function load_data(query)
+          {
+           $.ajax({
+            url:"/search",
+            method:"POST",
+            data:{query:query},
+            success:function(data)
+            {
+              $('#result').html(data);
+              $("#result").append(data.htmlresponse);
+            }
+           });
+          }
+          $('#search_text').keyup(function(){
+            var search = $(this).val();
+            if(search != ''){
+            load_data(search);
+           }else{
+            load_data();
+           }
+          });
+        });
+        </script>
 </head>
 
 <body>
@@ -57,6 +84,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="row row-cols-2 mt-3 align-items-center">
                     <!-- Search -->
                     <div class="col">
@@ -121,7 +149,7 @@
                                     <a href="{{url_for('view.home')}}" class="nav-item nav-link active">Home</a>
                                     <a href="about.html" class="nav-item nav-link">About</a>
                                     <a href="service.html" class="nav-item nav-link">Services</a>
-                                    <a href="{{url_for('view.room', id_filter='price_down')}}" class="nav-item nav-link">Rooms</a>
+                                    <a href="{{url_for('view.room', page=1,id_filter='price_down')}}" class="nav-item nav-link">Rooms</a>
                                     <div class="nav-item dropdown">
                                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                                         <div class="dropdown-menu">
