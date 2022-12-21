@@ -58,7 +58,7 @@ def resetpass():
         msg = 'You have changed password successfully'
         conn.commit()
         return render_template('login')
-    return render_template('reset_password.html', msg=msg, title='Reset Password Page')
+    return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
 
 @auth_blp.route('/register', methods=['GET', 'POST'])
