@@ -46,7 +46,7 @@ def profile():
 @main_blp.route('/rooms/pages/<id_filter>/{int:page}', methods=['GET', 'POST'])
 def room(page,id_filter):
 
-    limit = 5
+    limit = 6
     offset = page * limit - limit
     conn = connect_db()
     cursor = get_cursor(conn)

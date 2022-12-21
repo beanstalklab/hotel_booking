@@ -80,7 +80,7 @@ def resetpass():
             return redirect(url_for('auth.login'))
 
         else:
-            msg = 'Unconnected password'
+            msg = 'Passwords do not match !'
     return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
 @auth_blp.route('/register')
