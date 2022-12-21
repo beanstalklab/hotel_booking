@@ -1,2 +1,7 @@
 /venv/*
-/test.txt
+venv/
+.vscode/
+__pycache__/
+.svn/
+.git/
+.venv/
