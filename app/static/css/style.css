@@ -9,6 +9,10 @@
 .width-select {
     width: 250px;
 }
+.btn {
+    color: #fff;
+    background-color:#CE877F;
+}
 
 
 /* .fakeimage {

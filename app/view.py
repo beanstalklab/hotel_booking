@@ -11,8 +11,8 @@ main_blp = Blueprint(
 @main_blp.route('/')
 @main_blp.route('/home', methods=['GET'])
 def home():
-    if session['role_id'] == 0:
-        return render_template('admin/admin.html', title='ADMIN PAGE')
+    # if session['role_id'] == 0:
+    #     return render_template('admin/admin.html', title='ADMIN PAGE')
     return render_template('home.html')
 
 @main_blp.route('/profile', methods=['GET'])
