@@ -57,8 +57,8 @@ def resetpass():
                        (generate_password_hash(new_password), email, ))
         msg = 'You have changed password successfully'
         conn.commit()
-        return render_template('login')
-    return render_template('reset_password.html', msg=msg, title='Reset Password Page')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
 
 @auth_blp.route('/register', methods=['GET', 'POST'])
@@ -176,6 +176,5 @@ def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)
-    session.pop('email', None)
     session.pop('password', None)
     return redirect(url_for('view.home'))
