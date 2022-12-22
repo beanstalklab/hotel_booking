@@ -1,10 +1,6 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
 
-<head>
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
-        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-</head>
 <!-- Info -->
 <div class="container my-5">
     <div class="">
@@ -42,6 +38,7 @@
 
     <!-- image -->
     <div class="mt-5">
+<<<<<<< HEAD
 
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
             
@@ -50,202 +47,300 @@
                     <img src="user/booking.html"
                         class="d-block w-100" alt="...">
                 </div>
+=======
+        <div class="contain">
+            <!-- Carousel -->
+            {% if img%}
+            {%for item in img%}
+            <!-- The slideshow/carousel -->
+            <div class="mySlides">
+                <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}" style="width: 100%;">
+>>>>>>> 71386ef14ca83ac8f5a6ea9194965cfa9aca17ce
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-           
-        </div>
+            {%endfor%}
+            {%endif%}
 
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
+
+            <div class="row-img">
+                {% if img%}
+                {%for index in range(num)%} 
+                
+                <div class="column">
+                    <img class="demo cursor" src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
+                        style="width: 100%;" onclick="currentSlide({{loop.index}})">
+                </div>
+                {%endfor%}
+                {%endif%}
+            </div>
+        </div>
 
     </div>
+</div>
 
-    <!-- general -->
-    <div class="row p-0">
-        <!-- left -->
-        <div class="col-md-7">
-            <h1>Mo ta</h1>
+<!-- general -->
+<div class="row p-0">
+    <!-- left -->
+    <div class="col-md-7">
+        <h1>Mo ta</h1>
+        <div>
+            <ul>
+                <li>14 khách</li>
+                <li>7 phòng ngủ </li>
+                <li>7 giường</li>
+                <li>7 phòng tắm đầy đủ và 1 phòng vệ sinh cơ bản</li>
+            </ul>
+        </div>
+        <hr class="dropdown-divider">
+
+        <div>
+            <h2>Tien Nghi</h2>
             <div>
-                <ul>
-                    <li>14 khách</li>
-                    <li>7 phòng ngủ </li>
-                    <li>7 giường</li>
-                    <li>7 phòng tắm đầy đủ và 1 phòng vệ sinh cơ bản</li>
-                </ul>
+                <i class="fas fa-water"></i>
+                <span>Hướng nhìn ra đại dương</span>
             </div>
-            <hr class="dropdown-divider">
-
             <div>
-                <h2>Tien Nghi</h2>
-                <div>
-                    <i class="fas fa-water"></i>
-                    <span>Hướng nhìn ra đại dương</span>
-                </div>
-                <div>
-                    <i class="fas fa-wine-bottle"></i>
-                    <span>Bếp</span>
-                </div>
-                <div>
-                    <i class="fas fa-wifi"></i>
-                    <span>Wi-fi</span>
-                </div>
-                <div>
-                    <i class="fas fa-briefcase"></i>
-                    <span>Không gian riêng để làm việc</span>
-                </div>
-                <div>
-                    <i class="fas fa-car"></i>
-                    <span>Chỗ đỗ xe miễn phí tại nơi ở</span>
-                </div>
+                <i class="fas fa-wine-bottle"></i>
+                <span>Bếp</span>
             </div>
-
-            <hr class="dropdown-divider">
             <div>
-                <h2>Quyen Loi</h2>
-                <div>
-                    <i class="fas fa-user-shield"></i>
-                    <span>An Ninh Tuyet Doi</span>
-                </div>
-                <div>
-                    <i class="far fa-thumbs-up"></i>
-                    <span>Trải nghiệm nhận phòng tuyệt vời</span>
-                </div>
-                <div>
-                    <i class="far fa-calendar-alt"></i>
-                    <span>Hủy miễn phí trong 48 giờ.</span>
-                </div>
-
+                <i class="fas fa-wifi"></i>
+                <span>Wi-fi</span>
+            </div>
+            <div>
+                <i class="fas fa-briefcase"></i>
+                <span>Không gian riêng để làm việc</span>
+            </div>
+            <div>
+                <i class="fas fa-car"></i>
+                <span>Chỗ đỗ xe miễn phí tại nơi ở</span>
             </div>
         </div>
-        <!-- right -->
-        <div class="col-md-5">
-            <div class="mt-5">
-                <h1 class=" d-flex justify-content-md-center">Booking</h1>
-                <div class=" d-flex justify-content-center">
-                    <form action="">
-                        <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
-                            <div class="row">
-                                <div class="col-auto">
-                                    <small>{{data['room_price']}}đ/Đêm</small>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-star"></i>
-                                    <small>Rating: 4,69 </small>
+
+        <hr class="dropdown-divider">
+        <div>
+            <h2>Quyen Loi</h2>
+            <div>
+                <i class="fas fa-user-shield"></i>
+                <span>An Ninh Tuyet Doi</span>
+            </div>
+            <div>
+                <i class="far fa-thumbs-up"></i>
+                <span>Trải nghiệm nhận phòng tuyệt vời</span>
+            </div>
+            <div>
+                <i class="far fa-calendar-alt"></i>
+                <span>Hủy miễn phí trong 48 giờ.</span>
+            </div>
+
+        </div>
+    </div>
+    <!-- right -->
+    <div class="col-md-5">
+        <div class="mt-5">
+            <h1 class=" d-flex justify-content-md-center">Booking</h1>
+            <div class=" d-flex justify-content-center">
+                <form action="">
+                    <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
+                        <div class="row">
+                            <div class="col-auto">
+                                <small>{{data['room_price']}}đ/Đêm</small>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-star"></i>
+                                <small>Rating: 4,69 </small>
+                            </div>
+                        </div>
+                        <div class="row g-1">
+                            <!-- Check in -->
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="checkin" placeholder="Check In" />
+                                    <label for="checkint">Check In</label>
                                 </div>
                             </div>
-                            <div class="row g-1">
-                                <!-- Check in -->
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" id="checkin" placeholder="Check In" />
-                                        <label for="checkint">Check In</label>
-                                    </div>
+                            <!-- End Check in -->
+
+                            <!-- Check out -->
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="checkout" placeholder="Check Out" />
+                                    <label for="checkout">Check Out</label>
                                 </div>
-                                <!-- End Check in -->
+                            </div>
 
-                                <!-- Check out -->
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" id="checkout" placeholder="Check Out" />
-                                        <label for="checkout">Check Out</label>
-                                    </div>
+                            <!-- End Check out -->
+
+                            <!-- Customer Type -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select class="form-select" id="floatingsSelectGrid1"
+                                        aria-label="Floating label select example">
+                                        <option selected>Open this select</option>
+                                        <option value="1">16+</option>
+                                        <option value="2">18+</option>
+                                        <option value="3">89+</option>
+                                    </select>
+                                    <label for="floatingsSelectGrid1">Select local</label>
                                 </div>
+                            </div>
+                            <!-- End Customer Type -->
 
-                                <!-- End Check out -->
+                            <!-- Submit booking-->
+                            <div class="col-12 my-3">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop" style="width: 100%;">
+                                    <span>Booking</span>
+                                </button>
 
-                                <!-- Customer Type -->
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="floatingsSelectGrid1"
-                                            aria-label="Floating label select example">
-                                            <option selected>Open this select</option>
-                                            <option value="1">16+</option>
-                                            <option value="2">18+</option>
-                                            <option value="3">89+</option>
-                                        </select>
-                                        <label for="floatingsSelectGrid1">Select local</label>
-                                    </div>
-                                </div>
-                                <!-- End Customer Type -->
-
-                                <!-- Submit booking-->
-                                <div class="col-12 my-3">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop" style="width: 100%;">
-                                        <span>Booking</span>
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Search
-                                                    </h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    AHIHI
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Booking</button>
-                                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Search
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                AHIHI
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Booking</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Submit booking -->
+                            </div>
+                            <!-- End Submit booking -->
 
-                                <div class="row row-cols-2">
-                                    <div class="col">$1.153 x 2 đêm </div>
-                                    <div class="col">$2.306</div>
-                                    <div class="col">Phí dịch vụ</div>
-                                    <div class="col">$0</div>
-                                </div>
-                                <hr class="dropdown-divider">
+                            <div class="row row-cols-2">
+                                <div class="col">$1.153 x 2 đêm </div>
+                                <div class="col">$2.306</div>
+                                <div class="col">Phí dịch vụ</div>
+                                <div class="col">$0</div>
+                            </div>
+                            <hr class="dropdown-divider">
 
-                                <div class="row row-cols-2">
-                                    <div class="col">Tổng trước thuế</div>
-                                    <div id="money" class="col"></div>
-                                </div>
+                            <div class="row row-cols-2">
+                                <div class="col">Tổng trước thuế</div>
+                                <div id="money" class="col"></div>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('btn-lg').click(function () {
-                    var checkin = $('#checkin');
-                    var checkout = $('#checkout');
-                    var day = checkin - checkout;
-                    $('#money').val(day * 1000);
-                })
-
-            })
-        </script>
-        <hr class="dropdown-divider">
-        <div>
-            <h1>Danh Gia</h1>
-        </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('btn-lg').click(function () {
+                var checkin = $('#checkin');
+                var checkout = $('#checkout');
+                var day = checkin - checkout;
+                $('#money').val(day * 1000);
+            })
+
+        })
+    </script>
+    <hr class="dropdown-divider">
+    <div>
+        <h1>Danh Gia</h1>
+    </div>
+</div>
 
 </div>
 
 <!-- End Info -->
+<<<<<<< HEAD
 {%include 'footer.html'%}
 {%endblock%}
+=======
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="bg-primary rounded p-4">
+                    <a href="index.html">
+                        <h1 class="text-white text-uppercase mb-3">Hotelier</h1>
+                    </a>
+                    <p class="text-white mb-0">
+                        Download <a class="text-dark fw-medium" href="#">Hotelier – Premium Version</a>,
+                        build a professional website for your hotel business and grab the attention of new visitors
+                        upon your site’s launch.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <h6 class="section-title text-start text-primary text-uppercase mb-4">Contact</h6>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>334 Nguyen Trai, Thanh Xuan, HN</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+98 365 046 708</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>hugdosiucute@u_oa.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="row gy-5 g-4">
+                    <div class="col-md-6">
+                        <h6 class="section-title text-start text-primary text-uppercase mb-4">Company</h6>
+                        <a class="btn btn-link" href="">About Us</a>
+                        <a class="btn btn-link" href="">Contact Us</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Condition</a>
+                        <a class="btn btn-link" href="">Support</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="section-title text-start text-primary text-uppercase mb-4">Services</h6>
+                        <a class="btn btn-link" href="">Food & Restaurant</a>
+                        <a class="btn btn-link" href="">Spa & Fitness</a>
+                        <a class="btn btn-link" href="">Sports & Gaming</a>
+                        <a class="btn btn-link" href="">Event & Party</a>
+                        <a class="btn btn-link" href="">GYM & Yoga</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
+
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    <br>Distributed By: <a class="border-bottom" href="https://www.facebook.com/hugdo.02/"
+                        target="_blank">Hugciute</a>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="">Home</a>
+                        <a href="">Cookies</a>
+                        <a href="">Help</a>
+                        <a href="">FQAs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+{%endblock%}
+>>>>>>> 71386ef14ca83ac8f5a6ea9194965cfa9aca17ce
