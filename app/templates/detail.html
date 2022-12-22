@@ -12,7 +12,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6 py-2 d-flex">
+        <div class="col-6 py-2 d-flex">
             <div>
                 <i class="fas fa-star"></i>
                 <span>danh gia</span>
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 py-2 d-flex justify-content-md-end">
+        <div class="col-6 py-2 d-flex justify-content-end">
             <div class="">
                 <a href="" class="text-dark text-decoration-none">
                     <i class="fas fa-share"></i>
@@ -42,12 +42,31 @@
 
     <!-- image -->
     <div class="mt-5">
-        {% if img%}
-        {%for item in img%}
-        <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}" class="rounded img-fluid"
-            alt="..." style="width: 100px; height: 150px;">
-        {%endfor%}
-        {%endif%}
+
+        <!-- <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}" class="rounded img-fluid"
+            alt="..." style="width: 100px; height: 150px;"> -->
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="user/booking.html"
+                        class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+           
+        </div>
+
+
     </div>
 
     <!-- general -->
@@ -165,7 +184,7 @@
                                         data-bs-target="#staticBackdrop" style="width: 100%;">
                                         <span>Booking</span>
                                     </button>
-                                    
+
                                     <!-- Modal -->
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
@@ -211,14 +230,14 @@
             </div>
         </div>
         <script type="text/javascript">
-            $(document).ready(function() {
-                $('btn-lg').click(function() {
+            $(document).ready(function () {
+                $('btn-lg').click(function () {
                     var checkin = $('#checkin');
                     var checkout = $('#checkout');
                     var day = checkin - checkout;
-                $('#money').val(day*1000);
+                    $('#money').val(day * 1000);
                 })
-                
+
             })
         </script>
         <hr class="dropdown-divider">
