@@ -43,13 +43,13 @@
     <!-- image -->
     <div class="mt-5">
 
-        <!-- <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}" class="rounded img-fluid"
-            alt="..." style="width: 100px; height: 150px;"> -->
+        
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            
+            {% if img%}
+            {%for item in img%}
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="user/booking.html"
+                    <img src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}"
                         class="d-block w-100" alt="...">
                 </div>
             </div>
@@ -63,7 +63,8 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-           
+            {%endfor%}
+            {%endif%}
         </div>
 
 
