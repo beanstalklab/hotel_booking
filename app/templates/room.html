@@ -58,7 +58,7 @@
                                 Bath</small>
                             <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
                         </div>
-                        <p class="text-body mb-3">{{item[0]['room_performance']}}</p>
+                        <p class="text-body mb-3" >{{item[0]['room_address']}}</p>
                         <div class="d-flex justify-content-between">
                             <a class="btn btn-sm btn-primary rounded py-2 px-4"
                                 href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">View Detail</a>
@@ -77,18 +77,18 @@
         <ul>
             <li>
                 {%if prev >= 1%}
-                <a href="/page/{{prev}}/{{id_filter}}">Previous</a>
+                <a href="/page/{{prev}}">Previous</a>
                 {%endif%}
             </li>
             
             <li>
                 {% for page in range(page)%}
-                <span> <a href="/page/{{loop.index}}/{{id_filter}}">{{loop.index}}</a></span>
+                <span> <a href="/page/{{loop.index}}">{{loop.index}}</a></span>
                 {%endfor%}
             </li>
             
             <li>
-                {% if next <= page %} <a href="/page/{{next}}/{{id_filter}}">Next</a>
+                {% if next <= page %} <a href="/page/{{next}}">Next</a>
                 {%endif%}
             </li>
 

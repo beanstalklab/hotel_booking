@@ -1,24 +1,10 @@
-{%extends "admin.html"%}
+{%extends 'admin.html'%}
 {%block content%}
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <h1>ROOM PAGE</h1>
-    <style>
-        table,
-        th,
-        td {
-            border: 1px solid;
-        }
-    </style>
-</head>
-
-<body>
     <!-- <h3><form action="" method="post" >
             <input type="text" >
         </form></h3> -->
-    <h3>{{numrows}} Respone</h3>
+    <h3><a href="{{url_for('admin.add_room')}}">Addroom</a></h3>
+
     <table class = "table table-striped custab">
         <thead>
             <tr>
@@ -41,7 +27,10 @@
                 <td>{{row.room_type}}</td>
                 <td>{{row.room_price}}</td>
                 <td>{{row.room_province}}</td>
-                <!-- <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td> -->
+                <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td>
+                <td><button id='btn' onclick="myFunction()" type="submit" value="delete" id="btn-delete">Delete</button> </td>
+                <!-- <td><a href="{{url_for('admin.delete_room',id = row.room_id)}}">Delete</a></td> -->
+
         </tr>
         {%endfor%}
     </table>
@@ -50,5 +39,5 @@
 </body>
 
 </html>
-
+{%include 'footer_admin.html'%}
 {%endblock%}

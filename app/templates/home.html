@@ -1,17 +1,6 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
 
-<div>
-    {%with messages = get_flashed_messages()%}
-    {%if messages %}
-    {%for message in messages%}
-    <div class='alert alert-danger' role="alert">
-        <span onclick="this.parentElement.style.display='none'"></span>
-        {{messages}}</div>
-    {%endfor%}
-    {%endif%}
-    {%endwith%}
-</div>
 
 <body>
     <!-- Carousel -->

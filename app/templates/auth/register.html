@@ -42,7 +42,7 @@
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-                <div class = 'alert alert-danger' role="alert">{{messages}}</div>
+                <div class = 'alert alert-error' role="alert">{{messages}}</div>
                 {%endfor%}
                 {%endif%}
                 {%endwith%}

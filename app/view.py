@@ -113,7 +113,7 @@ def room(page):
                'name': img[0][index+1:], 'rank': img[1]}
         final_data.append((temp_data, img))
     conn.close()
-    return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev)
+    return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev,id_filter=change_filter)
 
 
 @main_blp.route('/detail/<room_id>', methods=['GET', 'POST'])
