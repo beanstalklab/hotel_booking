@@ -1,6 +1,12 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
 
+<head>
+
+    <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
+    <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
+</head>
+
 <!-- Info -->
 <div class="container my-5">
     <div class="">
@@ -49,15 +55,16 @@
             {%endfor%}
             {%endif%}
 
-            <a class="prev" onclick="plusSlides(-1)">❮</a>
-            <a class="next" onclick="plusSlides(1)">❯</a>
+            <a class="prev-img" onclick="plusSlides(-1)" style="text-decoration: none;">❮</a>
+            <a class="next-img" onclick="plusSlides(1)" style="text-decoration: none;">❯</a>
 
             <div class="row-img">
                 {% if img%}
-                {%for index in range(num)%} 
-                
+                {%for index in range(num)%}
+
                 <div class="column">
-                    <img class="demo cursor" src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
+                    <img class="demo cursor"
+                        src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
                         style="width: 100%;" onclick="currentSlide({{loop.index}})">
                 </div>
                 {%endfor%}
@@ -125,12 +132,12 @@
 
         </div>
     </div>
-    <!-- right -->
+    <!-- right (BOOKING) -->
     <div class="col-md-5">
         <div class="mt-5">
             <h1 class=" d-flex justify-content-md-center">Booking</h1>
             <div class=" d-flex justify-content-center">
-                <form action="">
+                <form autocomplete="off" action="">
                     <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                         <div class="row">
                             <div class="col-auto">
@@ -141,40 +148,82 @@
                                 <small>Rating: 4,69 </small>
                             </div>
                         </div>
+
                         <div class="row g-1">
-                            <!-- Check in -->
-                            <div class="col-6">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control" id="checkin" placeholder="Check In" />
-                                    <label for="checkint">Check In</label>
+                            <div class="col-12 d-flex justify-content-center p-0">
+                                <div class="row input-daterange" id="flight-datepicker">
+                                    <!-- Set Check In -->
+                                    <div class="col-6 px-1">
+                                        <div class="form-floating">
+                                            <input type="text" class="datepicker form-control" id="start-date"
+                                                name="start" placeholder="Check In" data-date-format="DD, MM d" />
+
+                                            <label for="start-date">
+                                                <i class="fa-solid fa-calendar-days"></i> Ngày đến
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- End Set Check In -->
+
+                                    <!-- Set Check Out -->
+                                    <div class="col-6 px-1">
+                                        <div class="form-floating">
+                                            <input type="text" class="datepicker form-control" id="end-date" name="end"
+                                                placeholder="Check Out" data-date-format="DD, MM d" />
+                                            <label for="end-date">
+                                                <i class="fa-solid fa-calendar-days"></i> Ngày đi
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                    <!-- End Set Check Out -->
                                 </div>
                             </div>
-                            <!-- End Check in -->
-
-                            <!-- Check out -->
-                            <div class="col-6">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control" id="checkout" placeholder="Check Out" />
-                                    <label for="checkout">Check Out</label>
-                                </div>
-                            </div>
-
                             <!-- End Check out -->
 
-                            <!-- Customer Type -->
+                            <!-- Service -->
                             <div class="col-12">
-                                <div class="form-floating">
-                                    <select class="form-select" id="floatingsSelectGrid1"
-                                        aria-label="Floating label select example">
-                                        <option selected>Open this select</option>
-                                        <option value="1">16+</option>
-                                        <option value="2">18+</option>
-                                        <option value="3">89+</option>
-                                    </select>
-                                    <label for="floatingsSelectGrid1">Select local</label>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseService">
+                                    Dịch vụ
+                                </button>
+
+                                <div class="collapse" id="collapseService">
+                                    <div class="card card-body">
+                                        <form action="">
+                                            <div class="list-group">
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    Xe đưa đón
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    Thuê xe tự lái
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    Bảo mẫu
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    Chăm sóc thú cưng
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    Vệ sĩ
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value="">
+                                                    phòng Gym
+                                                </label>
+                                            </div>
+                                            <button class="btn btn-primary" type="reset" > Đặt lại </button>
+                                        </form>
+                                    </div>
                                 </div>
+
                             </div>
-                            <!-- End Customer Type -->
+                            <!-- End service -->
 
                             <!-- Submit booking-->
                             <div class="col-12 my-3">
@@ -327,4 +376,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
+<script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-dateFormat/1.0/jquery.dateFormat.js'></script>
+
+<script src="{{url_for('static', filename='js/datepicker.js')}}"></script>
+
 {%endblock%}

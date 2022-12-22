@@ -147,7 +147,7 @@ def edit_profile():
         khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
                     'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
     conn.close()
-    print(khachhang['customer_gender'])
+    
     if request.method == 'POST' and 'identify' in request.form and 'address' in request.form and 'birthday' in request.form:
         firstname = request.form['firstname']
         lastname = request.form['lastname']
