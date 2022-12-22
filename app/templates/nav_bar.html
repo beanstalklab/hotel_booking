@@ -15,8 +15,6 @@
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     
      <!-- date picker -->
      <link rel='stylesheet'
@@ -27,32 +25,9 @@
     <link href="{{url_for('static', filename='css/search.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/datepicker.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
-    <script>
-        $(document).ready(function(){
-          load_data();
-          function load_data(query)
-          {
-           $.ajax({
-            url:"/search",
-            method:"POST",
-            data:{query:query},
-            success:function(data)
-            {
-              $('#result').html(data);
-              $("#result").append(data.htmlresponse);
-            }
-           });
-          }
-          $('#search_text').keyup(function(){
-            var search = $(this).val();
-            if(search != ''){
-            load_data(search);
-           }else{
-            load_data();
-           }
-          });
-        });
-        </script>
+    
+    <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
+    <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 </head>
 
 <body>

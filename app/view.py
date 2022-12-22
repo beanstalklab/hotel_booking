@@ -117,7 +117,9 @@ def detail(room_id):
         conn.commit()
     except:
         conn.rollback()
+    number_img = cursor.rowcount
     imgs = cursor.fetchall()
+    
     list_img = []
     for img in imgs:
 
@@ -126,7 +128,7 @@ def detail(room_id):
             'name': img[0][index+1:], 'rank': img[1]}
         list_img.append(img)
     conn.close()
-    return render_template('detail.html', data=data, msg=msg, img=list_img)
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img)
 
 
 @main_blp.route('/search', methods=['GET', 'POST'])
