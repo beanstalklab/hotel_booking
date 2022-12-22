@@ -10,10 +10,10 @@
         <!-- Select -->
         <div class="d-flex justify-content-end">
             <div class="form-floating mb-2 width-select">
-                <a href="url_for('view.room', id_filter='price_up', page=1)">Giá tăng dần</a>
+                <!-- <a href="url_for('view.room', id_filter='price_up', page=1)">Giá tăng dần</a>
                 <a href="url_for('view.room', id_filter='price_down', page=1)">Giá giảm dần</a>
                 <a href="url_for('view.room', id_filter='most_popular', page=1)">Phổ biến</a>
-                <a href="{{url_for('view.room', id_filter='rating')}}">Bình chọn</a>
+                <a href="{{url_for('view.room', id_filter='rating')}}">Bình chọn</a> -->
             </div>
         </div>
         <!-- Select end -->
@@ -69,16 +69,16 @@
         <ul>
             <li>
                 {%if prev >= 1%}
-                <a href="/rooms/pages/{{id_filter}}/{{prev}}">Previous</a>
+                <a href="/rooms/pages/{{prev}}">Previous</a>
                 {%endif%}
             </li>
             {% for page in range(page)%}
             <li>
-                <span> <a href="/rooms/pages/{{id_filter}}/{{loop.index}}">{{loop.index}}</a></span>
+                <span> <a href="/rooms/pages/{{loop.index}}">{{loop.index}}</a></span>
             </li>
             {%endfor%}
             <li>
-                {% if next <= page %} <a href="/rooms/pages/{{id_filter}}/{{next}}">
+                {% if next <= page %} <a href="/rooms/pages/{{next}}">
                     Next
                     </a>
                     {%endif%}
