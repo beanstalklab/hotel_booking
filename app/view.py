@@ -42,11 +42,16 @@ def profile():
     conn.close()
     return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg)
 
-@main_blp.route('/rooms/pages/<page>', defaults={'page': 1})
-@main_blp.route('/rooms/pages/{int:page}', methods=['GET', 'POST'])
+@main_blp.route('/page', defaults={'page': 1})
+@main_blp.route('/page/<int:page>', methods=['GET', 'POST'])
 def room(page):
-
-    limit = 3
+    change_filter = ''
+    if request.method == 'get':
+        change_filter = request.args.get('filter')
+    else:
+        change_filter = 'price_down'
+    print(change_filter)
+    limit = 9
     offset = page * limit - limit
     conn = connect_db()
     cursor = get_cursor(conn)
@@ -65,16 +70,31 @@ def room(page):
         conn.commit()
     except:
         conn.rollback()
+    
     total_row = cursor.rowcount
     total_page = math.ceil(total_row/limit)
-    
-    
-    try:
-        cursor.execute(
-            'SELECT * FROM phong ORDER BY room_id DESC LIMIT %s OFFSET %s', (limit, offset,))
-        conn.commit()
-    except:
-        conn.rollback()
+    if change_filter:
+        if change_filter == 'price_up':
+
+            try:
+                cursor.execute('SELECT * FROM phong ORDER BY room_price ASC LIMIT %s OFFSET %s', (limit, offset,))
+                conn.commit()
+            except:
+                conn.rollback()
+        elif change_filter == 'price_down':
+            try:
+                cursor.execute('SELECT * FROM phong ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,))
+                conn.commit()
+            except:
+                conn.rollback()
+        else:
+            try:
+                cursor.execute(
+                    'SELECT * FROM phong ORDER BY room_id DESC LIMIT %s OFFSET %s', (limit, offset,))
+                conn.commit()
+            except:
+                conn.rollback()
+        
     datas = cursor.fetchall()
     final_data = []
     for data in datas:

@@ -27,32 +27,6 @@
     <link href="{{url_for('static', filename='css/search.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/datepicker.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
-    <script>
-        $(document).ready(function(){
-          load_data();
-          function load_data(query)
-          {
-           $.ajax({
-            url:"/search",
-            method:"POST",
-            data:{query:query},
-            success:function(data)
-            {
-              $('#result').html(data);
-              $("#result").append(data.htmlresponse);
-            }
-           });
-          }
-          $('#search_text').keyup(function(){
-            var search = $(this).val();
-            if(search != ''){
-            load_data(search);
-           }else{
-            load_data();
-           }
-          });
-        });
-        </script>
 </head>
 
 <body>
