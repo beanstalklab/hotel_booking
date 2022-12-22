@@ -42,7 +42,7 @@ def profile():
     conn.close()
     return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg)
 
-@main_blp.route('/rooms/pages/<id_filter>/<page>', defaults={'page': 1, 'id_filter': 'price_down'})
+@main_blp.route('/rooms/pages/<id_filter>/<page>', defaults={'page': 1, 'id_filter': 'price_up'})
 @main_blp.route('/rooms/pages/<id_filter>/{int:page}', methods=['GET', 'POST'])
 def room(page,id_filter):
 
@@ -159,43 +159,42 @@ def detail(room_id):
 
 @main_blp.route('/search', methods=['GET', 'POST'])
 def search():
-    if request.method == 'GET' and 'province' in request.form:
-        province = request.form('province')
-        conn = connect_db()
-        cursor = get_cursor(conn)
-        try:
-            cursor.execute('select phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype * from phong inner join tinhthanh on tinhthanh.province_id = phong.id_province where tinhthanh.province_name = %s;', (province,))
-            conn.commit()
-        except:
-            conn.rollback()
-        datas = cursor.fetchall()
-        final_data = []
-        for data in datas:
-            temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
-                         'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
-            room_id = int(data[0])
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    if request.method == 'POST':
+        search_word = request.form['query']
+        if search_word:
             try:
-                cursor.execute(
-                    'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
+                cursor.execute('select * from phong order by room_id')
                 conn.commit()
             except:
                 conn.rollback()
-            img = cursor.fetchone()
-            index = img[0].index('/')
-            img = {'folder': img[0][0:index],
-                   'name': img[0][index+1:], 'rank': img[1]}
-            final_data.append((temp_data, img))
-    return render_template('room.html', data=final_data)
+        else:
+            try:
+                cursor.execute('select * from phong where room_name like "%{}%" or room_address like "%{}%" or room_performence like "%{}%" order by room_id', (search_word, search_word, search_word,))
+            except:
+                conn.rollback()
+    datas = cursor.fetchall()
+    final_data = []
+    for data in datas:
+        temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
+                    'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5]}
+        room_id = int(data[0])
+        try:
+            cursor.execute(
+                'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
+            conn.commit()
+        except:
+            conn.rollback()
+        numrows =int(cursor.rowcount)
+        img = cursor.fetchone()
+        index = img[0].index('/')
+        img = {'folder': img[0][0:index],
+            'name': img[0][index+1:], 'rank': img[1]}
+        final_data.append((temp_data, img))
+    return jsonify({'htmlrespone': render_template('filter.html', data=final_data, numrows = numrows)})
 
-@main_blp.route('/fetchrecords', methods=['POST', 'GET'])
-def fetchrecords():
-    if request.form == "POST":
-        query = request.form['action']
-        minimum_price = request.form['minimum_price']
-        maximum_price = request.form['maximum_price']
-        print(minimum_price)
-        print(maximum_price)
-    return render_template('filter.html')
+
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)

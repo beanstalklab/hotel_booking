@@ -2,6 +2,7 @@
 
 <head>
     <link href="{{url_for('static', filename='css/login_signup_reset.css')}}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -12,7 +13,7 @@
             <!-- Tabs Titles -->
             <h2 class="active"> Sign In </h2>
             <h2 class="inactive underlineHover"> <a href="{{ url_for('auth.register') }}"> Sign up </a></h2>
-
+            <h2 class="inactive underlineHover"> <a href="{{ url_for('view.home') }}"> Home </a></h2>
             <!-- Icon -->
             <div class="fadeIn first">
                 <img src="{{url_for('view.image_file',name='user-286.png', folder = 'user_image')}}" id="icon"
@@ -20,16 +21,28 @@
             </div>
 
             <!-- Login Form -->
-            <form method="post">
+            <form method="post" action="\login_submit">
                 <div class="msg">{{ msg }}</div>
                 <label for="login"><b>USER EMAIL</b></label>
-                <input type="email" class="fadeIn second" id='email' name='email' placeholder="Enter Email" required>
+                <input type="email" class="fadeIn second" id='email' name='email' placeholder="Enter Email" value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}" required>
                 <br>
                 <label for="password"><b>USER PASSWORD</b></label>
-                <input type="password" class="fadeIn third" id='password' name='password' placeholder="Enter Password"
+                <input type="password" class="fadeIn third" id='password' name='password' value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}" placeholder="Enter Password"
                     required> <br>
+                <input type="checkbox" class="fadeIn fourth" name="inputRemember" checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}" autocomplete="off">
+                <label for="inputRemember">Remember me</label> <br>
                 <input type="submit" class="fadeIn fourth" value="Log In">
+
             </form>
+            <div>
+                {%with messages = get_flashed_messages()%}
+                {%if messages %}
+                {%for message in messages%}
+                <div class = 'alert alert-danger' role="alert">{{messages}}</div>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+            </div>
 
             <!-- Remind Passowrd -->
 

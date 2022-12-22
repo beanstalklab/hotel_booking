@@ -1,213 +1,234 @@
 {%extends 'nav_bar.html'%}
- <!-- profile -->
+<!-- profile -->
 {%block content%}
-    <div class="container">
-        <div class="m-3">
-            <div class="row my-3">
-                <div class="col-md-4 my-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-column align-items-center text-center">
-                                {%if img %}
-                                <img src="{{url_for('view.image_file', name=img, folder='user_image')}}"
-                                    alt="User" class="rounded-circle" width="110">
-                                {%else%}
-                                <img src="{{url_for('view.image_file', name='undefine.jpg', folder='user_image')}}"
-                                    alt="User" class="rounded-circle" width="110">
-                                    {%endif%}
-                                    <div class="mt-3">
-                                    
-                                        <h4> {{session.username}}</h4>
-                                    
-                                </div>
+<div class="container">
+    <div class="m-3">
+        <div class="row my-3">
+            <div class="col-md-4 my-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {%if img %}
+                            <img src="{{url_for('view.image_file', name=img, folder='user_image')}}" alt="User"
+                                class="rounded-circle" width="110">
+                            {%else%}
+                            <img src="{{url_for('view.image_file', name='undefine.jpg', folder='user_image')}}"
+                                alt="User" class="rounded-circle" width="110">
+                            {%endif%}
+                            <div class="mt-3">
+
+                                <h4> {{session.username}}</h4>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 my-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="" method="post">
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="">Họ và tên đệm</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="firstname" name="firstname" class="form-control" value=" {{khachhang.first_name}}" required>
-                                    </div>
+            </div>
+            <div class="col-md-8 my-3">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="\edit_profile" method="post">
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="">Họ và tên đệm</h6>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="">Tên</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="lastname" name="lastname" class="form-control" value=" {{khachhang.last_name}}" required>
-                                    </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="firstname" name="firstname" class="form-control"
+                                        value="{{khachhang.first_name}}" required>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="">Tên tài khoản</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="username" name="username" class="form-control" value=" {{info.user_name}}" required>
-                                    </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="">Tên</h6>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="">Giới tính</h6>
-                                    </div>
-                                        <input type="radio" id="male" maxlength="3" name="gender" class="form-control" value="Nam" required> Nam
-                                        <input type="radio" id="female" name="gender" class="form-control" value="Nữ" required> Nữ
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="lastname" name="lastname" class="form-control"
+                                        value=" {{khachhang.last_name}}" required>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Email</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="email" id="email" name="email" class="form-control" value="{{info.email}}" readonly>
-                                    </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="">Tên tài khoản</h6>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Số điện thoại</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="phonenumber" maxlength="10" name="phonenumber" class="form-control" value="{{khachhang.customer_phone}}" required>
-                                    </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="username" name="username" class="form-control"
+                                        value=" {{info.user_name}}" required>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Địa chỉ</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="address" name="address" class="form-control" value="{{khachhang.customer_address}}" required>
-                                    </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="">Giới tính</h6>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">CMT/CCCD</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="identify" maxlength="12" name="identify" class="form-control" value="{{khachhang.customer_identity}}" req>
-                                    </div>
+
+                                <div class="col-sm-3">
+                                    {% if khachhang.customer_gender == 'Nam' %}
+                                    <input type="radio" id="male"  name="gender" checked="true" value="Nam" required> Nam
+                                    <input type="radio" id="female" name="gender" value="Nữ" required> Nữ
+                                    {%else%}
+                                    <input type="radio" id="male"  name="gender"  value="Nam" required> Nam
+                                    <input type="radio" id="female" name="gender" checked="true" value="Nữ" required> Nữ
+                                    {%endif%}
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Ngày sinh</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="date" id="birthday" name="birthday" class="form-control" value="{{khachhang.customer_date}}" required>
-                                    </div>
+
+
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
                                 </div>
-                                <div class="row mb-3 d-flex align-items-center">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Chú thích cá nhân</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="note" name="note" class="form-control" value="{{khachhang.customer_note}}">
-                                    </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="email" id="email" name="email" class="form-control"
+                                        value="{{info.email}}" readonly>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-3"></div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="submit" class="btn btn-primary px-4" value="Save Changes">
-                                    </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Số điện thoại</h6>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="phonenumber" maxlength="10" name="phonenumber"
+                                        class="form-control" value="{{khachhang.customer_phone}}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Địa chỉ</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="address" name="address" class="form-control"
+                                        value="{{khachhang.customer_address}}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">CMT/CCCD</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="identify" maxlength="12" name="identify" class="form-control"
+                                        value="{{khachhang.customer_identity}}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Ngày sinh</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="date" id="birthday" name="birthday" class="form-control"
+                                        value="{{khachhang.customer_date}}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Chú thích cá nhân</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" id="note" name="note" class="form-control"
+                                        value="{{khachhang.customer_note}}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="submit" id="but-submit" class="btn btn-primary px-4"
+                                        value="Save Changes">
+                                </div>
+
+                            </div>
+                        </form>
                     </div>
-                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- profile end -->
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5">
+    <div class="container pb-5">
+        <div class="row g-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="bg-primary rounded p-4">
+                    <a href="index.html">
+                        <h1 class="text-white text-uppercase mb-3">Hotelier</h1>
+                    </a>
+                    <p class="text-white mb-0">
+                        Download <a class="text-dark fw-medium" href="#">Hotelier – Premium Version</a>,
+                        build a professional website for your hotel business and grab the attention of new visitors
+                        upon your site’s launch.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <h6 class="section-title text-start text-primary text-uppercase mb-4">Contact</h6>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>334 Nguyen Trai, Thanh Xuan, HN</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+98 365 046 708</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>hugdosiucute@u_oa.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="row gy-5 g-4">
+                    <div class="col-md-6">
+                        <h6 class="section-title text-start text-primary text-uppercase mb-4">Company</h6>
+                        <a class="btn btn-link" href="">About Us</a>
+                        <a class="btn btn-link" href="">Contact Us</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Condition</a>
+                        <a class="btn btn-link" href="">Support</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="section-title text-start text-primary text-uppercase mb-4">Services</h6>
+                        <a class="btn btn-link" href="">Food & Restaurant</a>
+                        <a class="btn btn-link" href="">Spa & Fitness</a>
+                        <a class="btn btn-link" href="">Sports & Gaming</a>
+                        <a class="btn btn-link" href="">Event & Party</a>
+                        <a class="btn btn-link" href="">GYM & Yoga</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- profile end -->
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5">
-        <div class="container pb-5">
-            <div class="row g-5">
-                <div class="col-md-6 col-lg-4">
-                    <div class="bg-primary rounded p-4">
-                        <a href="index.html">
-                            <h1 class="text-white text-uppercase mb-3">Hotelier</h1>
-                        </a>
-                        <p class="text-white mb-0">
-                            Download <a class="text-dark fw-medium" href="#">Hotelier – Premium Version</a>,
-                            build a professional website for your hotel business and grab the attention of new visitors
-                            upon your site’s launch.
-                        </p>
-                    </div>
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    <br>Distributed By: <a class="border-bottom" href="https://www.facebook.com/hugdo.02/"
+                        target="_blank">Hugciute</a>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <h6 class="section-title text-start text-primary text-uppercase mb-4">Contact</h6>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>334 Nguyen Trai, Thanh Xuan, HN</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+98 365 046 708</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>hugdosiucute@u_oa.com</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-5 col-md-12">
-                    <div class="row gy-5 g-4">
-                        <div class="col-md-6">
-                            <h6 class="section-title text-start text-primary text-uppercase mb-4">Company</h6>
-                            <a class="btn btn-link" href="">About Us</a>
-                            <a class="btn btn-link" href="">Contact Us</a>
-                            <a class="btn btn-link" href="">Privacy Policy</a>
-                            <a class="btn btn-link" href="">Terms & Condition</a>
-                            <a class="btn btn-link" href="">Support</a>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="section-title text-start text-primary text-uppercase mb-4">Services</h6>
-                            <a class="btn btn-link" href="">Food & Restaurant</a>
-                            <a class="btn btn-link" href="">Spa & Fitness</a>
-                            <a class="btn btn-link" href="">Sports & Gaming</a>
-                            <a class="btn btn-link" href="">Event & Party</a>
-                            <a class="btn btn-link" href="">GYM & Yoga</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
-
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
-                        <br>Distributed By: <a class="border-bottom" href="https://www.facebook.com/hugdo.02/"
-                            target="_blank">Hugciute</a>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
-                        </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="">Home</a>
+                        <a href="">Cookies</a>
+                        <a href="">Help</a>
+                        <a href="">FQAs</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Footer End -->
+</div>
+<!-- Footer End -->
 
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script> -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
 </body>
 {%endblock%}

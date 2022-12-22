@@ -1,26 +1,38 @@
 import re
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, make_response
 from app.db_utils import connect_db, get_cursor
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import timedelta
 from app.sql import *
 auth_blp = Blueprint(
     "auth", __name__, template_folder='templates', static_folder='static')
-
-
-@auth_blp.before_request
-def make_session_permanent():
-    session.permanent = True
-    auth_blp.permanet_session_lifetime = timedelta(minutes=5)
-
-
-@auth_blp.route('/login', methods=['GET', 'POST'])
+global COOKIE_TIME_OUT 
+COOKIE_TIME_OUT = 60*5
+@auth_blp.route('/login')
 def login():
-    msg = ''
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-        session.permanent = True
-        email = request.form['email']
-        password = request.form['password']
+    return render_template('auth/login.html')
+@auth_blp.route('/login_submit', methods=['POST'])
+def login_submit():
+    email = request.form['email']
+    password = request.form['password']
+    remember = request.form.getlist('inputRemember')
+    if 'email' in request.cookies:
+        username = request.cookies.get('email')
+        password = request.cookies.get('password')
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        sql = 'SELECT * from taikhoan where email=%s;'
+        cursor.execute(sql, (username, ))
+        row = cursor.fetchone()
+        if row and check_password_hash(row[3], password):
+            session['email'] = row[2]
+            cursor.close()
+            conn.close()
+            flash("Login successfully")
+            return redirect('/home')
+        else:
+            return redirect('/login')
+    elif email and password:        
         conn = connect_db()
         cursor = get_cursor(conn)
         try:
@@ -36,15 +48,21 @@ def login():
             session['id'] = account[0]
             session['username'] = account[2]
             session['role_id'] = account[4]
-            msg = 'Logged in successfully !'
-            if (session['role_id'] == 0):
-                return redirect(url_for('admin.admin_home'))
-            return redirect(url_for('view.home'))
+            if remember:
+                resp = make_response(redirect('/home'))
+                resp.set_cookie('email', account[1], max_age=COOKIE_TIME_OUT)
+                resp.set_cookie('password', password, max_age=COOKIE_TIME_OUT)
+                resp.set_cookie('rem', 'checked', max_age=COOKIE_TIME_OUT)
+                return resp
+            flash("Login successfully")
+            return redirect('/home')
+
         else:
-            msg = 'Incorrect username / password !'
-    return render_template('auth/login.html', msg=msg, title='Login Page')
-
-
+            flash('Invalid Password')
+            return redirect('/login')
+    else:
+        flash('Invalid Email and Password')
+        return redirect('/login')
 @auth_blp.route('/resetpass', methods=['GET', 'POST'])
 def resetpass():
     msg = ''
@@ -65,9 +83,11 @@ def resetpass():
             msg = 'Passwords do not match !'
     return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
-
-@auth_blp.route('/register', methods=['GET', 'POST'])
+@auth_blp.route('/register')
 def register():
+    return render_template('auth/register.html')
+@auth_blp.route('/register_submit', methods=['GET', 'POST'])
+def register_submit():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
         username = request.form['username']
@@ -81,25 +101,25 @@ def register():
         cursor.execute('SELECT * FROM taikhoan WHERE email = % s', (email, ))
         account = cursor.fetchall()
         if account:
-            msg = 'Email already exists !'
+            flash('Email already exists !')
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address !'
+            flash('Invalid email address !')
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers !'
+            flash('Username must contain only characters and numbers !')
+        elif not re.match(r'^(?=\S{8,18}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])', password):
+            flash('Password is uncomfortable')
         elif not username or not password or not email:
-            msg = 'Please fill out the form !'
+            flash('Please fill out the form !')
         elif not (repassword == password):
-            msg = 'Invalid password, please try again'
+            flash('Invalid password, please try again')
         else:
             password_hash = generate_password_hash(password)
             cursor.execute('INSERT INTO taikhoan VALUES (NULL, %s, %s, %s, 2, 0)',
                            (email, username, password_hash, ))
             conn.commit()
-            msg = 'You have successfully registered !'
-            return render_template('home.html', msg=msg)
-    elif request.method == 'POST':
-        msg = 'Please fill out the form !'
-    return render_template('auth/register.html', msg=msg)
+            flash('You have successfully registered !')
+            return redirect('/login')
+    return redirect('/register')
 
 
 @auth_blp.route('/edit_profile', methods=['GET', 'POST'])
@@ -127,7 +147,7 @@ def edit_profile():
         khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
                     'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
     conn.close()
-
+    print(khachhang['customer_gender'])
     if request.method == 'POST' and 'identify' in request.form and 'address' in request.form and 'birthday' in request.form:
         firstname = request.form['firstname']
         lastname = request.form['lastname']
