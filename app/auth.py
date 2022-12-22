@@ -73,8 +73,8 @@ def register():
         username = request.form['username']
         password = request.form['password']
         repassword = request.form['repassword']
-
         email = request.form['email']
+        
         conn = connect_db()
         cursor = get_cursor(conn)
 
