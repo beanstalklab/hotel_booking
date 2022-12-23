@@ -3,8 +3,22 @@
     <!-- <h3><form action="" method="post" >
             <input type="text" >
         </form></h3> -->
-    <h3><a href="{{url_for('admin.add_room')}}">Addroom</a></h3>
+    <h1>Danh sách phòng</h1>
+    <button> <a href="{{url_for('admin.add_room')}}">Thêm phòng</a></button>
+    <form action="/room_filter" >
+        <select name="id_filter" id ="id_filter" >
+            <option value="room_price">Giá phòng</option>
+            <option value="room_id">Mã Phòng</option>
 
+        </select>
+        <select name="show_option" id="show_option">
+            <option value="hoatdong">Đang hoạt động</option>
+            <option value="toanbo">Xem toàn bộ</option>
+            <option value="daxoa">Đã xóa</option>
+        </select>
+        <input type="submit" value="Sắp xếp">
+    </form>
+    <a href=""></a>
     <table class = "table table-striped custab">
         <thead>
             <tr>
@@ -15,6 +29,7 @@
                 <th>Type</th>
                 <th>Price</th>
                 <th>Province</th>
+                <th>Status</th>
             </tr>
         </thead>
         {%if data%}
@@ -27,9 +42,9 @@
                 <td>{{row.room_type}}</td>
                 <td>{{row.room_price}}</td>
                 <td>{{row.room_province}}</td>
+                <td>{{row.room_isdelete}}</td>
                 <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td>
-                <td><button id='btn' onclick="myFunction()" type="submit" value="delete" id="btn-delete">Delete</button> </td>
-                <!-- <td><a href="{{url_for('admin.delete_room',id = row.room_id)}}">Delete</a></td> -->
+                <td><a href="{{url_for('admin.delete_room',id = row.room_id)}}">Delete</a></td>
 
         </tr>
         {%endfor%}

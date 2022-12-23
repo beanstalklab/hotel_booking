@@ -121,8 +121,7 @@ def register_submit():
             return redirect('/login')
     return redirect('/register')
 
-
-@auth_blp.route('/edit_profile', methods=['GET', 'POST'])
+@auth_blp.route('/edit_profile')
 def edit_profile():
     account_id = session['id']
     msg = 'Wating'
@@ -147,7 +146,12 @@ def edit_profile():
         khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
                     'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
     conn.close()
-    print(khachhang['customer_gender'])
+    return render_template('user/profile-edit.html', khachhang=khachhang, info=info, msg=msg)
+
+@auth_blp.route('/edit_profile_submit', methods=['GET', 'POST'])
+def edit_profile_submit():
+    account_id = session['id']
+    print(account_id)
     if request.method == 'POST' and 'identify' in request.form and 'address' in request.form and 'birthday' in request.form:
         firstname = request.form['firstname']
         lastname = request.form['lastname']
@@ -160,8 +164,11 @@ def edit_profile():
         note = request.form['note']
         conn = connect_db()
         cursor = get_cursor(conn)
+        print(gender, birthday)
         try:
-            cursor.execute(user['get_customer_info'], (account_id, ))
+            sql='''SELECT * FROM khachhang where account_id = %s'''
+            cursor.execute(sql % (account_id))
+            print("true")
             conn.commit()
         except:
             conn.rollback()
@@ -171,13 +178,19 @@ def edit_profile():
             conn = connect_db()
             cursor = get_cursor(conn)
             try:
-                cursor.execute(user['update_customer_info'],
-                               (firstname, lastname, identity, gender, phone_number, address, birthday, note, account_id,))
-                cursor.execute(user['update_username'], (username, account_id))
+                sql1 =  '''UPDATE khachhang SET `first_name` = %s, `last_name` = %s, `customer_identity`= %s,`customer_date`=%s, `customer_phone` = %s, `customer_address`=%s,`customer_gender`=%s,   `customer_note` = %s 
+                                WHERE `account_id` = %s;'''
+                cursor.execute(sql1, (firstname, lastname, identity,birthday, phone_number, address, gender,   note, account_id,))
+                print('Update khachhang seccuessfully')
+
+                sql2 = '''UPDATE taikhoan  SET `user_name` = %s where `account_id` = %s;'''
+                cursor.execute(sql2, (username, account_id,))
                 conn.commit()
+                print('Update taikhoan seccuessfully')
+
             except:
+                print('Update unseccuessfully')
                 conn.rollback()
-            flash('Update seccuessfully')
         else:
             conn = connect_db()
             cursor = get_cursor(conn)
@@ -185,16 +198,19 @@ def edit_profile():
                 cursor.execute(user['insert_customer_info'], (firstname, lastname, account_id, identity, gender, phone_number, address, birthday, note,))
                 cursor.execute(user['update_username'], (username, account_id))
                 conn.commit()
+                print('Insert khachhang seccuessfully')
+
             except:
+                print('Insert khachhang unseccuessfully')
+
                 conn.rollback()
-            flash('Update seccuessfully')
 
         conn.commit()
         return redirect(url_for('view.profile'))
     else:
-        flash('Update seccuessfully')
-    return render_template('user/profile-edit.html', khachhang=khachhang, info=info, msg=msg)
-
+        # flash('Update seccuessfully')
+        print('Update unseccuessfully')
+        return redirect('auth.edit_profile')
 
 @auth_blp.route('/logout')
 def logout():

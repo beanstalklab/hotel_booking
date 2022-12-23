@@ -2,7 +2,7 @@
 {%block content%}
 <div class="col-md-12">
   <div class="card">
-    <form id="TypeValidation" class="form-horizontal" action="" method="post">
+    <form id="TypeValidation" class="form-horizontal" action="{{url_for('admin.edit_room_submit')}}">
       <div class="card-header card-header-text" data-background-color="rose">
         <h4 class="card-title">Cập nhật thông tin phòng</h4>
       </div>
@@ -101,10 +101,10 @@
         $('#room_province').removeClass('load');
       });
     }
-    function province_fill(thisValue) {
+  }
+  function province_fill(thisValue) {
     $('#room_province').val(thisValue);
     setTimeout("$('#suggestions').fadeOut();", 600);
-  }
   }
   </script>
   <script>

@@ -30,7 +30,7 @@ def room():
     cursor = get_cursor(conn)
     phong=''
     try:
-        cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id;')
+        cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id;')
         conn.commit()
         phong = cursor.fetchall()
     except:
@@ -45,11 +45,12 @@ def room():
         temp['room_price'] = row[4]
         temp['room_type'] = row[5]
         temp['room_province'] = row[6]
+        temp['room_isdelete'] = 'Active'
+
         final_data.append(temp)
     conn.close()
-    print(final_data)
+    # print(final_data)
     return render_template('admin/room.html', data = final_data)
-    # return render_template('filter.html')
 @admin_blp.route('/edit_room/<id>', methods=['GET','POST'])
 def edit_room(id):
     conn = connect_db()
@@ -73,35 +74,95 @@ def edit_room(id):
     temp['room_type'] = phong[5]
     temp['room_province'] = phong[6]
     conn.close()
+    return render_template('edit_room.html', row=temp)
+
+@admin_blp.route('/edit_room_submit', methods=['GET','POST'])
+def edit_room_submit():
+
     conn = connect_db()
     cursor = get_cursor(conn)
-    if request.method  == 'POST':
-        room_name = request.form['room_name']
-        room_address = request.form['room_address']
-        room_performance = request.form['room_performance']
-        room_type = request.form['room_type']
-        room_price = request.form['room_price']
-        room_province = request.form['room_province']
+    room_id = request.args.get('room_id')
+    room_name = request.args.get('room_name')
+    room_address = request.args.get('room_address')
+    room_performance = request.args.get('room_performance')
+    room_type = request.args.get('room_type')
+    room_price = request.args.get('room_price')
+    room_province = request.args.get('room_province')
+    print(room_type, room_province, room_id)
+    
+    # print(id_type, id_province)
+    try:
+        
+        sql1 = '''select room_id from loaiphong where room_name like "%{}%" '''
+        cursor.execute(sql1.format(room_type))
+        conn.commit()
+        id_type = cursor.fetchone()
+        print('catch id_type', id_type[0])
+        sql2 = '''select province_id from tinhthanh where province_name like "%{}%"'''
+        cursor.execute(sql2.format(room_province))
+        conn.commit()
+        id_province = cursor.fetchone()
+        print('catch id_province', str(id_province))
+        cursor.execute('''UPDATE `phong` SET `room_name` = %s, `room_address` = %s, `room_performence` = %s, `room_price` = %s, `id_roomtype` = %s, `id_province` = %s WHERE `room_id` = %s;''', 
+        (room_name, room_address, room_performance, room_price, id_type[0],id_province[0], room_id ))
+        conn.commit()
+        print("Update successful")
+        conn.close()
+        return redirect ('/manage_rooms')
+    except:
+        print("Update unsuccessful")
+        conn.rollback()
+    return redirect(url_for('admin.edit_room', id=room_id))
+
+@admin_blp.route('/room_filter')
+def filter():
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    phong=''
+    id_filter = request.args.get('id_filter')
+    show_option = request.args.get('show_option')
+    if show_option == 'showall':
         try:
-            cursor.execute('''UPDATE `phong` SET room_name = %s, room_address = %s, room_performence = %s, room_price = %s, id_roomtype = %s, id_province = %s WHERE `phong`.`room_id` = %s;''', (room_name, room_address, room_performance, room_price, room_type,room_province, id, ))
+            cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province  order by phong.room_id')
             conn.commit()
-            print("Update successful")
-            conn.close()
-            redirect ('/mange_rooms')
+            phong = cursor.fetchall()
         except:
-            print("Update unsuccessful", room_province, room_type)
             conn.rollback()
-            redirect ('/edit_room')
+    elif show_option == 'toanbo':
+        try:
+            cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.{};'.format(id_filter,))
+            conn.commit()
+            phong = cursor.fetchall()
+        except:
+            conn.rollback()
     else:
-        print('error')
-    return render_template('admin/edit_room.html', row=temp)
+        
+    final_data = []
+    for row in phong:
+        temp = {}
+        temp['room_id'] = row[0]
+        temp['room_name'] = row[1]
+        temp['room_address'] = row[2]
+        temp['room_performance'] = row[3]
+        temp['room_price'] = row[4]
+        temp['room_type'] = row[5]
+        temp['room_province'] = row[6]
+        if row[7] == b'\x00':
+            temp['room_isdelete'] = 'UNACTIVE'
+        else:
+            temp['room_isdelete'] = 'ACTIVE'
+        final_data.append(temp)
+    conn.close()
+    # print(final_data)
+    return render_template('admin/room.html', data = final_data)
 @admin_blp.route('/delete_room/<id>', methods=['POST', 'GET'])
 def delete_room(id):
     conn = connect_db()
     cursor = get_cursor(conn)
-    sql = 'DELETE FROM phong where room_id = %s'
+    sql = 'update phong set room_isdelete = 0 where room_id = %s'
     cursor.execute(sql, (id,))
-    return redirect('/manage_room')
+    conn.commit()
+    return redirect('/manage_rooms')
 
 @admin_blp.route('/add_room')
 def add_room():

@@ -11,9 +11,39 @@ main_blp = Blueprint(
 @main_blp.route('/')
 @main_blp.route('/home', methods=['GET'])
 def home():
-    # if session['role_id'] == 0:
-    #     return render_template('admin/admin.html', title='ADMIN PAGE')
-    return render_template('home.html')
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    final_data = []
+    try:
+        cursor.execute('SELECT * FROM phong ORDER BY room_price ASC LIMIT 9')
+        conn.commit()
+    except:
+        print('cannot get data')
+
+    datas = cursor.fetchall()
+    print(datas)
+    conn.close()
+    for data in datas:
+        temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
+                     'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
+        room_id = data[0]
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        try:
+            cursor.execute(
+                'SELECT image_link, image_rank from hinhanh where room_id = %s', (room_id,))
+            conn.commit()
+        except:
+            print('error image')
+            # conn.rollback()
+        img = cursor.fetchone()
+        print(img)
+        index = img[0].index('/')
+        img = {'folder': img[0][0:index],
+            'name': img[0][index+1:], 'rank': img[1]}
+        final_data.append((temp_data, img))
+    conn.close()
+    return render_template('home.html', data=final_data)
 
 @main_blp.route('/profile', methods=['GET'])
 def profile():
@@ -97,6 +127,7 @@ def room(page):
         
     datas = cursor.fetchall()
     final_data = []
+    
     for data in datas:
         temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                      'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
