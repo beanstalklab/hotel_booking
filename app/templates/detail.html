@@ -3,8 +3,11 @@
 
 <head>
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
-    <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 </head>
 
 <!-- Info -->
@@ -50,35 +53,32 @@
     <div class="mt-5">
         <div class="contain">
             <!-- Carousel -->
-            {% if img%}
-            {%for index in range(num)%}
+
             <!-- The slideshow/carousel -->
-            <div class="mySlides">
-                <div class="numbertext">{{loop.index}} / {{num}}</div>
-                <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
-                    style="width: 100%;">
-            </div>
-            {%endfor%}
-            {%endif%}
-
-            <button class="prev-img" onclick="plusSlides(-1)">❮</button>
-            <button class="next-img" onclick="plusSlides(1)" >❯</button>
-
-            <div class="caption-container">
-                <p id="caption"></p>
-            </div>
-
-            <div class="row-img">
+            <div class="wrapper">
                 {% if img%}
-                {%for index in range(num)%}
-
-                <div class="column-img">
-                    <img class="demo cursor"
-                        src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
-                        style="width: 100%;" onclick="currentSlide({{loop.index}})">
+                {%for index in range(num - 2)%}
+                <div class="image">
+                    <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
+                        alt="" />
                 </div>
                 {%endfor%}
                 {%endif%}
+            </div>
+
+
+
+            <div class="gallery">
+                <span class="control prev">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                <span class="control next">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                <div class="gallery-inner">
+                    <img src="" alt="" />
+                </div>
+                <i class="fas fa-times close"></i>
             </div>
         </div>
 
@@ -306,6 +306,7 @@
 
 </div>
 <!-- End Info -->
+<script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 
 {%include 'footer.html'%}
 {%endblock%}

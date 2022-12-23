@@ -136,7 +136,7 @@ def filter():
         except:
             conn.rollback()
     else:
-        
+        print()
     final_data = []
     for row in phong:
         temp = {}
