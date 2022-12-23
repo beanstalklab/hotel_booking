@@ -1,56 +1,76 @@
 {%extends 'admin.html'%}
 {%block content%}
-    <!-- <h3><form action="" method="post" >
+<!-- <h3><form action="" method="post" >
             <input type="text" >
         </form></h3> -->
-    <h1>Danh sách phòng</h1>
-    <button> <a href="{{url_for('admin.add_room')}}">Thêm phòng</a></button>
-    <form action="/room_filter" >
-        <select name="id_filter" id ="id_filter" >
-            <option value="room_price">Giá phòng</option>
-            <option value="room_id">Mã Phòng</option>
+<h1>Danh sách phòng</h1>
+<button> <a href="{{url_for('admin.add_room')}}">Thêm phòng</a></button>
+<form name="filter" action="/room_filter">
+    <select name="id_filter" id="id_filter">
+        <option value="room_id">Mã Phòng</option>
+        <option value="room_price_up">Giá phòng tăng</option>
+        <option value="room_price_down">Giá phòng giảm</option>
 
-        </select>
-        <select name="show_option" id="show_option">
-            <option value="hoatdong">Đang hoạt động</option>
-            <option value="toanbo">Xem toàn bộ</option>
-            <option value="daxoa">Đã xóa</option>
-        </select>
-        <input type="submit" value="Sắp xếp">
-    </form>
-    <a href=""></a>
-    <table class = "table table-striped custab">
-        <thead>
-            <tr>
-                <th>Room ID</th>
-                <th>Room Name</th>
-                <th>Room Adress</th>
-                <th>Introduction</th>
-                <th>Type</th>
-                <th>Price</th>
-                <th>Province</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        {%if data%}
+    </select>
+    <select name="show_option" id="show_option">
+        <option value="hoatdong">Đang hoạt động</option>
+        <option value="daxoa">Đã xóa</option>
+    </select>
+    <input type="submit" value="Sắp xếp">
+</form>
+<table class="table table-striped custab">
+    <thead>
+        <tr>
+            <th>Room ID</th>
+            <th>Room Name</th>
+            <th>Room Adress</th>
+            <th>Introduction</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Province</th>
+            <th>Status</th>
+            <th colspan="2" style="justify-content: center;">Action</th>
+        </tr>
+    </thead>
+    {%if data%}
+    <form name="restore" action="/enable_room">
+        {%if show_option == 'daxoa'%}
         {%for row in data%}
         <tr>
-                <td>{{row.room_id}}</td>
-                <td>{{row.room_name}}</td>
-                <td>{{row.room_address}}</td>
-                <td>{{row.room_performance}}</td>
-                <td>{{row.room_type}}</td>
-                <td>{{row.room_price}}</td>
-                <td>{{row.room_province}}</td>
-                <td>{{row.room_isdelete}}</td>
-                <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td>
-                <td><a href="{{url_for('admin.delete_room',id = row.room_id)}}">Delete</a></td>
-
+            <td>{{row.room_id}}</td>
+            <td>{{row.room_name}}</td>
+            <td>{{row.room_address}}</td>
+            <td>{{row.room_performance}}</td>
+            <td>{{row.room_type}}</td>
+            <td>{{row.room_price}}</td>
+            <td>{{row.room_province}}</td>
+            <td>{{row.room_isdelete}}</td>
+            <td><input type="checkbox" name="restore" value="{{row.room_id}}"></td>
         </tr>
+
         {%endfor%}
-    </table>
+        <input type="submit" value="Restore">
+    </form>
+    {%else%}
+    {%for row in data%}
+    <tr>
+        <td>{{row.room_id}}</td>
+        <td>{{row.room_name}}</td>
+        <td>{{row.room_address}}</td>
+        <td>{{row.room_performance}}</td>
+        <td>{{row.room_type}}</td>
+        <td>{{row.room_price}}</td>
+        <td>{{row.room_province}}</td>
+        <td>{{row.room_isdelete}}</td>
+        <td><a href="{{url_for('admin.edit_room',id = row.room_id)}}">Edit</a></td>
+        <td><a href="{{url_for('admin.delete_room',id = row.room_id)}}">Delete</a></td>
+    </tr>
+
+    {%endfor%}
+    {%endif%}
 
     {%endif%}
+</table>
 </body>
 
 </html>

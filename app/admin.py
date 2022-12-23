@@ -121,22 +121,50 @@ def filter():
     phong=''
     id_filter = request.args.get('id_filter')
     show_option = request.args.get('show_option')
-    if show_option == 'showall':
-        try:
-            cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province  order by phong.room_id')
-            conn.commit()
-            phong = cursor.fetchall()
-        except:
-            conn.rollback()
-    elif show_option == 'toanbo':
-        try:
-            cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.{};'.format(id_filter,))
-            conn.commit()
-            phong = cursor.fetchall()
-        except:
-            conn.rollback()
+    if show_option == 'hoatdong':
+        if id_filter == 'room_id':
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1  order by phong.room_id')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
+        elif id_filter == 'room_price_up':
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1  order by phong.room_price ASC')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
+        else:
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province  where phong.room_isdelete = 1 order by phong.room_price DESC')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
     else:
-        
+        if id_filter == 'room_id':
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 0  order by phong.room_id')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
+        elif id_filter == 'room_price_up':
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 0  order by phong.room_price ASC')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
+        else:
+            try:
+                cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province  where phong.room_isdelete = 0 order by phong.room_price DESC')
+                conn.commit()
+                phong = cursor.fetchall()
+            except:
+                conn.rollback()
     final_data = []
     for row in phong:
         temp = {}
@@ -154,7 +182,7 @@ def filter():
         final_data.append(temp)
     conn.close()
     # print(final_data)
-    return render_template('admin/room.html', data = final_data)
+    return render_template('admin/room.html', data = final_data, show_option=show_option)
 @admin_blp.route('/delete_room/<id>', methods=['POST', 'GET'])
 def delete_room(id):
     conn = connect_db()
@@ -163,7 +191,16 @@ def delete_room(id):
     cursor.execute(sql, (id,))
     conn.commit()
     return redirect('/manage_rooms')
-
+@admin_blp.route('/enable_room', methods=['POST', 'GET'])
+def enable_room():
+    id = request.args.getlist('restore')
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    sql = 'update phong set room_isdelete = 1 where room_id in %s'
+    cursor.execute(sql, (id,))
+    conn.commit()
+    print(id)
+    return redirect('/manage_rooms')
 @admin_blp.route('/add_room')
 def add_room():
     return render_template('admin/add_room.html')
