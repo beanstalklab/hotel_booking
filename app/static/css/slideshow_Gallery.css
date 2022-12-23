@@ -1,20 +1,23 @@
 * {
     box-sizing: border-box;
+  }
+  /* Hide the images by default */
+.mySlides {
+    display: none;
 }
-
-img {
+  
+  img {
     vertical-align: middle;
-}
+    /* height: 400px; */
+  }
 
 /* Position the image container (needed to position the left and right arrows) */
 .contain {
     position: relative;
-}
+  }
+  
 
-/* Hide the images by default */
-.mySlides {
-    display: none;
-}
+
 
 /* Add a pointer when hovering over the thumbnail images */
 .cursor {
@@ -33,15 +36,15 @@ img {
     color: white;
     font-weight: bold;
     font-size: 20px;
-    border-radius: 0 3px 3px 0;
+    /* border-radius: 0 3px 3px 0;
     user-select: none;
-    -webkit-user-select: none;
+    -webkit-user-select: none; */
 }
 
 /* Position the "next button" to the right */
 .next-img {
     right: 0;
-    border-radius: 3px 0 0 3px;
+    /* border-radius: 3px 0 0 3px; */
 }
 
 /* On hover, add a black background color with a little bit see-through */
@@ -49,6 +52,16 @@ img {
 .next-img:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
+
+/* Number text (1/3 etc) */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+  }
+  
 
 /* Container for image text */
 .caption-container {
@@ -58,14 +71,14 @@ img {
     color: white;
 }
 
-.row:after {
+.row-img:after {
     content: "";
     display: table;
     clear: both;
   }
   
   /* Six columns side by side */
-  .column {
+  .column-img {
     float: left;
     width: 10%;
   }
@@ -79,3 +92,11 @@ img {
 .demo:hover {
     opacity: 1;
 }
+/* 
+@media only screen and (max-width: 450px) {
+    .prev-img,
+    .next-img,
+    .caption-container {
+       font-size: 16px;
+    }
+} */

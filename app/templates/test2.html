@@ -1,0 +1,48 @@
+{%extends 'nav_bar.html'%}
+{%block content%}
+
+<head>
+    <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- image -->
+    <div class="mt-5">
+        <main>
+            <div class="contain">
+                <div class="main-img">
+                    <span class="control prev-img">
+                        <i class="fa-regular fa-circle-left"></i>
+                    </span>
+                    <span class="control next-img">
+                        <i class="fa-regular fa-circle-right"></i>
+                    </span>
+                    <div class="img-wrap">
+                        <img class="img-form"
+                            src="{{url_for('view.image_file', name = img[1]['name'], folder=img[0]['folder'])}}"alt="" />
+                    </div>
+                </div>
+
+                <!-- The slideshow/carousel -->
+
+                <div class="list-img">
+                    {% if img%}
+                    {%for item in img%}
+                    <div>
+                        <img class="img-form" src="{{url_for('view.image_file', name = item.name, folder=item.folder)}}"
+                            alt="" />
+                    </div>
+                    {%endfor%}
+                    {%endif%}
+                </div>
+
+
+            </div>
+        </main>
+
+    </div>
+    <!-- end image -->
+</body>
+
+{%include 'footer.html'%}
+{%endblock%}
