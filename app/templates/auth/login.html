@@ -1,12 +1,15 @@
 <html>
 
 <head>
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+
     <link href="{{url_for('static', filename='css/login_signup_reset.css')}}" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 </head>
 
 <body>
-
     <!-- partial:index.partial.html -->
     <div class="wrapper fadeInDown">
         <div id="formContent">
@@ -24,21 +27,28 @@
             <form method="post" action="\login_submit">
                 <div class="msg">{{ msg }}</div>
                 <label for="login"><b>USER EMAIL</b></label>
-                <input type="email" class="fadeIn second" id='email' name='email' placeholder="Enter Email" value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}" required>
+                <input type="email" class="fadeIn second" id='email' name='email' placeholder="Enter Email"
+                    value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}" required>
                 <br>
                 <label for="password"><b>USER PASSWORD</b></label>
-                <input type="password" class="fadeIn third" id='password' name='password' value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}" placeholder="Enter Password"
-                    required> <br>
-                <input type="checkbox" class="fadeIn fourth" name="inputRemember" checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}" autocomplete="off">
+                <input type="password" class="fadeIn third" id='password' name='password'
+                    value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}"
+                    placeholder="Enter Password" required>
+                <i class="fa-regular fa-eye-slash" id="eye"></i>
+                <br>
+                <input type="checkbox" class="fadeIn fourth" name="inputRemember"
+                    checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}"
+                    autocomplete="off">
                 <label for="inputRemember">Remember me</label> <br>
                 <input type="submit" class="fadeIn fourth" value="Log In">
 
             </form>
+
             <div>
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-                <div class = 'msg' role="alert">{{messages}}</div>
+                <div class='msg' role="alert">{{messages}}</div>
                 {%endfor%}
                 {%endif%}
                 {%endwith%}
@@ -47,12 +57,15 @@
             <!-- Remind Passowrd -->
 
             <div id="formFooter">
-                <a class="underlineHover" href="{{ url_for('auth.resetpass') }}">Forgot Password?</a>
+                <a class="underlineHover" href="{{url_for('auth.resetpass')}}">Forgot Password?</a>
             </div>
 
         </div>
     </div>
     <!-- partial -->
+
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script src="{{url_for('static', filename='js/toggleEyePassword.js')}}"></script>
 
 </body>
 
