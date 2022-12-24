@@ -1,86 +1,126 @@
-{%extends 'admin.html'%}
+{%extends 'admin_home.html'%}
 {%block content%}
-<a class="navbar-brand" href="#"> Danh sách phòng </a>
-
-<div class="content">
-    <div class="container-fluid">
+<div class="col-md-12">
+  <div class="card">
+    <form id="TypeValidation" autocomplete="off" class="form-horizontal" action="/submit_add_room">
+      <div class="card-header card-header-text" data-background-color="rose">
+        <h4 class="card-title">Thêm phòng</h4>
+      </div>
+      <div class="card-content">
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-icon" data-background-color="rose">
-                        <i class="material-icons">assignment</i>
-                    </div>
-                    <div class="card-content">
-                        <h4 class="card-title">Simple Table</h4>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead class="text-primary">
-                                    <th>Name</th>
-                                    <th>Country</th>
-                                    <th>City</th>
-                                    <th>Salary</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Dakota Rice</td>
-                                        <td>Niger</td>
-                                        <td>Oud-Turnhout</td>
-                                        <td class="text-primary">$36,738</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Minerva Hooper</td>
-                                        <td>Curaçao</td>
-                                        <td>Sinaai-Waas</td>
-                                        <td class="text-primary">$23,789</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sage Rodriguez</td>
-                                        <td>Netherlands</td>
-                                        <td>Baileux</td>
-                                        <td class="text-primary">$56,142</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philip Chaney</td>
-                                        <td>Korea, South</td>
-                                        <td>Overland Park</td>
-                                        <td class="text-primary">$38,735</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Doris Greene</td>
-                                        <td>Malawi</td>
-                                        <td>Feldkirchen in Kärnten</td>
-                                        <td class="text-primary">$63,542</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mason Porter</td>
-                                        <td>Chile</td>
-                                        <td>Gloucester</td>
-                                        <td class="text-primary">$78,615</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+          <label class="col-sm-2 label-on-left">Tên phòng</label>
+          <div class="col-sm-7">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" name="room_name" id="room_name" value="" />
             </div>
+          </div>
         </div>
-    </div>
-</div>
-<form action="/add_room_submit">
-    <label for="roomName">Room Name</label>
-    <input type="text" id="roomName" name="roomName" placeholder="AbcdEDF" required> <br>
-    <label for="roomAddress">Room Address</label>
-    <input type="text" id="roomAddress" name="roomAddres" placeholder="AbcdDef" required> <br>
-    <label for="roomType">RoomType</label>
-    <input type="text" id="roomType" name="roomType" placeholder="ABCDEF" required> <br>
-    <label for="roomPrice">roomPrice</label>
-    <input type="number" id="roomPrice" name="roomPrice" placeholder="1000000" required><br>
-    <label for="roomIntroduction">Introduction</label>
-    <input type="text" id="roomIntroduction" name="roomIntroduction" placeholder="View peach,..."> <br>
-    <label for="roomProvince">Province</label>
-    <input type="text" id="roomProvince" name="roomProvince"> <br>
-    <button type="sumbit"> Submit</button>
-</form>
-{%include 'footer_admin.html'%}
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Địa chỉ</label>
+          <div class="col-sm-7">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" id="room_address" name="room_address"
+                value="" />
+            </div>
+          </div>
 
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Giá phòng</label>
+          <div class="col-sm-7">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" id="room_price" name="room_price" number="true"
+                value="" />
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Loại phòng</label>
+          <div class="col-sm-7">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" name="room_type" id="room_type" url="true"
+                value="" onkeyup="suggest_roomtype(this.value);" onblur="room_fill()"/>
+            </div>
+            <div class="suggestionsBox" id="suggestions_room">
+              <div class="suggestionList" id="suggestionsList_room"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Mô tả chung</label>
+          <div class="col-sm-3">
+            <div class="form-group label-floating column-sizing">
+              <label class="control-label"></label>
+              <input class="form-control" id="room_performance" name="room_performance" type="text"
+                value="" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group label-floating column-sizing">
+              <label class="control-label"></label>
+              <input class="form-control" id="room_province" name="room_province" type="text"
+                value="" onkeyup="suggest_province(this.value);" onblur="province_fill()" placeholder="Tỉnh thành"/>
+            </div>
+            <div class="suggestionsBox" id="suggestions">
+              <div class="suggestionList" id="suggestionsList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <label class="col-sm-2 label-on-left">Thêm ảnh</label>
+        <div class="col-sm-3">
+            <label class="control-label">Drop file here</label>
+            <input class="form-control" id="image" accept="image\*" name="image" type="file"/>
+        </div>
+      <div class="card-footer text-center">
+        <button type="submit" class="btn btn-rose btn-fill">Validate Inputs</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  function suggest_province(inputString) {
+    if (inputString.length == 0) {
+      $('#suggestions').fadeOut();
+    } else {
+      $('#room_province').addClass('load');
+      $.post("/ajaxpost", { queryString: "" + inputString + "" }, function (data) {
+        $('#suggestions').fadeIn();
+        $('#suggestionsList').html(data);
+        $('#suggestionsList').append(data.htmlresponse);
+        $('#room_province').removeClass('load');
+      });
+    }
+  }
+  function province_fill(thisValue) {
+    $('#room_province').val(thisValue);
+    setTimeout("$('#suggestions').fadeOut();", 600);
+  }
+  </script>
+  <script>
+  function suggest_roomtype(inputString) {
+    if (inputString.length == 0) {
+      $('#suggestions_room').fadeOut();
+    } else {
+      $('#room_type').addClass('load');
+      $.post("/type_room_ajax", { queryString: "" + inputString + "" }, function (data) {
+        $('#suggestions_room').fadeIn();
+        $('#suggestionsList_room').html(data);
+        $('#suggestionsList_room').append(data.htmlresponse);
+        $('#room_type').removeClass('load');
+      });
+    }
+  }
+  function room_fill(thisValue) {
+    $('#room_type').val(thisValue);
+    setTimeout("$('#suggestions_room').fadeOut();", 600);
+  }
+</script>
+{%include 'footer_admin.html'%}
 {%endblock%}

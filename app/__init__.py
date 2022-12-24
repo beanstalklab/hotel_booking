@@ -12,6 +12,11 @@ def register_blueprints(app):
     from app.auth import auth_blp
     from app.view import main_blp
     from app.admin import admin_blp 
+    from app.admin_view import adview_blp
+    from app.ajax import ajax_blp 
+
     app.register_blueprint(main_blp)
     app.register_blueprint(auth_blp)
     app.register_blueprint(admin_blp)
+    app.register_blueprint(adview_blp)
+    app.register_blueprint(ajax_blp)

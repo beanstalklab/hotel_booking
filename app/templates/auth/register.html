@@ -20,20 +20,19 @@
             </div>
 
             <!-- Login Form -->
-            <form method="post" action="/register_submit">
-                <div class="msg">{{ msg }}</div>
+            <form method="post" action="/register_submit" autocomplete="off">
                 <label for="login"><b>USER EMAIL</b></label>
-                <input type="email" class="fadeIn second" id='email' placeholder="Enter Email" name='email'> <br>
+                <input type="email" class="fadeIn second" id='email' placeholder="*****@gmail.com" name='email'> <br>
 
                 <label for="username"><b>USER NAME</b></label>
                 <input type="text" class="fadeIn second" id='username' placeholder="Enter Username" name='username'> <br>
                 
                 <label for="user-password"><b>PASSWORD</b></label>
-                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="Enter Password"
+                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="********"
                     name="password"><br>
 
-                <label for="password-repeat"><b>REPEAT PASSWORD</b></label>
-                <input type="password" class="fadeIn fourth" id="repassword" placeholder="Repeat Password"
+                <label for="password-repeat"><b>VALIDATE PASSWORD</b></label>
+                <input type="password" class="fadeIn fourth" id="repassword" placeholder="********"
                     name="repassword"><br>
 
                 <input type="submit" class="fadeIn fourth" value="Create Account">
@@ -42,7 +41,7 @@
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-                <div class = 'alert alert-error' role="alert">{{messages}}</div>
+                <div class = 'fadeIn fourth' style="color: red; motion-rotation: 70minutes;" role="alert">{{messages[0]}}</div>
                 {%endfor%}
                 {%endif%}
                 {%endwith%}

@@ -2,6 +2,7 @@
 <!-- profile -->
 {%block content%}
 <div class="container">
+    <form action="\edit_profile_submit" method="post">
     <div class="m-3">
         <div class="row my-3">
             <div class="col-md-4 my-3">
@@ -9,7 +10,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
                             {%if img %}
-                            <img src="{{url_for('view.image_file', name=img, folder='user_image')}}" alt="User"
+                            <img src="{{url_for('view.image_file', name=img['name'], folder=img['folder'])}}" alt="User"
                                 class="rounded-circle" width="110">
                             {%else%}
                             <img src="{{url_for('view.image_file', name='undefine.jpg', folder='user_image')}}"
@@ -21,126 +22,130 @@
 
                             </div>
                         </div>
+                        <label for="user_img">Cập nhật ảnh đại diện</label>
+                        <div class="btn btn-primary px-4">
+                            <input type="file" accept="image/*" name="user_img" id="user_img">
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-8 my-3">
                 <div class="card">
                     <div class="card-body">
-                        <form action="\edit_profile_submit" method="post">
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="">Họ và tên đệm</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="firstname" name="firstname" class="form-control"
-                                        value="{{khachhang.first_name}}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="">Tên</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="lastname" name="lastname" class="form-control"
-                                        value=" {{khachhang.last_name}}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="">Tên tài khoản</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="username" name="username" class="form-control"
-                                        value=" {{info.user_name}}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="">Giới tính</h6>
-                                </div>
 
-                                <div class="col-sm-3">
-                                    {% if khachhang.customer_gender == 'Nam' %}
-                                    <input type="radio" id="male"  name="gender" checked="true" value="Nam" required> Nam
-                                    <input type="radio" id="female" name="gender" value="Nữ" required> Nữ
-                                    {%else%}
-                                    <input type="radio" id="male"  name="gender"  value="Nam" required> Nam
-                                    <input type="radio" id="female" name="gender" checked="true" value="Nữ" required> Nữ
-                                    {%endif%}
-                                </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="">Họ và tên đệm</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="firstname" name="firstname" class="form-control"
+                                    value="{{khachhang.first_name}}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="">Tên</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="lastname" name="lastname" class="form-control"
+                                    value="{{khachhang.last_name}}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="">Tên tài khoản</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="username" name="username" class="form-control"
+                                    value="{{info.user_name}}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="">Giới tính</h6>
+                            </div>
+
+                            <div class="col-sm-3">
+                                {% if khachhang.customer_gender == 'Nam' %}
+                                <input type="radio" id="male" name="gender" checked="true" value="Nam" required> Nam
+                                <input type="radio" id="female" name="gender" value="Nữ" required> Nữ
+                                {%else%}
+                                <input type="radio" id="male" name="gender" value="Nam" required> Nam
+                                <input type="radio" id="female" name="gender" checked="true" value="Nữ" required> Nữ
+                                {%endif%}
+                            </div>
 
 
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Email</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="email" id="email" name="email" class="form-control"
-                                        value="{{info.email}}" readonly>
-                                </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="email" id="email" name="email" class="form-control" value="{{info.email}}"
+                                    readonly>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Số điện thoại</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="phonenumber" maxlength="10" name="phonenumber"
-                                        class="form-control" value="{{khachhang.customer_phone}}" required>
-                                </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Số điện thoại</h6>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Địa chỉ</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="address" name="address" class="form-control"
-                                        value="{{khachhang.customer_address}}" required>
-                                </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="phonenumber" maxlength="10" name="phonenumber"
+                                    class="form-control" value="{{khachhang.customer_phone}}" required>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">CMT/CCCD</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="identify" maxlength="12" name="identify" class="form-control"
-                                        value="{{khachhang.customer_identity}}" required>
-                                </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Địa chỉ</h6>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Ngày sinh</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="date" id="birthday" name="birthday" class="form-control"
-                                        value="{{khachhang.customer_date}}" required>
-                                </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="address" name="address" class="form-control"
+                                    value="{{khachhang.customer_address}}" required>
                             </div>
-                            <div class="row mb-3 d-flex align-items-center">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Chú thích cá nhân</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" id="note" name="note" class="form-control"
-                                        value="{{khachhang.customer_note}}">
-                                </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">CMT/CCCD</h6>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="submit" id="but-submit" class="btn btn-primary px-4"
-                                        value="Save Changes">
-                                </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="identify" minlength="12" maxlength="12" name="identify"
+                                    class="form-control" value="{{khachhang.customer_identity}}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Ngày sinh</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="date" id="birthday" name="birthday" class="form-control"
+                                    value="{{khachhang.customer_date}}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Chú thích cá nhân</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="note" name="note" class="form-control"
+                                    value="{{khachhang.customer_note}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="submit" id="but-submit" class="btn btn-primary px-4" value="Save Changes">
+                            </div>
 
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
+    </form>
+
 </div>
 <!-- profile end -->
 

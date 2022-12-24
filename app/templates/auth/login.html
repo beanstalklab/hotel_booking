@@ -2,7 +2,6 @@
 
 <head>
     <link href="{{url_for('static', filename='css/login_signup_reset.css')}}" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -21,15 +20,17 @@
             </div>
 
             <!-- Login Form -->
-            <form method="post" action="\login_submit">
-                <div class="msg">{{ msg }}</div>
+            {%if msg%}
+            <div style="color:greenyellow" class="fadeIn first">{{msg}}</div>
+            {%endif%}
+            <form method="post" action="\login_submit" autocomplete="off">
                 <label for="login"><b>USER EMAIL</b></label>
                 <input type="email" class="fadeIn second" id='email' name='email' placeholder="Enter Email" value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}" required>
                 <br>
                 <label for="password"><b>USER PASSWORD</b></label>
                 <input type="password" class="fadeIn third" id='password' name='password' value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}" placeholder="Enter Password"
                     required> <br>
-                <input type="checkbox" class="fadeIn fourth" name="inputRemember" checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}" autocomplete="off">
+                <input type="checkbox" class="fadeIn fourth" name="inputRemember" checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}" >
                 <label for="inputRemember">Remember me</label> <br>
                 <input type="submit" class="fadeIn fourth" value="Log In">
 
@@ -38,7 +39,7 @@
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-                <div class = 'msg' role="alert">{{messages}}</div>
+                <div name="msg" class="fadeIn second" style="color: red;" >{{messages[0]}}</div>
                 {%endfor%}
                 {%endif%}
                 {%endwith%}

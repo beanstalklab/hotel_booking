@@ -15,7 +15,7 @@ def home():
     cursor = get_cursor(conn)
     final_data = []
     try:
-        cursor.execute('SELECT * FROM phong ORDER BY room_price ASC LIMIT 9')
+        cursor.execute('SELECT * FROM phong where phong.room_isdelete = 1 ORDER BY room_price ASC LIMIT 9 ')
         conn.commit()
     except:
         print('cannot get data')
@@ -38,9 +38,9 @@ def home():
             # conn.rollback()
         img = cursor.fetchone()
         print(img)
-        index = img[0].index('/')
-        img = {'folder': img[0][0:index],
-            'name': img[0][index+1:], 'rank': img[1]}
+        idx = img[0].index('/')
+        img = {'folder': img[0][0:idx],
+            'name': img[0][idx+1:], 'rank': img[1]}
         final_data.append((temp_data, img))
     conn.close()
     return render_template('home.html', data=final_data)
@@ -67,10 +67,41 @@ def profile():
     khachhang = cursor.fetchone()
 
     if khachhang:
+        session['customer_id'] = khachhang[0]
         khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
                  'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
+    try:
+        cursor.execute(user['info_action'] % (session['customer_id'],))
+        conn.commit()
+    except:
+        conn.rollback()
+    
+    print(session['customer_id'])
+    hoatdong = cursor.fetchall()
+    lichsu = []
+    if hoatdong:
+        trangthai = {'0': 'Đã thanh toán', '1': 'Đã đặt', '2': 'Chờ duyêt', '3': 'Đã hủy'}
+        for row in hoatdong:
+            temp = {}
+            temp['room_name'] = row[0]
+            temp['time_start'] = row[1]
+            temp['time_end'] = row[2]
+            temp['status'] = trangthai[str(row[3])]
+            lichsu.append(temp)
+    try:
+        cursor.execute('select * from user_image where user_id = %s', (id_account,))
+        conn.commit()
+    except:
+        conn.rollback()
+    img = cursor.fetchone()
+    print(img[2])
+    if img:
+        index = img[2].index('/')
+        img = {'folder': img[2][0:index],
+                'name': img[2][index+1:]}
+    print(img)  
     conn.close()
-    return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg)
+    return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg, lichsu=lichsu,img=img)
 
 @main_blp.route('/page', defaults={'page': 1})
 @main_blp.route('/page/<int:page>', methods=['GET', 'POST'])
@@ -86,7 +117,7 @@ def room(page):
     conn = connect_db()
     cursor = get_cursor(conn)
     try:
-        cursor.execute('SELECT * FROM phong')
+        cursor.execute('SELECT * FROM phong where room_isdelete = 1')
         conn.commit()
     except:
         conn.rollback()
@@ -107,20 +138,20 @@ def room(page):
         if change_filter == 'price_up':
 
             try:
-                cursor.execute('SELECT * FROM phong ORDER BY room_price ASC LIMIT %s OFFSET %s', (limit, offset,))
+                cursor.execute('SELECT * FROM phong where room_isdelete = 1 ORDER BY room_price ASC LIMIT %s OFFSET %s', (limit, offset,))
                 conn.commit()
             except:
                 conn.rollback()
         elif change_filter == 'price_down':
             try:
-                cursor.execute('SELECT * FROM phong ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,))
+                cursor.execute('SELECT * FROM phong where room_isdelete = 1 ORDER BY room_price DESC LIMIT %s OFFSET %s', (limit, offset,))
                 conn.commit()
             except:
                 conn.rollback()
         else:
             try:
                 cursor.execute(
-                    'SELECT * FROM phong ORDER BY room_id DESC LIMIT %s OFFSET %s', (limit, offset,))
+                    'SELECT * FROM phong where room_isdelete = 1 ORDER BY room_id DESC LIMIT %s OFFSET %s', (limit, offset,))
                 conn.commit()
             except:
                 conn.rollback()
@@ -218,7 +249,6 @@ def search():
             'name': img[0][index+1:], 'rank': img[1]}
         final_data.append((temp_data, img))
     return jsonify({'htmlrespone': render_template('filter.html', data=final_data, numrows = numrows)})
-
 
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):

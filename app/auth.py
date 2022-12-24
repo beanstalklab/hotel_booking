@@ -1,3 +1,4 @@
+import os
 import re
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash, make_response
 from app.db_utils import connect_db, get_cursor
@@ -26,9 +27,12 @@ def login_submit():
         row = cursor.fetchone()
         if row and check_password_hash(row[3], password):
             session['email'] = row[2]
+            session['loggedin'] = True
+            session['id'] = row[0]
+            session['username'] = row[2]
+            session['role_id'] = row[4]
             cursor.close()
             conn.close()
-            flash("Login successfully")
             return redirect('/home')
         else:
             return redirect('/login')
@@ -41,27 +45,31 @@ def login_submit():
             conn.commit()
         except:
             conn.rollback()
+
         account = cursor.fetchone()
         conn.close()        
-        if account and check_password_hash(account[3], password):
-            session['loggedin'] = True
-            session['id'] = account[0]
-            session['username'] = account[2]
-            session['role_id'] = account[4]
-            if remember:
-                resp = make_response(redirect('/home'))
-                resp.set_cookie('email', account[1], max_age=COOKIE_TIME_OUT)
-                resp.set_cookie('password', password, max_age=COOKIE_TIME_OUT)
-                resp.set_cookie('rem', 'checked', max_age=COOKIE_TIME_OUT)
-                return resp
-            flash("Login successfully")
-            return redirect('/home')
-
+        if account:
+            if check_password_hash(account[3], password):
+                session['loggedin'] = True
+                session['id'] = account[0]
+                session['username'] = account[2]
+                session['role_id'] = account[4]
+                if remember:
+                    resp = make_response(redirect('/home'))
+                    resp.set_cookie('email', account[1], max_age=COOKIE_TIME_OUT)
+                    resp.set_cookie('password', password, max_age=COOKIE_TIME_OUT)
+                    resp.set_cookie('rem', 'checked', max_age=COOKIE_TIME_OUT)
+                    return resp
+                flash("Login successfully")
+                return redirect('/home')
+            else:
+                flash('Invalid Password')
+                return redirect('/login')
         else:
-            flash('Invalid Password')
+            flash("Account does not exist")
             return redirect('/login')
     else:
-        flash('Invalid Email and Password')
+        flash('Invalid Email or Password')
         return redirect('/login')
 @auth_blp.route('/resetpass', methods=['GET', 'POST'])
 def resetpass():
@@ -101,13 +109,12 @@ def register_submit():
         cursor.execute('SELECT * FROM taikhoan WHERE email = % s', (email, ))
         account = cursor.fetchall()
         if account:
-            flash('Email already exists !')
+            flash('Email đã tồn tại!')
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            flash('Invalid email address !')
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            flash('Username must contain only characters and numbers !')
+            flash('Email chưa đúng định dạng!')
         elif not re.match(r'^(?=\S{8,18}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])', password):
-            flash('Password is uncomfortable')
+            flash('Mật khẩu chưa đúng định dạng')
+            flash('[8-18][A-Z][a-z][_,.,*,@')
         elif not username or not password or not email:
             flash('Please fill out the form !')
         elif not (repassword == password):
@@ -117,8 +124,8 @@ def register_submit():
             cursor.execute('INSERT INTO taikhoan VALUES (NULL, %s, %s, %s, 2, 0)',
                            (email, username, password_hash, ))
             conn.commit()
-            flash('You have successfully registered !')
-            return redirect('/login')
+            msg = 'Đăng ký tài khoản thành công'
+            return redirect('/login', msg)
     return redirect('/register')
 
 @auth_blp.route('/edit_profile')
@@ -145,8 +152,20 @@ def edit_profile():
     if khachhang:
         khachhang = {'customer_id': khachhang[0], 'first_name': khachhang[1], 'last_name': khachhang[2], 'account_id': khachhang[3], 'customer_identity': khachhang[4], 'customer_gender': khachhang[5],
                     'customer_phone': khachhang[6], 'customer_address': khachhang[7], 'customer_date': khachhang[8], 'customer_note': khachhang[10], 'customer_nation': khachhang[9]}
+    try:
+        cursor.execute('select * from user_image where user_id = %s', (account_id,))
+        conn.commit()
+    except:
+        conn.rollback()
+    img = cursor.fetchone()
+    print(img[2])
+    if img:
+        index = img[2].index('/')
+        img = {'folder': img[2][0:index],
+                'name': img[2][index+1:]}
+    print(img)  
     conn.close()
-    return render_template('user/profile-edit.html', khachhang=khachhang, info=info, msg=msg)
+    return render_template('user/profile-edit.html', khachhang=khachhang, info=info, msg=msg, img=img)
 
 @auth_blp.route('/edit_profile_submit', methods=['GET', 'POST'])
 def edit_profile_submit():
@@ -162,9 +181,11 @@ def edit_profile_submit():
         address = request.form['address']
         birthday = request.form['birthday']
         note = request.form['note']
+        image = request.form['user_img']
+        user_image = 'user_image' +'/' + str(image)
         conn = connect_db()
         cursor = get_cursor(conn)
-        print(gender, birthday)
+        print(user_image)
         try:
             sql='''SELECT * FROM khachhang where account_id = %s'''
             cursor.execute(sql % (account_id))
@@ -182,11 +203,23 @@ def edit_profile_submit():
                                 WHERE `account_id` = %s;'''
                 cursor.execute(sql1, (firstname, lastname, identity,birthday, phone_number, address, gender,   note, account_id,))
                 print('Update khachhang seccuessfully')
-
                 sql2 = '''UPDATE taikhoan  SET `user_name` = %s where `account_id` = %s;'''
                 cursor.execute(sql2, (username, account_id,))
                 conn.commit()
                 print('Update taikhoan seccuessfully')
+                cursor.execute('select * from user_image where user_image.user_id = %s', (account_id,))
+                conn.commit()
+                img = cursor.fetchone()
+                print(user_image)
+                if image and img:
+                    print('----------')
+                    cursor.execute('update `user_image` set `img_link` = "{}" where `user_id` = {}'.format(user_image, account_id,))
+                    conn.commit()
+                    print('update anh')
+                else:
+                    cursor.execute('insert into user_image value (NULL, %s, %s)', (account_id, user_image,))
+                    conn.commit()
+                    print('insert')
 
             except:
                 print('Update unseccuessfully')
@@ -196,9 +229,13 @@ def edit_profile_submit():
             cursor = get_cursor(conn)
             try:
                 cursor.execute(user['insert_customer_info'], (firstname, lastname, account_id, identity, gender, phone_number, address, birthday, note,))
+                conn.commit()
                 cursor.execute(user['update_username'], (username, account_id))
                 conn.commit()
+                cursor.execute('insert into user_image value (NULL, %s, %s)', (account_id, user_image,))
+                conn.commit()
                 print('Insert khachhang seccuessfully')
+                msg='Cập nhật thông tin thành công'
 
             except:
                 print('Insert khachhang unseccuessfully')
