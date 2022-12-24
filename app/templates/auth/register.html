@@ -1,6 +1,9 @@
 <html>
 
 <head>
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+
     <link href="{{url_for('static', filename='css/login_signup_reset.css')}}" rel="stylesheet">
 </head>
 
@@ -16,18 +19,25 @@
 
             <!-- Icon -->
             <div class="fadeIn first">
-                <img src="{{url_for('view.image_file',name='registration-of-activities-512.png', folder = 'user_image')}}" id="icon" alt="User Icon" />
+                <img src="{{url_for('view.image_file',name='registration-of-activities-512.png', folder = 'user_image')}}"
+                    id="icon" alt="User Icon" />
             </div>
 
             <!-- Login Form -->
             <form method="post" action="/register_submit" autocomplete="off">
                 <label for="login"><b>USER EMAIL</b></label>
+<<<<<<< HEAD
                 <input type="email" class="fadeIn second" id='email' placeholder="*****@gmail.com" name='email'> <br>
 
+=======
+                <input type="email" class="fadeIn second" id='email' placeholder="Enter Email" name='email'>
+                <br>
+>>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 <label for="username"><b>USER NAME</b></label>
-                <input type="text" class="fadeIn second" id='username' placeholder="Enter Username" name='username'> <br>
-                
+                <input type="text" class="fadeIn second" id='username' placeholder="Enter Username" name='username'>
+                <br>
                 <label for="user-password"><b>PASSWORD</b></label>
+<<<<<<< HEAD
                 <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="********"
                     name="password"><br>
 
@@ -35,13 +45,26 @@
                 <input type="password" class="fadeIn fourth" id="repassword" placeholder="********"
                     name="repassword"><br>
 
+=======
+                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="Enter Password" name="password">
+                <i class="fa-regular fa-eye-slash" id="eye1"></i>
+                <br>
+                <label for="password-repeat"><b>REPEAT PASSWORD</b></label>
+                <input type="password" class="fadeIn fourth" id="repassword" placeholder="Repeat Password" name="repassword">
+                <i class="fa-regular fa-eye-slash" id="eye2"></i>
+                <br>
+>>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 <input type="submit" class="fadeIn fourth" value="Create Account">
             </form>
             <div>
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
+<<<<<<< HEAD
                 <div class = 'fadeIn fourth' style="color: red; motion-rotation: 70minutes;" role="alert">{{messages[0]}}</div>
+=======
+                <div class='alert alert-error' role="alert">{{messages}}</div>
+>>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 {%endfor%}
                 {%endif%}
                 {%endwith%}
@@ -55,6 +78,9 @@
         </div>
     </div>
     <!-- partial -->
+
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script src="{{url_for('static', filename='js/toggleEyePassword.js')}}"></script>
 </body>
 
 </html>
