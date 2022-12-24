@@ -35,7 +35,7 @@
                 <input type="password" class="fadeIn third" id='password' name='password'
                     value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}"
                     placeholder="Enter Password" required>
-                <i class="fa-regular fa-eye-slash" id="eye"></i>
+                <i class="fa-regular fa-eye-slash" id="eye1"></i>
                 <br>
                 <input type="checkbox" class="fadeIn fourth" name="inputRemember"
                     checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}"
