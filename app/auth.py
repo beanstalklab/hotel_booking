@@ -141,19 +141,23 @@ def register_submit():
             msg = 'Đăng ký tài khoản thành công'
             return redirect('/login', msg)
     return redirect('/register')
-@auth_blp.route('/customer_booking/<id>/<user>')
-def customer_booking(id, user):
+@auth_blp.route('/customer_booking', methods=['post', 'get'])
+def customer_booking():
     conn = connect_db()
     cursor = get_cursor(conn)
-    value = request.args.get('calc-all')
     checkin = request.args.get('start')
     checkout = request.args.get('end')
-
+    value = request.args.get('calc')
+    print(value)
+    id = request.args.get('room_id')
+    user = request.form['user_id']
     checkout = get_date(checkout)
     checkin = get_date(checkin)
     cursor.execute('select customer_id from khachhang where account_id = %s', (user,))
     customer = cursor.fetchone()
-    print(value)
+    print(value, id)
+    print(customer[0], checkin, checkout)
+
     if not value:
         return redirect(url_for('view.detail', room_id = id))
     print(customer[0], checkin, checkout)

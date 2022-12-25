@@ -159,7 +159,7 @@
                 <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
                 <div class=" d-flex justify-content-center">
                     <form autocomplete="off" onsubmit="fill_calc()"
-                        action="{{url_for('auth.customer_booking', id=data['room_id'], user = session.id)}}">
+                        action="/customer_booking">
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                             <div class="row">
                                 <div class="col-auto">
@@ -251,7 +251,7 @@
 
                                 <div class="row row-cols-2">
                                     <div class="col">Tổng trước thuế:</div>
-                                     <input type="hidden" id="calc-all" name="calc-all" />
+                                    <div class="col" id="calc-all"></div>
                                 </div>
                                 <div class="col-12 my-3">
                                     <!-- Button trigger modal -->
@@ -280,7 +280,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Booking</button>
+                                                    <button type="submit" id="submit_btn" class="btn btn-primary">Booking</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -331,11 +331,6 @@
 
 </div>
 <!-- End Info -->
-<script>
-    function fill_calc() {
-        document.getElementById('calc-all').value = document.getElementById('calc-all').innerHTML;
-    }
-</script>
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 
