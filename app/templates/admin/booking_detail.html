@@ -1,0 +1,143 @@
+{%extends 'admin_home.html'%}
+{%block content%}
+<div class="col-md-12">
+    <div class="card">
+        <form id="TypeValidation" autocomplete="off" class="form-horizontal" action="/submit_booking">
+            <div class="card-header card-header-text" data-background-color="rose">
+                <h4 class="card-title">Đặt phòng</h4>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Họ và tên</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating">
+                        <label class="control-label"></label>
+                        <input class="form-control" type="text" name="first_name" id="first_name" value="{{temp['first']}}" required />
+                    </div>
+                </div>
+                <label class="col-sm-1 label-on-left">Tên chính</label>
+                <div class="col-sm-1">
+                    <div class="form-group label-floating column-sizing">
+                        <input class="form-control" id="last_name" name="last_name" type="text" value="{{temp['last']}}" required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Số căn cước</label>
+                <div class="col-sm-1">
+                    <div class="form-group label-floating">
+                        <label class="control-label"></label>
+                        <input class="form-control" type="text" name="customer_identify" value="{{temp['identity']}}" maxlength="12" minlength="12"
+                            id="customer_identify" required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Giới tính</label>
+                <div class="col-sm-10 checkbox-radios">
+                    <div>
+                        <label>
+                            <input type="text" name="optionsRadios" value="{{temp['gender']}}" required/>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Số điện thoại</label>
+                <div class="col-sm-1">
+                    <div class="form-group label-floating">
+                        <label class="control-label"></label>
+                        <input class="form-control" type="text" name="customer_phone" value="{{temp['phone']}} " id="customer_phone" required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Ngày đến</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                        <input class="form-control" type="date" name="checkin" value="{{temp['star_time']}}" id="checkin" required />
+                    </div>
+                </div>
+                <label class="col-sm-1 label-on-left">Ngày đi</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                        <input class="form-control" type="date" name="checkout" value="{{temp['end_time']}} " id="checkout" required />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Tỉnh thành</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                        <input class="form-control" id="room_province" name="room_province" type="text"
+                            onkeyup="suggest_province(this.value);" onblur="province_fill()" value="{{temp['province']}}" />
+                    </div>
+                    <div class="suggestionsBox" id="suggestionP">
+                        <div class="suggestionP" id="suggestionP"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Chọn phòng</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                        <input class="form-control" style="cursor: pointer;" id="room" name="room" type="text" onclick="suggest_room();"
+                            onblur="room_fill()" value="{{temp['room']}}" />
+                    </div>
+                    <div class="suggestionsBox"  id="suggestionR">
+                        <div class="suggestionR" style="position: absolute;" id="suggestionR"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-rose btn-fill">Xác nhận</button>
+              </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function suggest_room() {
+        var checkin = document.getElementById('checkin').value;
+        var checkout = document.getElementById('checkout').value;
+        var province = document.getElementById('room_province').value;
+        if (!checkin || !checkout || !province) {
+            $('#suggestionR').fadeOut();
+        } else {
+            $(checkin, checkout, province).addClass('load');
+            $.post("/room_ajax", { checkin: "" + checkin + "", checkout: "" + checkout + "", province: "" + province + "" }, function (data) {
+                $('#suggestionR').fadeIn();
+                $('#suggestionR').html(data);
+                $('#suggestionR').append(data.htmlresponse);
+                $('#suggestionR').removeClass('load');
+            });
+        }
+    }
+    function room_fill(thisValue) {
+        $('#room').val(thisValue);
+        setTimeout("$('#suggestionR').fadeOut();", 700);
+    }
+    function suggest_province(inputString) {
+        if (inputString.length == 0) {
+            $('#suggestionP').fadeOut();
+        } else {
+            $('#room_province').addClass('load');
+            $.post("/ajaxpost", { queryString: "" + inputString + "" }, function (data) {
+                $('#suggestionP').fadeIn();
+                $('#suggestionsP').html(data);
+                $('#suggestionP').append(data.htmlresponse);
+                $('#room_province').removeClass('load');
+            });
+        }
+    }
+    function province_fill(thisValue) {
+        $('#room_province').val(thisValue);
+        setTimeout("$('#suggestionP').fadeOut();", 600);
+    }
+</script>
+{%include 'footer_admin.html'%}
+{%endblock%}

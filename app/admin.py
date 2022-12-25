@@ -135,11 +135,142 @@ def submit_add_room():
     return redirect('/add_room')
 
 
-@admin_blp.route('/customer')
-def customer():
-    pass
+@admin_blp.route('/edit_customer/<id>')
+def edit_customer(id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('select * from khachhang where customer_isdelete = 1 and customer_id = %s', (id, ))
+        conn.commit()
+    except:
+        conn.commit()
+    row = cursor.fetchone()
+    # print(khachhang)
+    temp = {}
+    if row:
+        temp['customer_id'] = row[0]
+        temp['first_name'] = row[1]
+        temp['last_name'] = row[2]
+        temp['customer_identity'] = row [4]
+        temp['customer_gender'] = row[5]
+        temp['customer_phone'] = row[6]
+        temp['customer_date'] = row[8]
+        temp['customer_address'] =row[7]
+        temp['customer_nation'] = row[9]
+        temp['customer_note'] = row[10]
+        if row[11] == b'\x01':
+            temp['customer_isdelete'] = 'ACTIVE'
+        else:
+            temp['customer_isdelete'] = 'UNACTIVE'
 
+    print(temp)
+    return render_template('admin/edit_customer.html', row = temp)
 
+@admin_blp.route('/submit_edit_customer', methods=['GET', 'POST'])
+def edit_customer_submit():
+    customer_id = request.args.get('customer_id')
+    firstname = request.args.get('first_name')
+    lastname = request.args.get('last_name')
+    gender = request.args.get('optionsRadios')
+    phone_number = request.args.get('customer_phone')
+    identity = request.args.get('customer_identify')
+    address = request.args.get('customer_address')
+    birthday = request.args.get('customer_date')
+    note = request.args.get('customer_note')
+    nation = request.args.get('customer_nation')
+    print(birthday)
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        sql1 =  '''UPDATE khachhang SET `first_name` = %s, `last_name` = %s, `customer_identity`= %s,`customer_date`=%s, `customer_phone` = %s, `customer_address`=%s,`customer_gender`=%s,   `customer_note` = %s, 
+                        customer_nation = %s WHERE `customer_id` = %s;'''
+        cursor.execute(sql1, (firstname, lastname, identity,birthday, phone_number, address, gender,note, nation, customer_id,))
+        conn.commit()
+        print('Update khachhang seccuessfully')
+        return redirect('/customer')
+    except:
+        conn.rollback()
+    return redirect(url_for('admin.edit_customer', id=customer_id))
+
+@admin_blp.route('/delete_customer/<id>', methods=['POST', 'GET'])
+def delete_customer(id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('update khachhang set customer_isdelete = 0 where customer_id = %s', (id, ))
+        conn.commit()
+        conn.close()
+        print('deleted customer')
+    except:
+        conn.rollback()
+        print('Cant delete customer')
+    return redirect('/customer')
+@admin_blp.route('/enable_customer', methods=['POST', 'GET'])
+def enable_customer():
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    list_id = request.args.getlist('restore')
+    print(list_id)
+    try:
+        cursor.execute('update khachhang set customer_isdelete = 1 where customer_id in %s', (list_id, ))
+        conn.commit()
+        conn.close()
+        print('restored customer')
+    except:
+        conn.rollback()
+        print('Cant restore customer')
+    return redirect('/customer')
+
+@admin_blp.route('/submit_booking')
+def submit_booking():
+    firstname = request.args.get('first_name')
+    lastname = request.args.get('last_name')
+    identity = request.args.get('customer_identify')
+    phone = request.args.get('customer_phone')
+    gender = request.args.get('optionsRadios')
+    start_time = request.args.get('checkin')
+    end_time = request.args.get('checkout')
+    province = request.args.get('room_province')
+    room = request.args.get('room')
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    id_customer = get_customer_id(cursor, identity)
+    
+    temp = {}
+    temp['first'] = firstname
+    temp['last'] = lastname
+    temp['indentity'] = identity
+    temp['phone'] = phone
+    temp['gender'] = gender
+    temp['start_time'] = start_time
+    temp['end_time'] = end_time
+    temp['province'] = province
+    temp['room'] = room
+    if id_customer:
+        cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
+        id_room = cursor.fetchone()
+        cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
+        conn.commit()
+        conn.close()
+    else:
+        cursor.execute('insert into khachhang values (NULL, %s, %s, NULL, %s, %s, %s, NULL, NULL, NULL, NULL,1)', (firstname, lastname, identity, gender, phone))
+        conn.commit()
+        cursor.execute('SELECT * FROM khachhang where customer_identity = %s', (identity, ))
+        id_customer = cursor.fetchone()[0]
+        cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
+        id_room = cursor.fetchone()[0]
+        cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
+        conn.commit()
+        conn.close()
+    return render_template('admin/booking_detail.html', temp=temp)
+def get_customer_id(cursor, identity):
+    sql = '''SELECT * FROM khachhang where customer_identity = %s'''
+    cursor.execute(sql, (identity,))
+    data = cursor.fetchone()
+    if data:
+        return data[0]
+    else:
+        return ''
 @admin_blp.route('/convenient')
 def convenient():
     pass

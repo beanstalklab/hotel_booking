@@ -1,0 +1,5 @@
+<ul>
+    {% for row in nation %}
+    <li onClick="nation_fill('{{row.1}}')" style="cursor: pointer;">{{row.1}}</li>
+    {% endfor %}
+</ul>

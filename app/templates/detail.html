@@ -25,7 +25,9 @@
 
             <div class="mx-4">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>Đà Lạt</span>
+                <span>{%if province%} {{province[0]}} 
+                    {%else%} Vị trí {%endif%}
+                </span>
             </div>
         </div>
 
@@ -57,7 +59,7 @@
             <!-- The slideshow/carousel -->
             <div class="wrapper">
                 {% if img%}
-                {%for index in range(num - 2)%}
+                {%for index in range(8)%}
                 <div class="image">
                     <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
                         alt="" />
@@ -92,11 +94,20 @@
             <h1>Mo ta</h1>
             <div>
                 <ul>
-                    <li>14 khách</li>
-                    <li>7 phòng ngủ </li>
-                    <li>7 giường</li>
-                    <li>7 phòng tắm đầy đủ và 1 phòng vệ sinh cơ bản</li>
+                    {%if loaiphong %}
+                    <li>
+                        {{loaiphong[0]}}
+                    </li>
+                    {%endif%} 
+                    {%if mota%}
+                    {%for row in mota%}
+                    <li> {{row.1}} {{row.0}} </li>
+                    {%endfor%}
+                    {%endif%}
                 </ul>
+            </div>
+            <div>
+                {{data['room_performance']}}
             </div>
             <hr class="dropdown-divider">
 

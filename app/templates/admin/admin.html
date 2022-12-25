@@ -1,30 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
-        <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>Material Dashboard Pro by Creative Tim</title>
-        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-        <meta name="viewport" content="width=device-width" />
-        <!-- Bootstrap core CSS     -->
-        <link href="{{url_for('static', filename='assets/css/bootstrap.min.css')}}" rel="stylesheet" />
-        <!--  Material Dashboard CSS    -->
-        <link href="{{url_for('static', filename='assets/css/material-dashboard.css')}}" rel="stylesheet" />
-        <!--  CSS for Demo Purpose, don't include it in your project     -->
-        <link href="{{url_for('static', filename = 'assets/css/demo.css')}}" rel="stylesheet" />
-        <!--     Fonts and icons     -->
-        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>ADMIN PAGE</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap core CSS     -->
+    <link href="{{url_for('static', filename='assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+    <!--  Material Dashboard CSS    -->
+    <link href="{{url_for('static', filename='assets/css/material-dashboard.css')}}" rel="stylesheet" />
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="{{url_for('static', filename = 'assets/css/demo.css')}}" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    {%if session.role_id == 0%}
+    <div class='container-fluid bg-dark'>
+        <div class='row'>
+            <div class='col'>
+                <div class="navbar navbar-expand-lg bg-dark navbar-dark">
+                    <div class="collapse navbar-collapse"
+                        style="display: flex; flex-direction: row; justify-self: end;">
+                        
+                        <div class="navbar-nav " style="padding-right: 150px;">
+                            <a class="btn" href="{{url_for('view.home')}}" style="padding: 5px 10px;">Home</a>
+                            <a class="btn" href="{{url_for('view.profile')}}" style="padding: 5px 10px;">Profile</a>
+                            <a class="btn" href="/manage_rooms" class="dropdown-item" style="padding: 5px 10px;">Room</a>
+                            <a class="btn" href="/customer" class="dropdown-item" style="padding: 5px 10px;"> Customer</a>
+                            <a class="btn" href="/room_booking" class="dropdown-item" style="padding: 5px 10px;">
+                                Booking</a>
+                        </div>
+                        <div class="navbar-nav">
+                            <a class="btn" href="{{url_for('adview.logout')}}" style="padding: 5px 10px;">Logout</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+
+    {%block content%} {%endblock%}
+    {%else%}
+    <div>
+        
+        <h1 style="padding: 200px 400px;position: absolute; border: 2px; "> <a href="{{ url_for('view.home') }}" class="dropdown-item" style="color: aliceblue; font-size: larger;">Bruh! You are not admin</a> </h1>
+    </div>
+    <div>
+        <img src="https://th.bing.com/th/id/R.690a76ea0c5255edc2bc9a46676a5dcc?rik=LKNLELIrTKa7Rg&pid=ImgRaw&r=0" style="height: 900px;width: 1700px;;" alt=""> 
+    </div>
     
-    </head>
-    <body>
-        <a href="{{url_for('adview.logout')}}">Logout</a>
-        <a href="{{url_for('adview.admin_home')}}">Home</a>
-        <a href="{{url_for('adview.dashboard')}}"> Dashboard</a>
-        {%block content%} {%endblock%}
-    </body>
+    {%endif%}
+</body>
+
 </html>

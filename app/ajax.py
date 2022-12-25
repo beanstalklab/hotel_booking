@@ -17,6 +17,32 @@ def type_room_ajax():
         cursor.execute(query)
         loaiphong = cursor.fetchall()
     return jsonify({'htmlresponse': render_template('admin/response/response_roomtype.html', loaiphong=loaiphong)})
+@ajax_blp.route("/nation_ajax",methods=["POST","GET"])
+def nation_ajax():
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    if request.method == 'POST':
+        queryString = request.form['queryString']
+        print(queryString)
+        query = "SELECT * from quoctich WHERE name LIKE '%{}%' LIMIT 10".format(queryString)
+        cursor.execute(query)
+        nation =cursor.fetchall()
+    return jsonify({'htmlresponse': render_template('admin/response/respone_nation.html', nation=nation)})
+@ajax_blp.route("/room_ajax",methods=["POST","GET"])
+def room_ajax():
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    if request.method == 'POST':
+        checkin = request.form['checkin']
+        checkout = request.form['checkout']
+        province = request.form['province']
+        print(checkin, checkout, province)
+        query = """SELECT phong.room_id, phong.room_name, datphong.time_start from phong inner join datphong on datphong.room_id = phong.room_id 
+    where date(datphong.time_start) > '%s' or date(datphong.time_end) < '%s'""".format(checkout, checkin)
+        cursor.execute(query)
+        room =cursor.fetchall()
+        print(room)
+    return jsonify({'htmlresponse': render_template('admin/response/respone_room.html', room=room)})
 @ajax_blp.route("/ajaxlivesearch",methods=["POST","GET"])
 def ajaxlivesearch():
     conn = connect_db()
