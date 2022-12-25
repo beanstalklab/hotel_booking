@@ -1,123 +1,121 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="section-title text-center text-primary text-uppercase">Our Rooms</h2>
-            <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
-        </div>
+<div class="container py-5">
+    <div class="text-center">
+        <h1 class="section-title text-center text-primary">KHÁM PHÁ</h1>
+        <h2 class="mb-5"><span class="text-primary">TRẢI NGHIỆM</span> những điều tuyệt vời</h2>
+    </div>
 
-        <!-- Select -->
-        <div class="d-flex justify-content-end">
-            <div class="form-floating mb-2 width-select">
-                        <form action="/page/filter">
-                            <select name="filter">
-                                {%if id_filter == 'price_down'%}
-                                <option class="dropdown-item" value="price_down" selected> Gia giam</option>
-                                <option class="dropdown-item" value="price_up">Gia tang</option>
-                                <option class="dropdown-item" value="most_popular">Pho bien</option>
-                                {%elif id_filter == 'price_up'%}
-                                <option class="dropdown-item" value="price_down"> Gia giam</option>
-                                <option class="dropdown-item" value="price_up" selected>Gia tang</option>
-                                <option class="dropdown-item" value="most_popular">Pho bien</option>
-                                {%else%}
-                                <option class="dropdown-item" value="price_down"> Gia giam</option>
-                                <option class="dropdown-item" value="price_up">Gia tang</option>
-                                <option class="dropdown-item" value="most_popular" selected>Pho bien</option>
-                                {%endif%}
-                            </select>
-
-                            <button type="submit">Submit</button>
-
-                        </form>
-
-                <!--  -->
-            </div>
-        </div>
-        <!-- Select end -->
-
-
-
-        <!-- Product -->
-        <div class="row gy-4">
-            <div>
-                {%if msg%}
-                <div>{{msg}}</div>
-                {%endif%}
-            </div>
-            {%if data%}
-            {%for item in data%}
-            {%if item %}
-            <div class="col-lg-4 col-md-6">
-
-                <div class="shadow rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid"
-                            src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
-                            alt="">
-                        <small
-                            class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">{{item[0]['room_price']}}đ/Đêm</small>
+    <!-- Select -->
+    <div class="d-flex justify-content-end">
+        <div class="form-floating mb-2 width-select">
+            <form action="/page/filter">
+                <div class="row">
+                    <div class="col-9">
+                        <select class="form-select" name="filter">
+                            {%if id_filter == 'price_down'%}
+                            <option value="price_down" selected>Giá giảm dần</option>
+                            <option value="price_up">Giá tăng dần</option>
+                            <option value="most_popular">Phổ biến</option>
+                            {%elif id_filter == 'price_up'%}
+                            <option value="price_down">Giá giảm dần</option>
+                            <option value="price_up" selected>Giá tăng dần</option>
+                            <option value="most_popular">Phổ biến</option>
+                            {%else%}
+                            <option value="price_down">Giá giảm dần</option>
+                            <option value="price_up">Giá tăng dần</option>
+                            <option value="most_popular" selected>Phổ biến</option>
+                            {%endif%}
+                        </select>
                     </div>
-                    <div class="p-4 mt-2 ">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h5 class="mb-0">{{item[0]['room_name']}}</h5>
-                            <div class="ps-2">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                            </div>
+                    <button class="btn col-3" type="submit">Lọc</button>
+                </div>
+            </form>
+
+            <!--  -->
+        </div>
+    </div>
+    <!-- Select end -->
+
+
+
+    <!-- Product -->
+    <div class="row gy-4">
+        <div>
+            {%if msg%}
+            <div>{{msg}}</div>
+            {%endif%}
+        </div>
+        {%if data%}
+        {%for item in data%}
+        {%if item %}
+        <div class="col-lg-4 col-md-6">
+
+            <div class="shadow rounded overflow-hidden cart-image">
+                <div class="position-relative resize-image">
+                    <img class="" src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
+                        alt="" style="height: 100%;">
+                    <small
+                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">{{item[0]['room_price']}}đ/Đêm</small>
+                </div>
+                <div class="p-4 mt-2 resize-info" style="height: 60%;">
+                    <div class="d-flex justify-content-between mb-3" style="height: 15%">
+                        <h5 class="mb-0">{{item[0]['room_name']}}</h5>
+                        <div class="ps-2">
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
                         </div>
-                        <div class="d-flex mb-3">
-                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                                Bed</small>
-                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                                Bath</small>
-                            <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                        </div>
-                        <p class="text-body mb-3">{{item[0]['room_address']}}</p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn btn-sm btn-primary rounded py-2 px-4"
-                                href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">View Detail</a>
-                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
-                        </div>
+                    </div>
+                    <div class="d-flex mb-3" style="height: 10%">
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
+                            Bed</small>
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
+                            Bath</small>
+                        <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                    </div>
+                    <p class="text-body mb-3 text-limit" style="height: 25%">{{item[0]['room_address']}}</p>
+                    <div class="d-flex justify-content-between mb-1" style="height: 20%">
+                        <a class="btn btn-sm btn-primary rounded py-2 px-4"
+                            href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">Chi tiết</a>
+                        <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Đặt lịch ngay</a>
                     </div>
                 </div>
             </div>
-            {%endif%}
-            {%endfor%}
-            {%endif%}
         </div>
+        {%endif%}
+        {%endfor%}
+        {%endif%}
     </div>
     {%if row_count%}
-    <div><h2>Số lượng: {{row_count}}</h2></div>
+    <div>
+        <h2>Số lượng: {{row_count}}</h2>
+    </div>
     {%endif%}
+
     <!-- pagination -->
-    <nav>
-        <ul>
+    <nav class="mt-4 d-flex justify-content-end">
+        <ul class="pagination">
             {%if prev or next%}
 
-            <li>
+            <li class="page-item">
                 {%if prev >= 1%}
-                <a href="/page/{{prev}}">Previous</a>
+                <a class="page-link" href="/page/{{prev}}">Previous</a>
                 {%endif%}
             </li>
-
-            <li>
-                {% for page in range(page)%}
-                <span> <a href="/page/{{loop.index}}">{{loop.index}}</a></span>
-                {%endfor%}
+            {% for page in range(page)%}
+            <li class="page-item" id="pageActive">
+                <span><a class="page-link" id="numPage" href="/page/{{loop.index}}">{{loop.index}}</a></span>
             </li>
-
-            <li>
-                {% if next <= page %} <a href="/page/{{next}}">Next</a>
+            {%endfor%}
+            <li class="page-item">
+                {% if next <= page %} <a class="page-link" href="/page/{{next}}">Next</a>
                     {%endif%}
             </li>
             {%endif%}
-
         </ul>
-
     </nav>
     <!-- end pagination -->
 </div>

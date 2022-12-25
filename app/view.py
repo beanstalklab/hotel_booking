@@ -2,7 +2,7 @@ import math
 import os
 from flask import Blueprint, redirect, render_template, request, session, url_for, send_from_directory, jsonify
 from app.db_utils import connect_db, get_cursor
-from app.config import HOTEL_IMAGE
+from app.config import HOTEL_IMAGE, USER_IMAGE
 from app.sql import *
 main_blp = Blueprint(
     "view", __name__, template_folder='templates', static_folder='static')
@@ -346,3 +346,8 @@ def filter_local():
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
+
+
+@main_blp.route('/user_image/<name>')
+def user_image(name):
+    return send_from_directory(USER_IMAGE, name)

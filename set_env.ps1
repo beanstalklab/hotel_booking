@@ -8,3 +8,5 @@ $Env:DB_NAME="quanlykhachsan"
 $Env:DB_PASSWORD=""
 $Env:APP_SECRET_KEY="nopassword"
 $Env:HOTEL_IMAGE="D:\\hotel_image"
+
+$Env:USER_IMAGE="D:\\CƠ CỞ WEB\\WEB\\project\\final\\app\\templates\\user"

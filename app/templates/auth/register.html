@@ -13,9 +13,9 @@
         <div id="formContent">
             <!-- Tabs Titles -->
 
-            <h2 class="inactive underlineHover"> <a href="{{ url_for('auth.login') }}"> Sign In </a></h2>
-            <h2 class="active"> Sign Up </h2>
-            <h2 class="inactive underlineHover"> <a href="{{ url_for('view.home') }}"> Home </a></h2>
+            <h2 class="inactive underlineHover"> <a href="{{ url_for('auth.login') }}"> Đăng nhập </a></h2>
+            <h2 class="active"> Đăng ký </h2>
+            <h2 class="inactive underlineHover"> <a href="{{ url_for('view.home') }}"> Trang chủ </a></h2>
 
             <!-- Icon -->
             <div class="fadeIn first">
@@ -25,21 +25,22 @@
 
             <!-- Login Form -->
             <form method="post" action="/register_submit" autocomplete="off">
-                <label for="login"><b>USER EMAIL</b></label>
+                <label for="login"><b>EMAIL</b></label>
+                <br>
                 <input type="email" class="fadeIn second" id='email' placeholder="*****@gmail.com" name='email'> <br>
                 <br>
-                <label for="username"><b>USER NAME</b></label>
-                <input type="text" class="fadeIn second" id='username' placeholder="Enter Username" name='username'>
+                <label for="username"><b>TÊN NGƯỜI DÙNG</b></label>
+                <input type="text" class="fadeIn second" id='username' placeholder="Nguyên Văn A" name='username'>
                 <br>
-                <label for="user-password"><b>PASSWORD</b></label>
+                <label for="user-password"><b>MẬT KHẨU</b></label>
                 <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="********" name="password">
                 <i class="fa-regular fa-eye-slash" id="eye1"></i>
                 <br>
-                <label for="password-repeat"><b>VALIDATE PASSWORD</b></label>
+                <label for="password-repeat"><b>XÁC NHẬN MẬT KHẨU</b></label>
                 <input type="password" class="fadeIn fourth" id="repassword" placeholder="********" name="repassword">
                 <i class="fa-regular fa-eye-slash" id="eye2"></i>
                 <br>
-                <input type="submit" class="fadeIn fourth" value="Create Account">
+                <input type="submit" class="fadeIn fourth" value="Tạo tài khoản">
             </form>
             <div>
                 {%with messages = get_flashed_messages()%}
@@ -53,7 +54,7 @@
 
             <!-- Remind Passowrd -->
             <div id="formFooter">
-                <a class="underlineHover" href="{{ url_for('auth.resetpass') }}">Forgot Password?</a>
+                <a class="underlineHover" href="{{ url_for('auth.resetpass') }}">Quên mật khẩu?</a>
             </div>
 
         </div>
