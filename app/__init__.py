@@ -4,7 +4,7 @@ from flask import Flask
 def create_app():
     app = Flask(__name__)
     app.config.from_object("app.config")
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
     register_blueprints(app)
     return app
 

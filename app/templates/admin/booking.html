@@ -86,6 +86,22 @@
                 </div>
             </div>
             <div class="row">
+                <label class="col-sm-2 label-on-left">Dịch vụ</label>
+                <div class="col-sm-5">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label">200.000đ</label>
+                        <input type="number" name = 'service' id = 'karaoke' value="0"> karaoke
+                    </div>
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label">500.000đ</label>
+                        <input type="number" name="service" id = 'bbq' value="0"> Tiệc nướng BBQ
+                    </div>
+                    <div class="suggestionsBox" id="suggestionP">
+                        <div class="suggestionP" id="suggestionP"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <label class="col-sm-2 label-on-left">Chọn phòng</label>
                 <div class="col-sm-2">
                     <div class="form-group label-floating column-sizing">
@@ -95,6 +111,13 @@
                     </div>
                     <div class="suggestionsBox"  id="suggestionR">
                         <div class="suggestionR" style="position: absolute;" id="suggestionR"></div>
+                    </div>
+                </div>
+                <label class="col-sm-2 label-on-left">Tổng tiền</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                            <input type="number" id = 'price' oninput="caculate()" readonly>
                     </div>
                 </div>
             </div>
@@ -121,6 +144,21 @@
                 $('#suggestionR').removeClass('load');
             });
         }
+    }
+    function caculate() {
+        var karaoke = document.getElementById('karaoke').value;
+        var bbq = document.getElementById('bbq').value;
+        var checkout = document.getElementById('checkout').value;
+        var checkin = document.getElementById('checkin').value;
+        var new_checkin = Date(checkin);
+        var new_checkout = Date(checkout);
+        var diff = new_checkout - new_checkin;
+        var days = Math.round(diff/(1000*60*60*24))
+        $(days, karaoke, bbq,).addClass('caculate');
+        $.post("/caculate_ajax", {karaoke: "" + karaoke + "", bbq: "" + bbq + "", days: "" + days + ""}, function(data) {
+            $('#price').fadeIn();
+            $('#price').val(data);
+        })
     }
     function room_fill(thisValue) {
         $('#room').val(thisValue);

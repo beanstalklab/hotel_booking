@@ -13,11 +13,7 @@
     color: #fff;
     background-color:#CE877F;
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+
 table.dataTable {
     clear: both;
     margin-top: 6px !important;
