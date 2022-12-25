@@ -3,7 +3,6 @@
 <!-- <h3><form action="" method="post" >
             <input type="text" >
         </form></h3> -->
-
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -83,8 +82,28 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        {%if show_option == 'hoatdong'%}
+                                        {%if show_option == 'daxoa'%}
+                                        <form name="restore" action="/enable_room">
+                                            {%for row in data%}
+                                            <tr>
+                                                <td>{{row.room_id}}</td>
+                                                <td>{{row.room_name}}</td>
+                                                <td>{{row.room_address}}</td>
+                                                <td>{{row.room_performance}}</td>
+                                                <td>{{row.room_type}}</td>
+                                                <td>{{row.room_price}}</td>
+                                                <td>{{row.room_province}}</td>
+                                                <td>{{row.room_isdelete}}</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" name="restore" value="{{row.room_id}}">
+                                                </td>
+                                            </tr>
+                                            {%endfor%}
+                                            <input type="submit" value="Khôi phục" class="btn btn-fill btn-rose">
+                                        </form>
+                                        {%else%}
                                         {%for row in data%}
+
                                         <tr>
                                             <td>{{row.room_id}}</td>
                                             <td>{{row.room_name}}</td>
@@ -102,26 +121,6 @@
                                             </td>
                                         </tr>
                                         {%endfor%}
-                                        {%else%}
-                                        <form name="restore" action="/enable_room">
-                                            {%for row in data%}
-                                            <tr>
-                                                <td>{{row.room_id}}</td>
-                                                <td>{{row.room_name}}</td>
-                                                <td>{{row.room_address}}</td>
-                                                <td>{{row.room_performance}}</td>
-                                                <td>{{row.room_type}}</td>
-                                                <td>{{row.room_price}}</td>
-                                                <td>{{row.room_province}}</td>
-                                                <td>{{row.room_isdelete}}</td>
-                                                <td class="text-center">
-                                                    <input type="checkbox" name="restore" value="{{row.room_id}}">
-                                                </td>
-                                            </tr>
-                                            {%endfor%}
-                                            <input type="submit" value="Submit" class="btn btn-fill btn-rose">
-                                        </form>
-
                                         {%endif%}
                                     </tbody>
                                 </table>
@@ -136,6 +135,31 @@
             </div>
             <!-- end row -->
         </div>
+        <nav>
+            <ul class="pagination pagination-info">
+                {%if prev or next%}
+                {%if prev >= 1%}
+                <li>
+
+                    <a href="/manage_rooms/{{prev}}">Previous</a>
+
+                </li>
+                {%endif%}
+                <li>
+                    {% for page in range(page)%}
+                    <span> <a href="/manage_rooms/{{loop.index}}">{{loop.index}}</a></span>
+                    {%endfor%}
+                </li>
+                {% if next <= page %} <li>
+                    <a href="/manage_rooms/{{next}}">Next</a>
+
+                    </li>
+                    {%endif%}
+                    {%endif%}
+
+            </ul>
+
+        </nav>
     </div>
 
     {%include 'footer_admin.html'%}

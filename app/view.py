@@ -131,7 +131,7 @@ def room(page):
 
     try:
         cursor.execute(
-        'SELECT * FROM phong where room_isdelete = 1 ORDER BY room_id DESC LIMIT %s OFFSET %s', (limit, offset,))
+        'SELECT * FROM phong where room_isdelete = 1 ORDER BY room_id ASC LIMIT %s OFFSET %s', (limit, offset,))
         conn.commit()
     except:
         conn.rollback()
@@ -149,10 +149,14 @@ def room(page):
         except:
             conn.rollback()
         img = cursor.fetchone()
-        index = img[0].index('/')
-        img = {'folder': img[0][0:index],
-               'name': img[0][index+1:], 'rank': img[1]}
-        final_data.append((temp_data, img))
+        
+        if img:
+            index = img[0].index('/')
+            img = {'folder': img[0][0:index],
+                'name': img[0][index+1:], 'rank': img[1]}
+            final_data.append((temp_data, img))
+        else:
+            continue
     conn.close()
     return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev)
     
@@ -172,7 +176,7 @@ def detail(room_id):
     data = cursor.fetchone()
 
     data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
-                    'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
+                    'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_province': data[6]}
     try:
         cursor.execute(
             'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
@@ -181,7 +185,13 @@ def detail(room_id):
         conn.rollback()
     number_img = cursor.rowcount
     imgs = cursor.fetchall()
-    
+    try:
+        cursor.execute(
+            'SELECT province_name from tinhthanh where province_id = % s;', (data['room_province'],))
+        conn.commit()
+    except:
+        conn.rollback()
+    province = cursor.fetchone()
     list_img = []
     for img in imgs:
 
@@ -189,46 +199,18 @@ def detail(room_id):
         img = {'folder': img[0][0:index],
             'name': img[0][index+1:], 'rank': img[1]}
         list_img.append(img)
+    try: 
+        cursor.execute('''select tiennghi.ten_dich_vu, ql_tiennghi.soluong from ql_tiennghi 
+                        inner join tiennghi on tiennghi.id = ql_tiennghi.id_tiennghi where ql_tiennghi.id_phong = %s''', (room_id, ))
+        mota = cursor.fetchall()
+        cursor.execute('''select room_note from loaiphong where room_id = %s''', (room_id, ))
+        loaiphong = cursor.fetchone()
+        print(mota, loaiphong, province)
+    except:
+        print('errro')
     conn.close()
-    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img)
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province)
 
-
-@main_blp.route('/search', methods=['GET', 'POST'])
-def search():
-    conn = connect_db()
-    cursor = get_cursor(conn)
-    if request.method == 'POST':
-        search_word = request.form['query']
-        if search_word:
-            try:
-                cursor.execute('select * from phong order by room_id')
-                conn.commit()
-            except:
-                conn.rollback()
-        else:
-            try:
-                cursor.execute('select * from phong where room_name like "%{}%" or room_address like "%{}%" or room_performence like "%{}%" order by room_id', (search_word, search_word, search_word,))
-            except:
-                conn.rollback()
-    datas = cursor.fetchall()
-    final_data = []
-    for data in datas:
-        temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
-                    'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5]}
-        room_id = int(data[0])
-        try:
-            cursor.execute(
-                'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
-            conn.commit()
-        except:
-            conn.rollback()
-        numrows =int(cursor.rowcount)
-        img = cursor.fetchone()
-        index = img[0].index('/')
-        img = {'folder': img[0][0:index],
-            'name': img[0][index+1:], 'rank': img[1]}
-        final_data.append((temp_data, img))
-    return jsonify({'htmlrespone': render_template('filter.html', data=final_data, numrows = numrows)})
 
 @main_blp.route('/page/filter', defaults={'page': 1})
 @main_blp.route('/page/filter/<int:page>', methods=['GET', 'POST'])
@@ -294,10 +276,14 @@ def room_filter(page):
         except:
             conn.rollback()
         img = cursor.fetchone()
-        index = img[0].index('/')
-        img = {'folder': img[0][0:index],
-               'name': img[0][index+1:], 'rank': img[1]}
-        final_data.append((temp_data, img))
+        
+        if img:
+            index = img[0].index('/')
+            img = {'folder': img[0][0:index],
+                'name': img[0][index+1:], 'rank': img[1]}
+            final_data.append((temp_data, img))
+        else:
+            continue
     conn.close()
     return render_template('room.html', data=final_data, page=total_page, next=next, prev=prev,id_filter=id_filter)
 @main_blp.route('/filter_local')
@@ -319,22 +305,27 @@ def filter_local():
             row_count = cursor.rowcount
             datas = cursor.fetchall()
             final_data = []
-        
+            conn.close()
             for data in datas:
+                conn = connect_db()
+                cursor = get_cursor(conn)
                 temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                             'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
                 room_id = int(data[0])
                 try:
                     cursor.execute(
                         'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
-                    conn.commit()
+                    
                 except:
                     conn.rollback()
                 img = cursor.fetchone()
-                index = img[0].index('/')
-                img = {'folder': img[0][0:index],
-                    'name': img[0][index+1:], 'rank': img[1]}
-                final_data.append((temp_data, img))
+                if img:
+                    index = img[0].index('/')
+                    img = {'folder': img[0][0:index],
+                        'name': img[0][index+1:], 'rank': img[1]}
+                    final_data.append((temp_data, img))
+                else:
+                    continue
                 conn.close()
             return render_template('room.html', data=final_data,  id_filter='most_popular', row_count=row_count)
         except:

@@ -33,6 +33,8 @@ def login_submit():
             session['role_id'] = row[4]
             cursor.close()
             conn.close()
+            if row[4] == 0:
+                return redirect('/manage_rooms')
             return redirect('/home')
         else:
             return redirect('/login')
@@ -54,6 +56,8 @@ def login_submit():
                 session['id'] = account[0]
                 session['username'] = account[2]
                 session['role_id'] = account[4]
+                if account[4] == 0:
+                    return redirect('/manage_rooms')
                 if remember:
                     resp = make_response(redirect('/home'))
                     resp.set_cookie('email', account[1], max_age=COOKIE_TIME_OUT)
@@ -61,6 +65,7 @@ def login_submit():
                     resp.set_cookie('rem', 'checked', max_age=COOKIE_TIME_OUT)
                     return resp
                 flash("Login successfully")
+                print(session['role_id'])
                 return redirect('/home')
             else:
                 flash('Invalid Password')
@@ -78,17 +83,25 @@ def resetpass():
         new_password = request.form['password']
         email = request.form['email']
         repeat_password = request.form['repassword']
-        if (repeat_password ==  new_password):
-            conn = connect_db()
-            cursor = get_cursor(conn)
-            cursor.execute(account['reset_password'],
-                        (generate_password_hash(new_password), email, ))
-            msg = 'You have changed password successfully'
-            conn.commit()
-            return redirect(url_for('auth.login'))
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        cursor.execute('select * from taikhoan where email = %s', (email, ))
+        check_account = cursor.fetchone()
+        if check_account:
+            if (repeat_password ==  new_password):
+                conn = connect_db()
+                cursor = get_cursor(conn)
+                cursor.execute(account['reset_password'],
+                            (generate_password_hash(new_password), email, ))
+                msg = 'Thay đổi mật khẩu thành công'
+                conn.commit()
+                return redirect(url_for('auth.login'))
 
+            else:
+                flash('Mật khẩu chưa khớp')
         else:
-            msg = 'Passwords do not match !'
+            flash('Tài khoản không tồn tại')
+            return redirect(url_for('auth.resetpass'))
     return render_template('auth/reset_password.html', msg=msg, title='Reset Password Page')
 
 @auth_blp.route('/register')

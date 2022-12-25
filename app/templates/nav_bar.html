@@ -90,9 +90,14 @@
                             </a>
                             <div class="dropdown-menu">
                                 {% if session.id %}
+                                {% if session.role_id != 0%}
                                 <a href="{{url_for('view.profile')}}" class="dropdown-item">Thông tin cá nhân</a>
                                 <a href="{{url_for('auth.logout')}}" class="dropdown-item">Đăng xuất</a>
-    
+                                {%else%}
+                                <a href="{{url_for('view.profile')}}" class="dropdown-item">Thông tin cá nhân</a>
+                                <a href="{{url_for('adview.room')}}" class="dropdown-item">Trang quản lý</a>
+                                <a href="{{url_for('auth.logout')}}" class="dropdown-item">Đăng xuất</a>
+                                {%endif%}
                                 {% else %}
                                 <a href="{{ url_for('auth.login') }}" class="dropdown-item">Đăng nhập</a>
                                 <a href="{{ url_for('auth.register') }}" class="dropdown-item">Đăng ký</a>
