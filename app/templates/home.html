@@ -52,107 +52,14 @@
     </div>
     <!-- End Carousel -->
 
-    <!-- Booking Start -->
-    <form autocomplete="off" action="">
-        <div class="container-fluid">
-            <div class="background-booking shadow m-5 p-4">
-                <div class="row g-2 align-items-center">
-                    <div class="col-md-10">
-                        <div class="row g-2">
-                            <!-- Set Local -->
-                            <div class="col-md-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="input-search" placeholder="local..">
-                                    <label for="input-search">
-                                        <i class="fa-solid fa-location-dot"></i> Select local
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- End Set Local -->
-                            <div class="col-md-6 d-flex justify-content-center p-0">
-                                <div class="row input-daterange" id="flight-datepicker">
-                                    <!-- Set Check In -->
-                                    <div class="col-6 px-1">
-                                        <div class="form-floating">
-                                            <input type="text" class="datepicker form-control" id="start-date"
-                                                name="start" placeholder="Check In" data-date-format="DD, MM d" />
-
-                                            <label for="start-date">
-                                                <i class="fa-solid fa-calendar-days"></i> Check Int
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <!-- End Set Check In -->
-
-                                    <!-- Set Check Out -->
-                                    <div class="col-6 px-1">
-                                        <div class="form-floating">
-                                            <input type="text" class="datepicker form-control" id="end-date" name="end"
-                                                placeholder="Check Out" data-date-format="DD, MM d" />
-                                            <label for="end-date">
-                                                <i class="fa-solid fa-calendar-days"></i> Check Out
-                                            </label>
-
-                                        </div>
-                                    </div>
-                                    <!-- End Set Check Out -->
-                                </div>
-                            </div>
-
-
-                            <!-- Customer Type -->
-                            <div class="col-md-3">
-                                <div class="form-floating">
-                                    <input type="text" class="datepicker form-control" id="floatingsSelectGrid1"
-                                        placeholder="people..">
-                                    <label for="floatingsSelectGrid1">
-                                        <i class="fa-solid fa-user-check"></i> people
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- End Customer Type -->
-                        </div>
-                    </div>
-
-                    <!-- Submit booking-->
-                    <div class="col-md-2">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-lg" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop">
-                            Submit
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
-                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Search</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        AHIHI
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Booking</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Submit booking -->
-                </div>
-            </div>
-        </div>
-
-    </form>
-    <!-- Booking End -->
+    
 
     <!-- Room Start -->
+    <div class="text-center">
+        <h2 class="section-title text-center text-primary text-uppercase">Our Rooms</h2>
+        <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
+    </div>
+
     <!-- Product -->
     <div class="row gy-4">
         {%for item in data%}

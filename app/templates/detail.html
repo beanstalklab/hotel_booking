@@ -151,7 +151,7 @@
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                             <div class="row">
                                 <div class="col-auto">
-                                    <small>{{data['room_price']}}đ/Đêm</small>
+                                    <small id="price">{{data['room_price']}}</small> <span>đ/đêm</span>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-star"></i>
@@ -160,80 +160,98 @@
                             </div>
 
                             <div class="row g-1">
-                                <div class="col-12 d-flex justify-content-center p-0">
-                                    <div class="row input-daterange" id="flight-datepicker">
-                                        <!-- Set Check In -->
-                                        <div class="col-6 px-1">
-                                            <div class="form-floating">
-                                                <input type="text" class="datepicker form-control" id="start-date"
-                                                    name="start" placeholder="Check In" data-date-format="DD, MM d" />
-
-                                                <label for="start-date">
-                                                    <i class="fa-solid fa-calendar-days"></i> Ngày đến
-                                                </label>
+                                <form action="">
+                                    <div class="col-12 d-flex justify-content-center p-0">
+                                        <div class="row input-daterange" id="flight-datepicker">
+                                            <!-- Set Check In -->
+                                            <div class="col-6 px-1">
+                                                <div class="form-floating">
+                                                    <input type="text" class="datepicker form-control"
+                                                        id="start-date" name="start" placeholder="Check In" />
+                                                    <label for="start-date">
+                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đến
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!-- End Set Check In -->
+                                            <!-- End Set Check In -->
 
-                                        <!-- Set Check Out -->
-                                        <div class="col-6 px-1">
-                                            <div class="form-floating">
-                                                <input type="text" class="datepicker form-control" id="end-date"
-                                                    name="end" placeholder="Check Out" data-date-format="DD, MM d" />
-                                                <label for="end-date">
-                                                    <i class="fa-solid fa-calendar-days"></i> Ngày đi
-                                                </label>
+                                            <!-- Set Check Out -->
+                                            <div class="col-6 px-1">
+                                                <div class="form-floating">
+                                                    <input type="text" class="datepicker form-control"
+                                                        id="end-date" name="end" placeholder="Check Out" />
+                                                    <label for="end-date">
+                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đi
+                                                    </label>
 
+                                                </div>
                                             </div>
+                                            <!-- End Set Check Out -->
                                         </div>
-                                        <!-- End Set Check Out -->
+
+
                                     </div>
-                                </div>
-                                <!-- End Check out -->
-
+                                    <!-- End Check out -->
+                                </form>
                                 <!-- Service -->
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseService">
-                                        Dịch vụ
+                                        Dịch vụ đi kèm
                                     </button>
-
                                     <div class="collapse" id="collapseService">
                                         <div class="card card-body">
                                             <form action="">
                                                 <div class="list-group">
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service1" type="checkbox" value="">
                                                         Xe đưa đón
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service2" type="checkbox" value="">
                                                         Thuê xe tự lái
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service3" type="checkbox" value="">
                                                         Bảo mẫu
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service4" type="checkbox" value="">
                                                         Chăm sóc thú cưng
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service5" type="checkbox" value="">
                                                         Vệ sĩ
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service6" type="checkbox" value="">
                                                         phòng Gym
                                                     </label>
                                                 </div>
-                                                <button class="btn btn-primary" type="reset"> Đặt lại </button>
+                                                <button class="btn btn-primary" type="reset" onclick="clear()"> Đặt lại </button>
                                             </form>
                                         </div>
                                     </div>
 
                                 </div>
                                 <!-- End service -->
+
+                                <div type="button" class="btn" onclick="calc()">ghi nhận</div>
+
+                                <div class="row row-cols-2">
+                                    <div class="col">{{data['room_price']}} x 2 đêm: </div>
+                                    <div class="col" id="calc-room">0</div>
+                                    
+
+                                    <div class="col">Phí dịch vụ:</div>
+                                    <div class="col" id="calc-service">$0</div>
+                                </div>
+                                <hr class="dropdown-divider">
+
+                                <div class="row row-cols-2">
+                                    <div class="col">Tổng trước thuế:</div>
+                                    <div class="col" id="calc-all"></div>
+                                </div>
 
                                 <!-- Submit booking-->
                                 <div class="col-12 my-3">
@@ -257,6 +275,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     XÁC NHẬN ĐẶT PHÒNG/KHÁCH SẠN
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -269,35 +288,13 @@
                                 </div>
                                 <!-- End Submit booking -->
 
-                                <div class="row row-cols-2">
-                                    <div class="col">$1.153 x 2 đêm </div>
-                                    <div class="col">$2.306</div>
-                                    <div class="col">Phí dịch vụ</div>
-                                    <div class="col">$0</div>
-                                </div>
-                                <hr class="dropdown-divider">
 
-                                <div class="row row-cols-2">
-                                    <div class="col">Tổng trước thuế</div>
-                                    <div id="money" class="col"></div>
-                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('btn-lg').click(function () {
-                    var checkin = $('#checkin');
-                    var checkout = $('#checkout');
-                    var day = checkin - checkout;
-                    $('#money').val(day * 1000);
-                })
-
-            })
-        </script>
         <hr class="dropdown-divider">
         <div>
             <h1>Danh Gia</h1>
@@ -307,6 +304,8 @@
 </div>
 <!-- End Info -->
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
+<script src="{{url_for('static', filename='js/calculate.js')}}"></script>
+
 
 {%include 'footer.html'%}
 {%endblock%}

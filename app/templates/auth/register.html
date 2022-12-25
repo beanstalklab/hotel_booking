@@ -26,45 +26,26 @@
             <!-- Login Form -->
             <form method="post" action="/register_submit" autocomplete="off">
                 <label for="login"><b>USER EMAIL</b></label>
-<<<<<<< HEAD
                 <input type="email" class="fadeIn second" id='email' placeholder="*****@gmail.com" name='email'> <br>
-
-=======
-                <input type="email" class="fadeIn second" id='email' placeholder="Enter Email" name='email'>
                 <br>
->>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 <label for="username"><b>USER NAME</b></label>
                 <input type="text" class="fadeIn second" id='username' placeholder="Enter Username" name='username'>
                 <br>
                 <label for="user-password"><b>PASSWORD</b></label>
-<<<<<<< HEAD
-                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="********"
-                    name="password"><br>
-
-                <label for="password-repeat"><b>VALIDATE PASSWORD</b></label>
-                <input type="password" class="fadeIn fourth" id="repassword" placeholder="********"
-                    name="repassword"><br>
-
-=======
-                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="Enter Password" name="password">
+                <input type="password" class="fadeIn fourth" id="password" minlength="8" placeholder="********" name="password">
                 <i class="fa-regular fa-eye-slash" id="eye1"></i>
                 <br>
-                <label for="password-repeat"><b>REPEAT PASSWORD</b></label>
-                <input type="password" class="fadeIn fourth" id="repassword" placeholder="Repeat Password" name="repassword">
+                <label for="password-repeat"><b>VALIDATE PASSWORD</b></label>
+                <input type="password" class="fadeIn fourth" id="repassword" placeholder="********" name="repassword">
                 <i class="fa-regular fa-eye-slash" id="eye2"></i>
                 <br>
->>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 <input type="submit" class="fadeIn fourth" value="Create Account">
             </form>
             <div>
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-<<<<<<< HEAD
                 <div class = 'fadeIn fourth' style="color: red; motion-rotation: 70minutes;" role="alert">{{messages[0]}}</div>
-=======
-                <div class='alert alert-error' role="alert">{{messages}}</div>
->>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
                 {%endfor%}
                 {%endif%}
                 {%endwith%}
