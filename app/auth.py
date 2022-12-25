@@ -158,7 +158,7 @@ def edit_profile():
     except:
         conn.rollback()
     img = cursor.fetchone()
-    print(img[2])
+    # print(img[2])
     if img:
         index = img[2].index('/')
         img = {'folder': img[2][0:index],
