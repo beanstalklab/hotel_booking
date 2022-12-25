@@ -25,7 +25,7 @@
 
             <div class="mx-4">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>{%if province%} {{province[0]}} 
+                <span>{%if province%} {{province[0]}}
                     {%else%} Vị trí {%endif%}
                 </span>
             </div>
@@ -98,7 +98,7 @@
                     <li>
                         {{loaiphong[0]}}
                     </li>
-                    {%endif%} 
+                    {%endif%}
                     {%if mota%}
                     {%for row in mota%}
                     <li> {{row.1}} {{row.0}} </li>
@@ -156,9 +156,10 @@
         <!-- right (BOOKING) -->
         <div class="col-md-5">
             <div class="mt-5">
-                <h1 class=" d-flex justify-content-md-center">Booking</h1>
+                <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
                 <div class=" d-flex justify-content-center">
-                    <form autocomplete="off" action="">
+                    <form autocomplete="off" onsubmit="fill_calc()"
+                        action="{{url_for('auth.customer_booking', id=data['room_id'], user = session.id)}}">
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                             <div class="row">
                                 <div class="col-auto">
@@ -171,39 +172,37 @@
                             </div>
 
                             <div class="row g-1">
-                                <form action="">
-                                    <div class="col-12 d-flex justify-content-center p-0">
-                                        <div class="row input-daterange" id="flight-datepicker">
-                                            <!-- Set Check In -->
-                                            <div class="col-6 px-1">
-                                                <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control"
-                                                        id="start-date" name="start" placeholder="Check In" />
-                                                    <label for="start-date">
-                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đến
-                                                    </label>
-                                                </div>
+                                <div class="col-12 d-flex justify-content-center p-0">
+                                    <div class="row input-daterange" id="flight-datepicker">
+                                        <!-- Set Check In -->
+                                        <div class="col-6 px-1">
+                                            <div class="form-floating">
+                                                <input type="text" class="datepicker form-control" id="start-date"
+                                                    name="start" placeholder="Check In" />
+                                                <label for="start-date">
+                                                    <i class="fa-solid fa-calendar-days"></i> Ngày đến
+                                                </label>
                                             </div>
-                                            <!-- End Set Check In -->
-
-                                            <!-- Set Check Out -->
-                                            <div class="col-6 px-1">
-                                                <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control"
-                                                        id="end-date" name="end" placeholder="Check Out" />
-                                                    <label for="end-date">
-                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đi
-                                                    </label>
-
-                                                </div>
-                                            </div>
-                                            <!-- End Set Check Out -->
                                         </div>
+                                        <!-- End Set Check In -->
 
+                                        <!-- Set Check Out -->
+                                        <div class="col-6 px-1">
+                                            <div class="form-floating">
+                                                <input type="text" class="datepicker form-control" id="end-date"
+                                                    name="end" placeholder="Check Out" />
+                                                <label for="end-date">
+                                                    <i class="fa-solid fa-calendar-days"></i> Ngày đi
+                                                </label>
 
+                                            </div>
+                                        </div>
+                                        <!-- End Set Check Out -->
                                     </div>
-                                    <!-- End Check out -->
-                                </form>
+
+
+                                </div>
+                                <!-- End Check out -->
                                 <!-- Service -->
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
@@ -212,66 +211,56 @@
                                     </button>
                                     <div class="collapse" id="collapseService">
                                         <div class="card card-body">
-                                            <form action="">
-                                                <div class="list-group">
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service1" type="checkbox" value="">
-                                                        Xe đưa đón
-                                                    </label>
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service2" type="checkbox" value="">
-                                                        Thuê xe tự lái
-                                                    </label>
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service3" type="checkbox" value="">
-                                                        Bảo mẫu
-                                                    </label>
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service4" type="checkbox" value="">
-                                                        Chăm sóc thú cưng
-                                                    </label>
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service5" type="checkbox" value="">
-                                                        Vệ sĩ
-                                                    </label>
-                                                    <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service6" type="checkbox" value="">
-                                                        phòng Gym
-                                                    </label>
-                                                </div>
-                                                <button class="btn btn-primary" type="reset" onclick="clear()"> Đặt lại </button>
-                                            </form>
+                                            <div class="list-group">
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" id="service1" type="checkbox"
+                                                        value="">
+                                                    Tiệc nướng BBQ
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" id="service2" type="checkbox"
+                                                        value="">
+                                                    Loa kéo Karaoke
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" id="service3" type="checkbox"
+                                                        value="">
+                                                    Tổ chức sự kiện
+                                                </label>
+
+                                            </div>
+                                            <button class="btn btn-primary" type="reset" onclick="clear()"> Đặt lại
+                                            </button>
                                         </div>
                                     </div>
 
                                 </div>
                                 <!-- End service -->
 
-                                <div type="button" class="btn" onclick="calc()">ghi nhận</div>
+                                <div type="button" class="btn" onclick="calc()">Ghi nhận</div>
 
                                 <div class="row row-cols-2">
-                                    <div class="col">{{data['room_price']}} x 2 đêm: </div>
+                                    <div class="col">{{data['room_price']}} x <span id="days"></span> </div>
                                     <div class="col" id="calc-room">0</div>
-                                    
+
 
                                     <div class="col">Phí dịch vụ:</div>
-                                    <div class="col" id="calc-service">$0</div>
+                                    <div class="col" id="calc-service">0đ</div>
                                 </div>
                                 <hr class="dropdown-divider">
 
                                 <div class="row row-cols-2">
                                     <div class="col">Tổng trước thuế:</div>
-                                    <div class="col" id="calc-all"></div>
+                                     <input type="hidden" id="calc-all" name="calc-all" />
                                 </div>
-
-                                <!-- Submit booking-->
                                 <div class="col-12 my-3">
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop" style="width: 100%;">
                                         <span>Booking</span>
                                     </button>
-
+                                    {%if session.id %}
+                                    <!-- Submit booking-->
                                     <!-- Modal -->
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
@@ -279,7 +268,7 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Search
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo
                                                     </h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
@@ -298,22 +287,55 @@
                                     </div>
                                 </div>
                                 <!-- End Submit booking -->
+                                {%else%}
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo đăng
+                                                    nhập
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn chưa đăng nhập rồi! Đăng nhập trước nhé
 
-
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <a class="btn btn-secondary" data-bs-dismiss="modal"
+                                                    href="{{url_for('auth.login')}}">Đăng nhập</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            {%endif%}
+
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
-        <hr class="dropdown-divider">
-        <div>
-            <h1>Danh Gia</h1>
-        </div>
     </div>
+    <hr class="dropdown-divider">
+    <div>
+        <h1>Danh Gia</h1>
+    </div>
+</div>
 
 </div>
 <!-- End Info -->
+<script>
+    function fill_calc() {
+        document.getElementById('calc-all').value = document.getElementById('calc-all').innerHTML;
+    }
+</script>
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 

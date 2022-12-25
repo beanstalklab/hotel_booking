@@ -3,70 +3,38 @@ function service() {
     var service1 = document.querySelector("input[id=service1]");
     var service2 = document.querySelector("input[id=service2]");
     var service3 = document.querySelector("input[id=service3]");
-    var service4 = document.querySelector("input[id=service4]");
-    var service5 = document.querySelector("input[id=service5]");
-    var service6 = document.querySelector("input[id=service6]");
 
 
     service1.addEventListener('change', function () {
         if (this.checked) {
-            sum += 100
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum += 500000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         } else {
-            sum -= 100
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum -= 500000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         }
     });
 
     service2.addEventListener('change', function () {
         if (this.checked) {
-            sum += 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum += 300000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         } else {
-            sum -= 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum -= 300000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         }
     });
 
     service3.addEventListener('change', function () {
         if (this.checked) {
-            sum += 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum += 1000000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         } else {
-            sum -= 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
+            sum -= 1000000
+            document.getElementById("calc-service").innerHTML = sum + "đ";
         }
     });
 
-    service4.addEventListener('change', function () {
-        if (this.checked) {
-            sum += 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        } else {
-            sum -= 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        }
-    });
-
-    service5.addEventListener('change', function () {
-        if (this.checked) {
-            sum += 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        } else {
-            sum -= 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        }
-    });
-
-    service6.addEventListener('change', function () {
-        if (this.checked) {
-            sum += 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        } else {
-            sum -= 200
-            document.getElementById("calc-service").innerHTML = sum + "$";
-        }
-    });
 }
 
 service()
@@ -83,7 +51,7 @@ function calc() {
     const price = document.getElementById('price').innerText;
 
     const days = numOfDays(starDay, endDay)
-
+    document.getElementById("days").innerHTML = days + " đêm";
     document.getElementById("calc-room").innerHTML = days * price + "đ";
     document.getElementById("calc-all").innerHTML = days * price + "đ";
     document.getElementById("calc-all").innerHTML = days * price + sum;
@@ -98,7 +66,7 @@ function numOfDays(starDay, endDay) {
     let millisBetween = Number(start.getTime() - end.getTime());
 
     let days = millisBetween / (1000 * 3600 * 24);
-
+    document.getElementById("days").innerHTML = days;
     return Math.round(Math.abs(days));
 }
 

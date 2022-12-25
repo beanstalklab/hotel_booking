@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash, make_response
@@ -140,7 +141,43 @@ def register_submit():
             msg = 'Đăng ký tài khoản thành công'
             return redirect('/login', msg)
     return redirect('/register')
+@auth_blp.route('/customer_booking/<id>/<user>')
+def customer_booking(id, user):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    value = request.args.get('calc-all')
+    checkin = request.args.get('start')
+    checkout = request.args.get('end')
 
+    checkout = get_date(checkout)
+    checkin = get_date(checkin)
+    cursor.execute('select customer_id from khachhang where account_id = %s', (user,))
+    customer = cursor.fetchone()
+    print(value)
+    if not value:
+        return redirect(url_for('view.detail', room_id = id))
+    print(customer[0], checkin, checkout)
+    # cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], id, checkin, checkout))
+    # conn.commit()
+    # print('10')
+    # cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], id, checkin, checkout, ))
+    # id_datphong = cursor.fetchone()
+    # print(id_datphong)
+    # cursor.execute("insert into ql_datphong values (`bookroom_id`, `tongtien`,`tiephaitra`,`tinhtrang` ) VALUES ({},{}, {},{})".format(id_datphong[0], id, value, value))
+    # conn.commit()
+    # print('Thanh cong')
+    # conn.close()
+    # try:
+        
+    #     return redirect(url_for('view.detail', room_id = id))
+    # except:
+    #     print('That bai')
+    #     conn.rollback()
+    #     conn.close()
+    return (redirect('/home'))
+def get_date(date):
+    temp = date.split('/')
+    return  temp[2] +"-"+ temp[0] + "-"+ temp[1]
 @auth_blp.route('/edit_profile')
 def edit_profile():
     account_id = session['id']
