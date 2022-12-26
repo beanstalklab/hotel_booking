@@ -25,7 +25,7 @@
 
             <div class="mx-4">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>{%if province%} {{province[0]}} 
+                <span>{%if province%} {{province[0]}}
                     {%else%} Vị trí {%endif%}
                 </span>
             </div>
@@ -91,14 +91,14 @@
     <div class="row p-0">
         <!-- left -->
         <div class="col-md-7">
-            <h1>Mo ta</h1>
+            <h1>Mô tả</h1>
             <div>
                 <ul>
                     {%if loaiphong %}
                     <li>
                         {{loaiphong[0]}}
                     </li>
-                    {%endif%} 
+                    {%endif%}
                     {%if mota%}
                     {%for row in mota%}
                     <li> {{row.1}} {{row.0}} </li>
@@ -112,7 +112,7 @@
             <hr class="dropdown-divider">
 
             <div>
-                <h2>Tien Nghi</h2>
+                <h2>Tiện nghi</h2>
                 <div>
                     <i class="fas fa-water"></i>
                     <span>Hướng nhìn ra đại dương</span>
@@ -137,10 +137,10 @@
 
             <hr class="dropdown-divider">
             <div>
-                <h2>Quyen Loi</h2>
+                <h2>Quyền lợi</h2>
                 <div>
                     <i class="fas fa-user-shield"></i>
-                    <span>An Ninh Tuyet Doi</span>
+                    <span>An ninh tuyệt đối</span>
                 </div>
                 <div>
                     <i class="far fa-thumbs-up"></i>
@@ -156,7 +156,7 @@
         <!-- right (BOOKING) -->
         <div class="col-md-5">
             <div class="mt-5">
-                <h1 class=" d-flex justify-content-md-center">Booking</h1>
+                <h1 class=" d-flex justify-content-md-center">ĐẶT LỊCH NGAY</h1>
                 <div class=" d-flex justify-content-center">
                     <form autocomplete="off" action="">
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
@@ -166,7 +166,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-star"></i>
-                                    <small>Rating: 4,69 </small>
+                                    <small>Đánh giá: 4,69 </small>
                                 </div>
                             </div>
 
@@ -177,8 +177,8 @@
                                             <!-- Set Check In -->
                                             <div class="col-6 px-1">
                                                 <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control"
-                                                        id="start-date" name="start" placeholder="Check In" />
+                                                    <input type="text" class="datepicker form-control" id="start-date"
+                                                        name="start" placeholder="Check In" />
                                                     <label for="start-date">
                                                         <i class="fa-solid fa-calendar-days"></i> Ngày đến
                                                     </label>
@@ -189,8 +189,8 @@
                                             <!-- Set Check Out -->
                                             <div class="col-6 px-1">
                                                 <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control"
-                                                        id="end-date" name="end" placeholder="Check Out" />
+                                                    <input type="text" class="datepicker form-control" id="end-date"
+                                                        name="end" placeholder="Check Out" />
                                                     <label for="end-date">
                                                         <i class="fa-solid fa-calendar-days"></i> Ngày đi
                                                     </label>
@@ -215,31 +215,37 @@
                                             <form action="">
                                                 <div class="list-group">
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service1" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service1"
+                                                            type="checkbox" value="">
                                                         Xe đưa đón
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service2" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service2"
+                                                            type="checkbox" value="">
                                                         Thuê xe tự lái
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service3" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service3"
+                                                            type="checkbox" value="">
                                                         Bảo mẫu
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service4" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service4"
+                                                            type="checkbox" value="">
                                                         Chăm sóc thú cưng
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service5" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service5"
+                                                            type="checkbox" value="">
                                                         Vệ sĩ
                                                     </label>
                                                     <label class="list-group-item">
-                                                        <input class="form-check-input me-1" id="service6" type="checkbox" value="">
+                                                        <input class="form-check-input me-1" id="service6"
+                                                            type="checkbox" value="">
                                                         phòng Gym
                                                     </label>
                                                 </div>
-                                                <button class="btn btn-primary" type="reset" onclick="clear()"> Đặt lại </button>
+                                                
                                             </form>
                                         </div>
                                     </div>
@@ -252,7 +258,7 @@
                                 <div class="row row-cols-2">
                                     <div class="col">{{data['room_price']}} x 2 đêm: </div>
                                     <div class="col" id="calc-room">0</div>
-                                    
+
 
                                     <div class="col">Phí dịch vụ:</div>
                                     <div class="col" id="calc-service">$0</div>
@@ -269,7 +275,7 @@
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop" style="width: 100%;">
-                                        <span>Booking</span>
+                                        <span>Đặt lịch</span>
                                     </button>
 
                                     <!-- Modal -->
@@ -279,19 +285,18 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Search
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Rất hân hạnh được phục vụ quý khách hàng
                                                     </h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     XÁC NHẬN ĐẶT PHÒNG/KHÁCH SẠN
-
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Booking</button>
+                                                        data-bs-dismiss="modal">Đóng</button>
+                                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -308,7 +313,7 @@
         </div>
         <hr class="dropdown-divider">
         <div>
-            <h1>Danh Gia</h1>
+            <h1>Đánh giá</h1>
         </div>
     </div>
 
