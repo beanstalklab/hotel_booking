@@ -277,8 +277,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Đóng</button>
-                                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" id="submit_btn"
+                                                        class="btn btn-primary">Booking</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -323,6 +324,15 @@
     </div>
     <hr class="dropdown-divider">
     <div>
+        {%if post_list%}
+        {%for data in post_list%}
+            <small>{{data['date_post']}}</small>
+            <h3>{{data['user_name']}}</h3>
+            <textarea name="" id="" cols="30" rows="10">{{data['post']}}</textarea>
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+        {%endfor%}
+        {%endif%}
         <h1>Đánh giá</h1>
         <form action="{{url_for('view.write_post', id=data.data['room_id'])}}" name="write-post">
             <div class="form-group">

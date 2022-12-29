@@ -210,10 +210,23 @@ def detail(room_id):
     except:
         print('errro')
     
-    cursor.execute('select * from binhluan where room_id  = %s')
+    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post,  
+                from binhluan
+                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s''', (room_id))
+    posts = cursor.fetchall()
+    post_list = []
+    if posts:
+        for row in posts:
+            temp = {}
+            temp['post_id'] = row[0]
+            temp['room_id'] = row[1]
+            temp['user_name'] = row[2]
+            temp['post'] = row[3]
+            temp['date_post'] = row[4]
+            post_list.append(temp)
     conn.close()
     
-    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province)
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list)
 
 
 @main_blp.route('/page/filter', defaults={'page': 1})
@@ -343,7 +356,8 @@ def write_post(id):
     conn = connect_db()
     cursor = get_cursor(conn)
     post = request.args.get('body')
-    cursor.execute('insert into binhluan(NULL, {}, {},NULL)'.format(id, post))
+    user_id = session['id']
+    cursor.execute('insert into binhluan(NULL, {}, {},{},NULL)'.format(id,user_id,post))
     return redirect(url_for('view.detail', room_id=id))
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
