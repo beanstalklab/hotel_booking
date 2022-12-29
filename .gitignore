@@ -5,4 +5,6 @@ __pycache__/
 .svn/
 .git/
 .venv/
-.app/config
+/app/config.py 
+/set_env.ps1
+
