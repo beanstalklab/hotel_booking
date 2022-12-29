@@ -91,7 +91,7 @@
     <div class="row p-0">
         <!-- left -->
         <div class="col-md-7">
-            <h1>Mô tả</h1>
+            <h1>Mo ta</h1>
             <div>
                 <ul>
                     {%if loaiphong %}
@@ -112,7 +112,7 @@
             <hr class="dropdown-divider">
 
             <div>
-                <h2>Tiện nghi</h2>
+                <h2>Tien Nghi</h2>
                 <div>
                     <i class="fas fa-water"></i>
                     <span>Hướng nhìn ra đại dương</span>
@@ -137,10 +137,10 @@
 
             <hr class="dropdown-divider">
             <div>
-                <h2>Quyền lợi</h2>
+                <h2>Quyen Loi</h2>
                 <div>
                     <i class="fas fa-user-shield"></i>
-                    <span>An ninh tuyệt đối</span>
+                    <span>An Ninh Tuyet Doi</span>
                 </div>
                 <div>
                     <i class="far fa-thumbs-up"></i>
@@ -156,14 +156,9 @@
         <!-- right (BOOKING) -->
         <div class="col-md-5">
             <div class="mt-5">
-<<<<<<< HEAD
                 <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
-=======
-                <h1 class=" d-flex justify-content-md-center">ĐẶT LỊCH NGAY</h1>
->>>>>>> 7f0d9fe05ccbf5712fe2ac204cb083ce0ff8a572
                 <div class=" d-flex justify-content-center">
-                    <form autocomplete="off" onsubmit="fill_calc()"
-                        action="/customer_booking">
+                    <form autocomplete="off" onsubmit="fill_calc()" action="/customer_booking">
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                             <div class="row">
                                 <div class="col-auto">
@@ -171,12 +166,11 @@
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-star"></i>
-                                    <small>Đánh giá: 4,69 </small>
+                                    <small>Rating: 4,69 </small>
                                 </div>
                             </div>
 
                             <div class="row g-1">
-<<<<<<< HEAD
                                 <div class="col-12 d-flex justify-content-center p-0">
                                     <div class="row input-daterange" id="flight-datepicker">
                                         <!-- Set Check In -->
@@ -188,35 +182,6 @@
                                                     <i class="fa-solid fa-calendar-days"></i> Ngày đến
                                                 </label>
                                             </div>
-=======
-                                <form action="">
-                                    <div class="col-12 d-flex justify-content-center p-0">
-                                        <div class="row input-daterange" id="flight-datepicker">
-                                            <!-- Set Check In -->
-                                            <div class="col-6 px-1">
-                                                <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control" id="start-date"
-                                                        name="start" placeholder="Check In" />
-                                                    <label for="start-date">
-                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đến
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <!-- End Set Check In -->
-
-                                            <!-- Set Check Out -->
-                                            <div class="col-6 px-1">
-                                                <div class="form-floating">
-                                                    <input type="text" class="datepicker form-control" id="end-date"
-                                                        name="end" placeholder="Check Out" />
-                                                    <label for="end-date">
-                                                        <i class="fa-solid fa-calendar-days"></i> Ngày đi
-                                                    </label>
-
-                                                </div>
-                                            </div>
-                                            <!-- End Set Check Out -->
->>>>>>> 7f0d9fe05ccbf5712fe2ac204cb083ce0ff8a572
                                         </div>
                                         <!-- End Set Check In -->
 
@@ -263,7 +228,7 @@
                                                 </label>
 
                                             </div>
-            
+
                                         </div>
                                     </div>
 
@@ -290,7 +255,7 @@
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop" style="width: 100%;">
-                                        <span>Đặt lịch</span>
+                                        <span>Booking</span>
                                     </button>
                                     {%if session.id %}
                                     <!-- Submit booking-->
@@ -301,27 +266,20 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-<<<<<<< HEAD
                                                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo
-=======
-                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Rất hân hạnh được phục vụ quý khách hàng
->>>>>>> 7f0d9fe05ccbf5712fe2ac204cb083ce0ff8a572
                                                     </h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     XÁC NHẬN ĐẶT PHÒNG/KHÁCH SẠN
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-<<<<<<< HEAD
                                                         data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" id="submit_btn" class="btn btn-primary">Booking</button>
-=======
-                                                        data-bs-dismiss="modal">Đóng</button>
-                                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
->>>>>>> 7f0d9fe05ccbf5712fe2ac204cb083ce0ff8a572
+                                                    <button type="submit" id="submit_btn"
+                                                        class="btn btn-primary">Booking</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -363,22 +321,31 @@
 
             </div>
         </div>
-<<<<<<< HEAD
-=======
-        <hr class="dropdown-divider">
-        <div>
-            <h1>Đánh giá</h1>
-        </div>
->>>>>>> 7f0d9fe05ccbf5712fe2ac204cb083ce0ff8a572
     </div>
     <hr class="dropdown-divider">
     <div>
-        <h1>Danh Gia</h1>
+        <h1>Đánh giá</h1>
+        <form action="{{url_for('view.write_post', id=data.data['room_id'])}}" name="write-post">
+            <div class="form-group">
+                <label for="input-post">Nhập nội dung đánh giá</label>
+                <textarea name="body" id="editor" rows="9" cols="20" class="form-control"
+                    placeholder="Nhập nội dung tại đây"></textarea>
+                <div class=""></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
 </div>
 
 </div>
 <!-- End Info -->
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 

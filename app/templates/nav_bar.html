@@ -28,6 +28,7 @@
     <link href="{{url_for('static', filename='css/datepicker.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
 
 </head>
 
@@ -89,7 +90,7 @@
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
                             </a>
-                            {%if session.role_id != 0%}
+                            {%if session.role_id != 0%}xx`
                             <a href="{{url_for('view.profile')}}" class="dropdown-item">Thông tin cá nhân</a>
                             <a href="{{url_for('auth.logout')}}" class="dropdown-item">Đăng xuất</a>
                             {%else%}
