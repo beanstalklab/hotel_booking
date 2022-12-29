@@ -61,7 +61,7 @@
                 <div class="row row-cols-3 align-items-center">
                     <div class="col-3">
                         <a href="{{url_for('view.home')}}" class="navbar-brand">
-                            <img class="logo-img" src="{{url_for('view.user_image', name='logo.png')}}" alt="logo" >
+                            <img class="logo-img" src="{{url_for('static', filename='user_img/logo.png')}}" alt="logo" >
                         </a>
                     </div>
                     <!-- Search -->
@@ -81,7 +81,7 @@
                     <div class="col-1 d-flex justify-content-end">
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
-                                <img src="{{url_for('view.user_image', name='user.png')}}" class="rounded-circle" width="25" height="25"/>
+                                <img src="{{url_for('static', filename='user_img/user.png')}}" class="rounded-circle" width="25" height="25"/>
                             </a>
                             <div class="dropdown-menu">
                                 {% if session.id %}
