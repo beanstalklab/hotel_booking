@@ -9,4 +9,4 @@ DB_NAME = os.environ.get("DB_NAME", "quanlykhachsan")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 
 HOTEL_IMAGE = os.environ.get("HOTEL_IMAGE", "D:\\hotel_image")
-USER_IMAGE = os.environ.get("USER_IMAGE", "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app\\templates\\user")
+USER_IMAGE = os.environ.get("USER_IMAGE", "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app\\static\\user_img")
