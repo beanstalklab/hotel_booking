@@ -209,7 +209,10 @@ def detail(room_id):
         print(mota, loaiphong, province)
     except:
         print('errro')
+    
+    cursor.execute('select * from binhluan where room_id  = %s')
     conn.close()
+    
     return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province)
 
 
@@ -335,6 +338,13 @@ def filter_local():
             return render_template('room.html', data='final_data',  id_filter='most_popular', msg=msg, row_count=0)
     msg = 'We dont have that data'
     return render_template('room.html', data='',  id_filter='most_popular', msg=0)
+@main_blp.route('/write_post/<id_room>')
+def write_post(id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    post = request.args.get('body')
+    cursor.execute('insert into binhluan(NULL, {}, {},NULL)'.format(id, post))
+    return redirect(url_for('view.detail', room_id=id))
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
