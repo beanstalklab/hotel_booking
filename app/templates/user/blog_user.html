@@ -48,8 +48,8 @@
 <textarea name="body" id="body" cols="30" rows="5" readonly class="form-control">{{blog[0]['body']}}</textarea>
 <div>
     {%for img in blog[1]%}
-<img src="{{url_for('view.blog_image', name=img)}}" style="height: 10%; width: 10%;" alt="">
-{%endfor%}
+    <img src="{{url_for('view.blog_image', name=img)}}" style="height: 10%; width: 10%;" alt="">
+    {%endfor%}
 </div>
 
 {%endfor%}

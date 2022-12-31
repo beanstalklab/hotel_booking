@@ -158,7 +158,7 @@
             <div class="mt-5">
                 <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
                 <div class=" d-flex justify-content-center">
-                    <form autocomplete="off" onsubmit="fill_calc()" action="/customer_booking">
+                    <form autocomplete="off" action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
                         <div class="bg-white shadow m-0 p-3 rounded" style="max-width: 350px">
                             <div class="row">
                                 <div class="col-auto">
@@ -212,18 +212,18 @@
                                         <div class="card card-body">
                                             <div class="list-group">
                                                 <label class="list-group-item">
-                                                    <input class="form-check-input me-1" id="service1" type="checkbox"
-                                                        value="">
+                                                    <input name="service" class="form-check-input me-1" id="service1" type="checkbox"
+                                                        value="2">
                                                     Tiệc nướng BBQ
                                                 </label>
                                                 <label class="list-group-item">
-                                                    <input class="form-check-input me-1" id="service2" type="checkbox"
-                                                        value="">
+                                                    <input name="service" class="form-check-input me-1" id="service2" type="checkbox"
+                                                        value="1">
                                                     Loa kéo Karaoke
                                                 </label>
                                                 <label class="list-group-item">
-                                                    <input class="form-check-input me-1" id="service3" type="checkbox"
-                                                        value="">
+                                                    <input name="service" class="form-check-input me-1" id="service3" type="checkbox"
+                                                        value="4">
                                                     Tổ chức sự kiện
                                                 </label>
 
