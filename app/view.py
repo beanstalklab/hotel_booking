@@ -1,9 +1,8 @@
 import math
 import os
-from flask import Blueprint, redirect, render_template, request, session, url_for, send_from_directory, jsonify
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for, send_from_directory, jsonify
 from app.db_utils import connect_db, get_cursor
-from app.config import HOTEL_IMAGE, USER_IMAGE
-from app.config import HOTEL_IMAGE, USER_IMAGE
+from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE
 from app.sql import *
 main_blp = Blueprint(
     "view", __name__, template_folder='templates', static_folder='static')
@@ -103,6 +102,86 @@ def profile():
     print(img)  
     conn.close()
     return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg, lichsu=lichsu,img=img)
+
+@main_blp.route('/blog_customer/<account_id>')
+def blog_customer(account_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    posts=''
+    cursor.execute('select * from baiviet where account_id = %s and status = 0', (account_id,))
+    data = cursor.fetchall()
+    posts = []
+    for row in data:
+        temp = {}
+        temp['post_id'] = row[0]
+        temp['title'] = row[2]
+        temp['body'] = row[3]
+        temp['time'] = row[4]
+        cursor.execute('select * from blog_image where post_id = %s', (row[0],))
+        img_list = cursor.fetchall()
+        final_img = []
+        for img in img_list:
+            if img:
+                final_img.append(img[2])
+        posts.append((temp, final_img))
+    # try:
+
+    #     cursor.execute('select * from baiviet where account_id = %s where status = 0', (account_id,))
+    #     data = cursor.fetchall()
+    #     posts = []
+    #     for row in data:
+    #         temp = {}
+    #         temp['post_id'] = row[0]
+    #         temp['title'] = row[2]
+    #         temp['body'] = row[3]
+    #         temp['time'] = row[4]
+    #         cursor.execute('select * from blog_image where post_id = %s', (row[0],))
+    #         img_list = cursor.fetchall()
+    #         final_img = []
+    #         for img in img_list:
+    #             if img:
+    #                 index = img[2].index('/')
+    #                 img = {'folder': img[2][0:index],
+    #                         'name': img[2][index+1:]}
+    #                 final_img.append(img)
+    #         posts.append((temp, final_img))
+    # except:
+    #     conn.rollback()
+    return render_template('user/blog_user.html', blogs = posts)
+
+@main_blp.route('/write_blog/<account_id>')
+def write_blog(account_id):
+
+    title = request.args.get('title')
+    body = request.args.get('body')
+    image_file = request.args.getlist('file')
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    print(body, title, image_file, account_id)
+    msg = ''
+    try:
+        cursor.execute('insert into baiviet (`account_id`,`title`, `body`) values(%s,%s, %s)', (account_id, title, body))
+        conn.commit()
+        print('add thanh cong')
+        cursor.execute('select * from baiviet where account_id = {} and title = "{}"'.format(account_id, title))
+        post_id = cursor.fetchone()
+        print('post_id:', post_id)
+        for image in image_file:
+            blog_image = str(image)
+            cursor.execute('insert into blog_image (`post_id`,`img_link`) values(%s,%s)', (post_id[0], blog_image))
+            conn.commit()
+        conn.close()
+        print('Thanh cong')
+        flash('tạo bài viết thành công')
+
+        return redirect(url_for('view.blog_customer', account_id = account_id))
+
+    except:
+        print('error')
+        conn.rollback()
+        conn.close()
+        flash('Tạo bài viết không thành công')
+    return redirect(url_for('view.blog_customer', account_id = account_id))
 
 @main_blp.route('/page', defaults={'page': 1})
 @main_blp.route('/page/<int:page>', methods=['GET', 'POST'])
@@ -210,9 +289,9 @@ def detail(room_id):
     except:
         print('errro')
     
-    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post,  
+    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, taikhoan.account_id 
                 from binhluan
-                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s''', (room_id))
+                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s order by binhluan.date_post desc limit 5''', (room_id))
     posts = cursor.fetchall()
     post_list = []
     if posts:
@@ -223,12 +302,87 @@ def detail(room_id):
             temp['user_name'] = row[2]
             temp['post'] = row[3]
             temp['date_post'] = row[4]
+            temp['user_id'] = row[5]
             post_list.append(temp)
     conn.close()
     
     return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list)
+@main_blp.route('/full_detail_comment/<room_id>', methods=['GET', 'POST'])
+def full_detail_comment(room_id):
+    msg = ''
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute(
+            'SELECT * FROM phong where room_id = %s', (room_id,))
+        conn.commit()
+    except:
+        conn.rollback()
+    data = cursor.fetchone()
 
+    data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
+                    'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_province': data[6]}
+    try:
+        cursor.execute(
+            'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
+        conn.commit()
+    except:
+        conn.rollback()
+    number_img = cursor.rowcount
+    imgs = cursor.fetchall()
+    try:
+        cursor.execute(
+            'SELECT province_name from tinhthanh where province_id = % s;', (data['room_province'],))
+        conn.commit()
+    except:
+        conn.rollback()
+    province = cursor.fetchone()
+    list_img = []
+    for img in imgs:
 
+        index = img[0].index('/')
+        img = {'folder': img[0][0:index],
+            'name': img[0][index+1:], 'rank': img[1]}
+        list_img.append(img)
+    try: 
+        cursor.execute('''select tiennghi.ten_dich_vu, ql_tiennghi.soluong from ql_tiennghi 
+                        inner join tiennghi on tiennghi.id = ql_tiennghi.id_tiennghi where ql_tiennghi.id_phong = %s''', (room_id, ))
+        mota = cursor.fetchall()
+        cursor.execute('''select room_note from loaiphong where room_id = %s''', (room_id, ))
+        loaiphong = cursor.fetchone()
+        print(mota, loaiphong, province)
+    except:
+        print('errro')
+    
+    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, taikhoan.account_id 
+                from binhluan
+                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s order by binhluan.date_post desc''', (room_id))
+    posts = cursor.fetchall()
+    post_list = []
+    if posts:
+        for row in posts:
+            temp = {}
+            temp['post_id'] = row[0]
+            temp['room_id'] = row[1]
+            temp['user_name'] = row[2]
+            temp['post'] = row[3]
+            temp['date_post'] = row[4]
+            temp['user_id'] = row[5]
+            post_list.append(temp)
+    conn.close()
+    
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list, full='full')
+@main_blp.route('/delete_comment/<room_id>/<post_id>')
+def delete_comment(post_id, room_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('delete from binhluan where id = %s and room_id = %s', (post_id, room_id, ))
+        conn.commit()
+    except:
+        conn.rollback()
+    conn.close()
+    return redirect(url_for('view.detail', room_id=room_id))
 @main_blp.route('/page/filter', defaults={'page': 1})
 @main_blp.route('/page/filter/<int:page>', methods=['GET', 'POST'])
 def room_filter(page):
@@ -337,6 +491,7 @@ def filter_local():
                     conn.rollback()
                 img = cursor.fetchone()
                 if img:
+                    print(img)
                     index = img[0].index('/')
                     img = {'folder': img[0][0:index],
                         'name': img[0][index+1:], 'rank': img[1]}
@@ -352,16 +507,23 @@ def filter_local():
     msg = 'We dont have that data'
     return render_template('room.html', data='',  id_filter='most_popular', msg=0)
 @main_blp.route('/write_post/<id_room>')
-def write_post(id):
+def write_post(id_room):
     conn = connect_db()
     cursor = get_cursor(conn)
     post = request.args.get('body')
     user_id = session['id']
-    cursor.execute('insert into binhluan(NULL, {}, {},{},NULL)'.format(id,user_id,post))
-    return redirect(url_for('view.detail', room_id=id))
+    cursor.execute('insert into binhluan(`room_id`, `user_id`, `post`) values ({}, {},"{}")'.format(id_room,user_id,post))
+    conn.commit()
+    conn.close()
+    print(id_room,user_id,post)
+    return redirect(url_for('view.detail', room_id=id_room))
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
 @main_blp.route('/user_image/<name>')
 def user_image(name):
     return send_from_directory(USER_IMAGE, name)
+
+@main_blp.route('/blog_image/<name>')
+def blog_image(name):
+    return send_from_directory(BLOG_IMAGE, name)

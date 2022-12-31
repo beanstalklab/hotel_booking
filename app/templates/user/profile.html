@@ -19,7 +19,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
-                                {%if img %}
+                                {%if img['name'] %}
                                 <img src="{{url_for('view.image_file', name=img['name'], folder=img['folder'])}}"
                                     alt="User" class="rounded-circle" width="110">
                                 {%else%}
@@ -30,7 +30,7 @@
                                 <div class="mt-3">
                                     <h4>{{ info.user_name }}</h4>
                                     <p class="text-secondary"> {{ khachhang.customer_note }}</p>
-                                    <p class="text-secondary">Ngày sinh: {{ khachhang.customer_date }}</p>
+                                    <p class="text-secondary">Ngày sinh: {%if khachhang.customer_date%}{{ khachhang.customer_date.strftime("%d/%m/%Y") }}{%endif%}</p>
 
                                 </div>
                             </div>
@@ -89,6 +89,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <a class="btn btn-info "  href="/edit_profile">Cập nhật thông tin cá nhân</a>
+                                </div>
+                                <div class="col-sm-12">
+                                    <a class="btn btn-info "  href="{{url_for('view.blog_customer', account_id = info['account_id'])}}">Bài viết cá nhân</a>
                                 </div>
                             </div>
                         </div>

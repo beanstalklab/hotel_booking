@@ -104,7 +104,7 @@ def submit_add_room():
     room_price = request.args.get('room_price')
     room_province = request.args.get('room_province')
     room_image = request.args.get('image')
-    room_image = os.path.join('Ảnh test', room_image)
+    room_image = 'Ảnh test' + "/" + room_image
     print(room_type, room_province, room_image)
     
     try:

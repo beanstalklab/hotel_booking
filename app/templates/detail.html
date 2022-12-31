@@ -323,38 +323,48 @@
         </div>
     </div>
     <hr class="dropdown-divider">
+
     <div>
         {%if post_list%}
         {%for data in post_list%}
-            <small>{{data['date_post']}}</small>
-            <h3>{{data['user_name']}}</h3>
-            <textarea name="" id="" cols="30" rows="10">{{data['post']}}</textarea>
-            <a href="#">Edit</a>
-            <a href="#">Delete</a>
-        {%endfor%}
+        <div style="background-color: antiquewhite; margin-bottom: 10px;">
+            <div class="container">
+                <p style="font-weight: bold;">{{data['user_name']}}</p> 
+                <small>{{data['date_post'].strftime("%d/%m/%Y")}}</small>
+            </div>
+            <p>{{data['post'] | safe}}</p>
+            {%if data['user_id'] == session.id %}
+            <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}">Xóa</a>
+            {%else%}
+            <a href=""></a>
+            <a href="#">Xem trang cá nhân</a>
+            {%endif%}
+        </div>
+
+            {%endfor%}
+            {%endif%}
+        {%if not full%}
+        <div><a href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm bình luận</a></div>
+        {%else%}
+        <div><a href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt</a></div>
         {%endif%}
         <h1>Đánh giá</h1>
-        <form action="{{url_for('view.write_post', id=data.data['room_id'])}}" name="write-post">
+        {%if session.id%}
+        <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
             <div class="form-group">
                 <label for="input-post">Nhập nội dung đánh giá</label>
                 <textarea name="body" id="editor" rows="9" cols="20" class="form-control"
                     placeholder="Nhập nội dung tại đây"></textarea>
-                <div class=""></div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <div id="result-form"></div>
+        {%endif%}
     </div>
 </div>
 
 </div>
 <!-- End Info -->
-<script>
-    ClassicEditor
-        .create(document.querySelector('#editor'))
-        .catch(error => {
-            console.error(error);
-        });
-</script>
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 
