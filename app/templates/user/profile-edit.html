@@ -4,8 +4,19 @@
 <div class="container">
     <form action="\edit_profile_submit" method="post">
     <div class="m-3">
+
+        <!-- Breadcrumb -->
+        <nav class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{url_for('view.profile')}}">Cá nhân</a></li>
+                <li class="breadcrumb-item active">Chỉnh sửa</li>
+            </ol>
+        </nav>
+        <!-- End Breadcrumb -->
+
         <div class="row my-3">
-            <div class="col-md-4 my-3">
+            <div class="col-md-5 col-lg-4 col-xl-3 my-3">
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="text-center">
@@ -28,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 my-3">
+            <div class="col-md-7 col-lg-8 col-xl-9 my-3">
                 <div class="card shadow">
                     <div class="card-body">
 
