@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash, make_response
+from pymysql import Date
 from app.db_utils import connect_db, get_cursor
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import timedelta
@@ -136,47 +137,86 @@ def register_submit():
             msg = 'Đăng ký tài khoản thành công'
             return redirect('/login', msg)
     return redirect('/register')
-@auth_blp.route('/customer_booking', methods=['post', 'get'])
-def customer_booking():
+@auth_blp.route('/customer_booking/<room_id>', methods=['get'])
+def customer_booking(room_id):
+    # create connect to database
     conn = connect_db()
     cursor = get_cursor(conn)
+    # Get data from form 
     checkin = request.args.get('start')
     checkout = request.args.get('end')
-    value = request.args.get('calc')
-    print(value)
-    id = request.args.get('room_id')
-    user = request.form['user_id']
+    service  = request.args.getlist('service')
+
+    #Convert date format to insert to database
     checkout = get_date(checkout)
     checkin = get_date(checkin)
-    cursor.execute('select customer_id from khachhang where account_id = %s', (user,))
-    customer = cursor.fetchone()
-    print(value, id)
-    print(customer[0], checkin, checkout)
+    print(checkout, checkin,service, len(service))
+    days = int((checkout - checkin).days)
 
-    if not value:
-        return redirect(url_for('view.detail', room_id = id))
-    print(customer[0], checkin, checkout)
-    # cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], id, checkin, checkout))
-    # conn.commit()
-    # print('10')
-    # cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], id, checkin, checkout, ))
-    # id_datphong = cursor.fetchone()
-    # print(id_datphong)
-    # cursor.execute("insert into ql_datphong values (`bookroom_id`, `tongtien`,`tiephaitra`,`tinhtrang` ) VALUES ({},{}, {},{})".format(id_datphong[0], id, value, value))
-    # conn.commit()
-    # print('Thanh cong')
-    # conn.close()
-    # try:
-        
-    #     return redirect(url_for('view.detail', room_id = id))
-    # except:
-    #     print('That bai')
-    #     conn.rollback()
-    #     conn.close()
-    return (redirect('/home'))
-def get_date(date):
-    temp = date.split('/')
-    return  temp[2] +"-"+ temp[0] + "-"+ temp[1]
+    # Start query data to caculate
+    cursor.execute('select customer_id from khachhang where account_id = %s', (session['id'],))
+    customer = cursor.fetchone()
+    if (customer):
+        cursor.execute('select room_price from phong where room_id = %s', (room_id, ))
+        room_price = cursor.fetchone()
+        if len(service) > 0:
+            cursor.execute('select service_price from dichvu where service_id in %s', (service, ))
+            service_price = cursor.fetchall()
+            
+            # Caculate money
+            sum_service = 0
+            for i in service_price: 
+                sum_service += int(i[0])
+        else:
+             sum_service = 0
+        total_money = sum_service + int(room_price[0]) * days
+        cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], room_id, checkin, checkout))
+        conn.commit()
+        print('insert datphong ok')
+        cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], room_id, checkin, checkout, ))
+        id_datphong = cursor.fetchone()
+        print(id_datphong)
+        # # Generate bill_id
+        bill_id = str(id_datphong[0]) + "_" + str(customer[0])
+        print(bill_id, total_money, id_datphong[0])
+        cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,id_datphong[0], total_money,))
+        conn.commit()
+        print('Thanh cong')
+        if len(service) > 0:
+            for item in service:
+                cursor.execute('insert into ql_dichvu values (NULL, %s, %s, 1)', (item,id_datphong[0]))
+                conn.commit()
+        conn.close()
+            
+        flash('Bạn đã đặt phòng thành công')
+        return redirect(url_for('view.profile'))
+    #     try:
+    #         cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], room_id, checkin, checkout))
+    #         conn.commit()
+    #         print('insert datphong ok')
+    #         cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], room_id, checkin, checkout, ))
+    #         id_datphong = cursor.fetchone()
+    #         print(id_datphong)
+    #         # # Generate bill_id
+    #         bill_id = str(id_datphong[0]) + "_" + str(customer[0])
+    #         print(bill_id, total_money, id_datphong[0])
+    #         cursor.execute("insert into hoadon (`id_bill`,`bookroom_id`, `tongtien`, `tinhtrang`) VALUES ({},{},{}, 'Chưa thanh toán')".format(bill_id,id_datphong[0], total_money))
+    #         conn.commit()
+    #         print('Thanh cong')
+    #         conn.close()
+    #         flash('Bạn đã đặt phòng thành công')
+    #         return redirect(url_for('view.profie'))
+    #     except:
+    #         conn.rollback()
+    #         return (redirect('/home'))
+
+    # else:
+    #     flash('Bạn cần hoàn thiện thông tin cá nhân để đặt phòng')
+    #     return render_template('view.profile')
+def get_date(dates):
+    temp = dates.split('/')
+    return  datetime.date(int(temp[2]),int(temp[0]),int(temp[1]))
+
 @auth_blp.route('/edit_profile')
 def edit_profile():
     account_id = session['id']

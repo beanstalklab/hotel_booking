@@ -17,10 +17,10 @@ function service() {
 
     service2.addEventListener('change', function () {
         if (this.checked) {
-            sum += 300000
+            sum += 200000
             document.getElementById("calc-service").innerHTML = sum + "đ";
         } else {
-            sum -= 300000
+            sum -= 200000
             document.getElementById("calc-service").innerHTML = sum + "đ";
         }
     });
