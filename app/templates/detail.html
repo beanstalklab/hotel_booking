@@ -12,6 +12,17 @@
 
 <!-- Info -->
 <div class="container my-5">
+
+    <!-- Breadcrumb -->
+    <nav class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{url_for('view.room')}}">Các phòng</a></li>
+            <li class="breadcrumb-item active">Chi tiết</li>
+        </ol>
+    </nav>
+    <!-- End Breadcrumb -->
+
     <div class="">
         <h1>{{data['hotel_name']}}</h1>
     </div>

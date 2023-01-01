@@ -5,12 +5,5 @@ __pycache__/
 .svn/
 .git/
 .venv/
-<<<<<<< HEAD
-.app/config
 /app/config.py 
 /set_env.ps1
-=======
-/app/config.py 
-/set_env.ps1
-
->>>>>>> 548a291a48cbe944afe3eb865d4c79ff38038502
