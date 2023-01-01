@@ -12,6 +12,6 @@ account['reset_password'] = '''UPDATE taikhoan SET `password` = % s where `email
 room = {}
 room['edit_room'] = '''UPDATE `phong` SET room_name = %s, room_address = %s, room_performence = %s, room_price = %s, id_roomtype = %s, id_province = %s WHERE `phong`.`room_id` = %s;'''
 room['room_info'] ='''select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province;'''
-user['info_action'] = '''select phong.room_name, datphong.time_start, datphong.time_end, qldp.tinhtrang from datphong
+user['info_action'] = '''select phong.room_name, datphong.time_start, datphong.time_end, hoadon.tinhtrang from datphong
                         inner join phong on phong.room_id = datphong.room_id
-                        inner join ql_datphong as qldp on qldp.id_datphong = datphong.bookroom_id where datphong.customer_id = %s'''
+                        inner join hoadon  on hoadon.bookroom_id = datphong.bookroom_id where datphong.customer_id = %s'''

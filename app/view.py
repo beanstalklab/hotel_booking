@@ -86,7 +86,7 @@ def profile():
             temp['room_name'] = row[0]
             temp['time_start'] = row[1]
             temp['time_end'] = row[2]
-            temp['status'] = trangthai[str(row[3])]
+            temp['status'] = row[3]
             lichsu.append(temp)
     try:
         cursor.execute('select * from user_image where user_id = %s', (id_account,))

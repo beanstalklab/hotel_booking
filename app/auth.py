@@ -182,7 +182,12 @@ def customer_booking(room_id):
         cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,id_datphong[0], total_money,))
         conn.commit()
         print('Thanh cong')
+        if len(service) > 0:
+            for item in service:
+                cursor.execute('insert into ql_dichvu values (NULL, %s, %s, 1)', (item,id_datphong[0]))
+                conn.commit()
         conn.close()
+            
         flash('Bạn đã đặt phòng thành công')
         return redirect(url_for('view.profile'))
     #     try:

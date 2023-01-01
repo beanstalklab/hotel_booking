@@ -1,6 +1,15 @@
 {%extends 'nav_bar.html'%}
 
 {%block content%}
+<!--Message -->
+{%with messages = get_flashed_messages()%}
+{%if messages%}
+{%for msg in messages%}
+<div class="msg">{{msg}}</div>
+{%endfor%}
+{%endif%}
+{%endwith%}
+<!--End message-->
 <!-- profile -->
 <div class="container">
     <div class="m-3">
@@ -104,23 +113,24 @@
                             <h5 class="d-flex align-items-center mb-3">Lịch sử giao hoạt động</h5>
 
                             {%if lichsu%}
-                            <table>
+                            <table id="customers">
                                 <thead>
                                     <tr>
-                                        <td class="dataTable">Tên phòng</td>
-                                        <td>Thời gian bắt đầu</td>
-                                        <td>Thời gian kết thúc</td>
-                                        <td>Trạng thái</td>
+                                        <th>Tên phòng</td>
+                                        <th>Thời gian bắt đầu</td>
+                                        <th>Thời gian kết thúc</td>
+                                        <th>Trạng thái</td>
+                                        <th>Hành động</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {%for row in lichsu%}
                                     <tr>
                                         <td>{{row.room_name}}</td>
-                                        <td>{{row.time_start}}</td>
-                                        <td>{{row.time_end}}</td>
+                                        <td>{{row.time_start.strftime("%d/%m/%Y")}}</td>
+                                        <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
                                         <td>{{row.status}}</td>
-                                        <td><a href="#">Hủy</a></td>
+                                        <td><a href="#">Xem chi tiết</a></td>
                                     </tr>
                                     {%endfor%}
                                 </tbody>
