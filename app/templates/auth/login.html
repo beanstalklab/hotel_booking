@@ -19,8 +19,7 @@
             <h2 class="inactive underlineHover"> <a href="{{ url_for('view.home') }}"> Trang chủ </a></h2>
             <!-- Icon -->
             <div class="fadeIn first">
-                <img src="{{url_for('static', filename='user_img/user-286.png')}}" id="icon"
-                    alt="User Icon" />
+                <img src="{{url_for('static', filename='user_img/user-286.png')}}" id="icon" alt="User Icon" />
             </div>
 
             <!-- Login Form -->
@@ -28,37 +27,39 @@
             <div style="color:greenyellow" class="fadeIn first">{{msg}}</div>
             {%endif%}
             <form method="post" action="\login_submit" autocomplete="off">
-                <label for="login"><b>EMAIL</b></label>
+                <label for="email"><b>EMAIL (*)</b></label>
+                <input type="text" class="fadeIn second" id='email' name='email' placeholder="Nhập Email"
+                    value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}">
+                <span class="error-msg" id="msg-email"></span>
                 <br>
-                <input type="email" class="fadeIn second" id='email' name='email' placeholder="Nhập Email"
-                    value="{%if 'email' in request.cookies%} {{ request.cookies.get('email') }} {%endif%}" required>
-                <br>
-                <label for="password"><b>MẬT KHẨU</b></label>
+                <label for="password"><b>MẬT KHẨU (*)</b></label>
                 <input type="password" class="fadeIn third" id='password' name='password'
                     value="{% if 'password' in request.cookies %} {{ request.cookies.get('password') }} {% endif %}"
-                    placeholder="********" required>
+                    placeholder="********">
                 <i class="fa-regular fa-eye-slash" id="eye1"></i>
+                <span class="error-msg" id="msg-pass"></span>
                 <br>
                 <input type="checkbox" class="fadeIn fourth" name="inputRemember"
                     checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}"
                     autocomplete="off">
                 <label for="inputRemember">Ghi nhớ</label> <br>
-                <input type="submit" class="fadeIn fourth" value="Đăng nhập">
+                <input type="submit" class="fadeIn fourth" value="Đăng nhập" onclick="return validateLogin()">
             </form>
 
             <div>
                 {%with messages = get_flashed_messages()%}
                 {%if messages %}
                 {%for message in messages%}
-                <div name="msg" class="fadeIn second" style="color: red;" >{{messages[0]}}</div>
+                <div name="msg" class="fadeIn second" style="color: red;">{{messages[0]}}</div>
                 {%endfor%}
                 {%endif%}
                 {%endwith%}
             </div>
 
             <!-- Remind Passowrd -->
-
+            <span>(*) Trường bắt buộc</span>
             <div id="formFooter">
+                
                 <a class="underlineHover" href="{{url_for('auth.resetpass')}}">Quên mật khẩu?</a>
             </div>
 
@@ -68,6 +69,7 @@
 
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
     <script src="{{url_for('static', filename='js/toggleEyePassword.js')}}"></script>
+    <script src="{{url_for('static', filename='js/validateform.js')}}"></script>
 
 </body>
 

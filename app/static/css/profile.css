@@ -7,3 +7,20 @@
 .bold-text {
     font-weight: bold;
 }
+
+.error-msg {
+    /* display: flex;
+    justify-content: flex-start; */
+    color: red;
+    font-size: 12px;
+    /* max-width: 350px;
+    margin-left: 50px;
+    position: relative; */
+}
+.error-msg i{
+    color: red;
+    font-size: 12px;
+    /* left: 35px;
+    top: -22px;
+    position: absolute; */
+}

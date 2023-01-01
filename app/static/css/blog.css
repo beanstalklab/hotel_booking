@@ -1,0 +1,18 @@
+* {
+    box-sizing: border-box;
+}
+
+#body-text, #title
+{
+    display: block;
+    overflow: hidden;
+    resize: none;
+}
+
+#body-text {
+    min-height: 100px;
+}
+
+#title {
+    height: 38px;
+}

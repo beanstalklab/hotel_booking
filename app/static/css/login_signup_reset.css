@@ -160,13 +160,13 @@ input[type=text] {
     border-radius: 5px 5px 5px 5px;
 }
 
-input[type=email]:focus,
+input[type=text]:focus,
 input[type=password]:focus {
     background-color: #fff;
     border-bottom: 2px solid #5fbae9;
 }
 
-input[type=email]:placeholder,
+input[type=text]:placeholder,
 input[type=password]:placeholder {
     color: #cccccc;
 }
@@ -315,39 +315,6 @@ input[type=password]:placeholder {
 }
 
 * {
-<<<<<<< HEAD
-  box-sizing: border-box;
-}
-
-.c-error .c-validation{ 
-  background: #c51244 !important;
-  padding: 10px !important;
-  border-radius: 0 !important;
-  position: relative; 
-  display: inline-block !important;
-  box-shadow: 1px 1px 1px #aaaaaa;
-  margin-top: 10px;
-}
-.c-error  .c-validation:before{ 
-  content: ''; 
-  width: 0; 
-  height: 0; 
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #c51244;
-  position: absolute; 
-  top: -10px; 
-}
-.c-label:after{
-  color: #c51244 !important;
-}
-.c-error input, .c-error select, .c-error .c-choice-option{ 
-  background: #fff0f4; 
-  color: #c51244;
-}
-.c-error input, .c-error select{ 
-  border: 1px solid #c51244 !important; 
-=======
     box-sizing: border-box;
 }
 
@@ -360,5 +327,21 @@ i {
     margin-top: 25px;
     cursor: pointer;
     position: absolute;
->>>>>>> 2a633c43f986994f1a1f2ad433f1fddfd0dbd858
+}
+
+.error-msg {
+    display: flex;
+    justify-content: flex-start;
+    color: red;
+    font-size: 12px;
+    max-width: 350px;
+    margin-left: 50px;
+    position: relative;
+}
+.error-msg i{
+    color: red;
+    font-size: 12px;
+    left: 35px;
+    top: -22px;
+    position: absolute;
 }
