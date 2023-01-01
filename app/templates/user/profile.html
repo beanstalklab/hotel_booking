@@ -1,15 +1,6 @@
 {%extends 'nav_bar.html'%}
 
 {%block content%}
-<!--Message -->
-{%with messages = get_flashed_messages()%}
-{%if messages%}
-{%for msg in messages%}
-<div class="msg">{{msg}}</div>
-{%endfor%}
-{%endif%}
-{%endwith%}
-<!--End message-->
 <!-- profile -->
 <div class="container">
     <div class="m-3">
@@ -60,35 +51,52 @@
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <h5 class="d-flex align-items-center mb-3">Lịch sử giao hoạt động</h5>
-
-                            {%if lichsu%}
-                            <table id="customers">
-                                <thead>
-                                    <tr>
-                                        <th>Tên phòng</td>
-                                        <th>Thời gian bắt đầu</td>
-                                        <th>Thời gian kết thúc</td>
-                                        <th>Trạng thái</td>
-                                        <th>Hành động</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {%for row in lichsu%}
-                                    <tr>
-                                        <td>{{row.room_name}}</td>
-                                        <td>{{row.time_start.strftime("%d/%m/%Y")}}</td>
-                                        <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
-                                        <td>{{row.status}}</td>
-                                        <td><a href="#">Xem chi tiết</a></td>
-                                    </tr>
-                                    {%endfor%}
-                                </tbody>
-                            </table>
-                            {%endif%}
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="bold-text mb-0">Ngày sinh</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ khachhang.customer_date }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="bold-text mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ info.email }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="bold-text mb-0">Số điện thoại</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{khachhang.customer_phone}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="bold-text mb-0">Địa chỉ thường trú</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{khachhang.customer_address}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a class="btn btn-info " href="/edit_profile">Cập nhật thông tin cá nhân</a>
+                            </div>
+                            <div class="col-sm-12">
+                                <a class="btn btn-info "
+                                    href="{{url_for('view.blog_customer', account_id = info['account_id'])}}">Bài viết
+                                    cá nhân</a>
+                            </div>
                         </div>
                     </div>
                 </div>
