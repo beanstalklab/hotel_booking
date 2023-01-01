@@ -10,4 +10,3 @@ $Env:APP_SECRET_KEY="nopassword"
 $Env:HOTEL_IMAGE="D:\\hotel_image"
 $Env:USER_IMAGE="D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app\\static\\user_img"
 $Env:BLOG_IMAGE="D:\\blog_image"
-dsdsds
