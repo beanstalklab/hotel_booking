@@ -71,4 +71,3 @@ function numOfDays(starDay, endDay) {
 }
 
 
-

@@ -1,5 +1,6 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
+
 <div class="container py-5">
 
     <!-- Breadcrumb -->
@@ -60,14 +61,24 @@
         {%for item in data%}
         {%if item %}
         <div class="col-lg-4 col-md-6">
-            <div class="shadow rounded overflow-hidden cart-image">
-                <div class="position-relative" style="height: 45%;">
-                    <img class="resize-image" src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
-                        alt="" style="">
+            <div class="shadow rounded cart-image">
+                <div class="content position-relative" style="height: 50%;">
+                    <a href="{{url_for('view.detail', room_id = item[0]['room_id'])}}" target="_blank">
+                        <div class="content-overlay"></div>
+                        <img class="resize-image rounded-top"
+                            src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
+                            alt="room image">
+                        <div class="content-details fadeIn-top">
+                            <h3>this is a title</h3>
+                            <p>this is a short description</p>
+                        </div>
+                    </a>
                     <small
-                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">{{item[0]['room_price']}}đ/Đêm</small>
+                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4" id="fomat-money">
+                        {{item[0]['room_price']}} VNĐ/Đêm
+                    </small>
                 </div>
-                <div class="p-4 mt-2 resize-info" style="height: 60%;">
+                <div class="p-4 mt-2 resize-info" style="height: 50%;">
                     <div class="d-flex justify-content-between mb-3" style="height: 15%">
                         <h5 class="mb-0">{{item[0]['room_name']}}</h5>
                         <div class="ps-2">
