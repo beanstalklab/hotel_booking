@@ -1,64 +1,96 @@
 {%extends 'admin.html'%}
 {%block content%}
-<div class="col-lg-4 col-md-9">
-    <div class="col-lg-4 col-md-7">
-        <div class="shadow rounded overflow-hidden">
-            <div class="position-relative">
-                <h2>Tên Phòng</h2>
-            </div>
-            <div class="p-4 mt-2 ">
-                <div class="d-flex justify-content-between mb-3">
-                    <h3>Khách hàng</h3>
-                </div>
-                <div class="d-flex mb-3">
-                    <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                        Bed</small>
-                    <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                        Bath</small>
-                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                </div>
-                <p class="text-body mb-3"></p>
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-sm btn-primary rounded py-2 px-4">View Detail</a>
-                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
-                </div>
-            </div>
-        </div>
+<!-- <h3><form action="" method="post" >
+            <input type="text" >
+        </form></h3> -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+    <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
 
-    </div>
-    <div class="col-lg-4 col-md-6">
-        <div class="shadow rounded overflow-hidden">
-            <div class="position-relative">
-                <h2>Tên Phòng</h2>
-            </div>
-            <div class="p-4 mt-2 ">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5 class="mb-0"></h5>
-                    <div class="ps-2">
-                        <small class="fa fa-star text-primary"></small>
-                        <small class="fa fa-star text-primary"></small>
-                        <small class="fa fa-star text-primary"></small>
-                        <small class="fa fa-star text-primary"></small>
-                        <small class="fa fa-star text-primary"></small>
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="purple">
+                        <i class="material-icons">assignment</i>
                     </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Dashboard</h4>
+                        <div class="toolbar">
+                            <!--        Here you can write extra buttons/actions for the toolbar              -->
+                        </div>
+                        <div class="material-datatables">
+                            <div class="material-datatables">
+                                <table id="datatables" class="table table-striped table-no-bordered table-hover"
+                                    cellspacing="0" width="100%" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Bill ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Room ID</th>
+                                            <th>Purchase</th>
+                                            <th>Status</th>
+                                            <th class="disabled-sorting text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {%if data%}
+                                        {%for row in data%}
+                                        <tr>
+                                            <td>{{row.bill_id}}</td>
+                                            <td>{{row.customer_name}}</td>
+                                            <td>{{row.room_id}}</td>
+                                            <td>{{row.total_money}}</td>
+                                            <td>{{row.tinhtrang}}</td>
+                                            <td><a href="{{url_for('adview.detail_bill',bill_id = row.bill_id)}}">View
+                                                    details</a>
+                                            </td>
+                                        </tr>
+                                        {%endfor%}
+                                        {%endif%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end content-->
+                    </div>
+                    <!--  end card  -->
                 </div>
-                <div class="d-flex mb-3">
-                    <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                        Bed</small>
-                    <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                        Bath</small>
-                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                </div>
-                <p class="text-body mb-3"></p>
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-sm btn-primary rounded py-2 px-4">View Detail</a>
-                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
-                </div>
+                <!-- end col-md-12 -->
             </div>
+            <!-- end row -->
         </div>
+        <nav>
+            <ul class="pagination pagination-info">
+                {%if prev or next%}
+                {%if prev >= 1%}
+                <li>
 
+                    <a href="/manage_rooms/{{prev}}">Previous</a>
+
+                </li>
+                {%endif%}
+                <li>
+                    {% for page in range(page)%}
+                    <span> <a href="/manage_rooms/{{loop.index}}">{{loop.index}}</a></span>
+                    {%endfor%}
+                </li>
+                {% if next <= page %} <li>
+                    <a href="/manage_rooms/{{next}}">Next</a>
+
+                    </li>
+                    {%endif%}
+                    {%endif%}
+
+            </ul>
+
+        </nav>
     </div>
-</div>
 
-{%include 'footer_admin.html'%}
-{%endblock%}
+    {%include 'footer_admin.html'%}
+    {%endblock%}

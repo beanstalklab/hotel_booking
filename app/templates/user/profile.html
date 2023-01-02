@@ -1,6 +1,13 @@
 {%extends 'nav_bar.html'%}
 
 {%block content%}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <!-- profile -->
 <div class="container">
     <div class="m-3">
@@ -57,7 +64,7 @@
                                 <h6 class="bold-text mb-0">Ngày sinh</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                {{ khachhang.customer_date }}
+                                {{ khachhang.customer_date.strftime("%d/%m/%Y") }}
                             </div>
                         </div>
                         <hr>
@@ -105,23 +112,27 @@
                         <h5 class="d-flex align-items-center mb-3">Lịch sử giao hoạt động</h5>
 
                         {%if lichsu%}
-                        <table>
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <td class="dataTable">Tên phòng</td>
-                                    <td>Thời gian bắt đầu</td>
-                                    <td>Thời gian kết thúc</td>
-                                    <td>Trạng thái</td>
+                                    <th class="thead-dark">Tên phòng</td>
+                                    <th>Thời gian bắt đầu</td>
+                                    <th>Thời gian kết thúc</td>
+                                    <th>Trạng thái</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 {%for row in lichsu%}
                                 <tr>
                                     <td>{{row.room_name}}</td>
-                                    <td>{{row.time_start}}</td>
-                                    <td>{{row.time_end}}</td>
+                                    <td>{{row.time_start.strftime("%d/%m/%Y")}}</td>
+                                    <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.status}}</td>
-                                    <td><a href="#">Hủy</a></td>
+                                    {%if row.status == "Đã thanh toán"%}
+                                    <td><a href="{{url_for('adview.detail_bill', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
+                                    {%else%}
+                                    <td><a href="#">Hủy đăng ký</a></td>
+                                    {%endif%}
                                 </tr>
                                 {%endfor%}
                             </tbody>

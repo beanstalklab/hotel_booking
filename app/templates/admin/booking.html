@@ -85,7 +85,19 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="row">
+                <label class="col-sm-2 label-on-left">Chọn phòng</label>
+                <div class="col-sm-2">
+                    <div class="form-group label-floating column-sizing">
+                        <label class="control-label"></label>
+                        <input class="form-control" style="cursor: pointer;" id="room" name="room" type="text" onclick="suggest_room();"
+                            onblur="room_fill()" />
+                    </div>
+                    <div class="suggestionsBox"  id="suggestionR">
+                        <div class="suggestionR" style="position: absolute;" id="suggestionR"></div>
+                    </div>
+                </div>
+            </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-rose btn-fill">Xác nhận</button>
               </div>
