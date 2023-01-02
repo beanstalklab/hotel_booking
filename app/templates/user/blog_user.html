@@ -28,7 +28,7 @@
 </legend>
 
 <div class="container">
-    <form action="{{url_for('view.write_blog', account_id = session.id)}}" class="form-control">
+    <form action="{{url_for('view.write_blog', account_id = session.id)}}">
         <div class="card shadow m-3">
             <div class="card-body">
                 <div class="mb-3">
@@ -59,7 +59,7 @@
 {%for blog in blogs%}
 <h2>{{blog[0]['title']}}</h2>
 <h3>{{blog[0]['time']}}</h3>
-<textarea name="body" id="body" cols="30" rows="5" readonly class="form-control">{{blog[0]['body']}}</textarea>
+<textarea class="form-control" name="body" id="body-text" readonly>{{blog[0]['body']}}</textarea>
 <div>
     {%for img in blog[1]%}
     <img src="{{url_for('view.blog_image', name=img)}}" style="height: 10%; width: 10%;" alt="">
@@ -67,7 +67,5 @@
 </div>
 {%endfor%}
 {%endif%}
-
-
 {%include 'footer.html'%}
 {%endblock%}

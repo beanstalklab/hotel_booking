@@ -60,11 +60,10 @@
         {%for item in data%}
         {%if item %}
         <div class="col-lg-4 col-md-6">
-
             <div class="shadow rounded overflow-hidden cart-image">
-                <div class="position-relative resize-image">
-                    <img class="" src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
-                        alt="" style="height: 100%;">
+                <div class="position-relative" style="height: 45%;">
+                    <img class="resize-image" src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
+                        alt="" style="">
                     <small
                         class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">{{item[0]['room_price']}}đ/Đêm</small>
                 </div>

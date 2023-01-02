@@ -8,10 +8,5 @@ $Env:DB_NAME="quanlykhachsan"
 $Env:DB_PASSWORD=""
 $Env:APP_SECRET_KEY="nopassword"
 $Env:HOTEL_IMAGE="D:\\hotel_image"
-<<<<<<< HEAD
 $Env:USER_IMAGE="D:\\CƠ CỞ WEB\\WEB\\project\\final\\app\\static\\user_img"
-$Env:HOTEL_IMAGE="D:\\blog_image"
-=======
-$Env:USER_IMAGE="D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app\\static\\user_img"
 $Env:BLOG_IMAGE="D:\\blog_image"
->>>>>>> 1a52976a1538716119ca5106fa74f672771c11a0

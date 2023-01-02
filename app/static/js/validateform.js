@@ -20,7 +20,7 @@ function validateLogin() {
             document.getElementById('msg-email').innerHTML = temp + "Email sai định dạng <br>";
             check = false
         } else {
-            document.getElementById('msg-email').innerHTML = checked;
+            document.getElementById('msg-email').innerHTML = "";
         }
     }
 
@@ -33,7 +33,7 @@ function validateLogin() {
             document.getElementById('msg-pass').innerHTML = temp + "Mật khẩu gồm 8-18 kí tự bao gồm viết thường(a-z), viết hoa(A-Z), số(0-9) <br>";
             check = false
         } else {
-            document.getElementById('msg-pass').innerHTML = checked;
+            document.getElementById('msg-pass').innerHTML = "";
         }
     }
 

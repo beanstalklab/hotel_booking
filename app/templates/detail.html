@@ -2,11 +2,7 @@
 {%block content%}
 
 <head>
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
     <link href="{{url_for('static', filename='css/slideshow_Gallery.css')}}" rel="stylesheet">
 </head>
 
@@ -223,18 +219,18 @@
                                         <div class="card card-body">
                                             <div class="list-group">
                                                 <label class="list-group-item">
-                                                    <input name="service" class="form-check-input me-1" id="service1" type="checkbox"
-                                                        value="2">
+                                                    <input name="service" class="form-check-input me-1" id="service1"
+                                                        type="checkbox" value="2">
                                                     Tiệc nướng BBQ
                                                 </label>
                                                 <label class="list-group-item">
-                                                    <input name="service" class="form-check-input me-1" id="service2" type="checkbox"
-                                                        value="1">
+                                                    <input name="service" class="form-check-input me-1" id="service2"
+                                                        type="checkbox" value="1">
                                                     Loa kéo Karaoke
                                                 </label>
                                                 <label class="list-group-item">
-                                                    <input name="service" class="form-check-input me-1" id="service3" type="checkbox"
-                                                        value="4">
+                                                    <input name="service" class="form-check-input me-1" id="service3"
+                                                        type="checkbox" value="4">
                                                     Tổ chức sự kiện
                                                 </label>
 
@@ -340,7 +336,7 @@
         {%for data in post_list%}
         <div style="background-color: antiquewhite; margin-bottom: 10px;">
             <div class="container">
-                <p style="font-weight: bold;">{{data['user_name']}}</p> 
+                <p style="font-weight: bold;">{{data['user_name']}}</p>
                 <small>{{data['date_post'].strftime("%d/%m/%Y")}}</small>
             </div>
             <p>{{data['post'] | safe}}</p>
@@ -352,10 +348,11 @@
             {%endif%}
         </div>
 
-            {%endfor%}
-            {%endif%}
+        {%endfor%}
+        {%endif%}
         {%if not full%}
-        <div><a href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm bình luận</a></div>
+        <div><a href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm bình luận</a>
+        </div>
         {%else%}
         <div><a href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt</a></div>
         {%endif%}
@@ -364,10 +361,9 @@
         <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
             <div class="form-group">
                 <label for="input-post">Nhập nội dung đánh giá</label>
-                <textarea name="body" id="editor" rows="9" cols="20" class="form-control"
-                    placeholder="Nhập nội dung tại đây"></textarea>
+                <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary mt-1">Submit</button>
         </form>
         <div id="result-form"></div>
         {%endif%}
@@ -376,6 +372,8 @@
 
 </div>
 <!-- End Info -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-dateFormat/1.0/jquery.dateFormat.js'></script>
 <script src="{{url_for('static', filename='js/slideshow_Gallery.js')}}"></script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 
