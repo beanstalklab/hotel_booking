@@ -80,13 +80,13 @@ def profile():
     hoatdong = cursor.fetchall()
     lichsu = []
     if hoatdong:
-        trangthai = {'0': 'Đã thanh toán', '1': 'Đã đặt', '2': 'Chờ duyêt', '3': 'Đã hủy'}
         for row in hoatdong:
             temp = {}
             temp['room_name'] = row[0]
             temp['time_start'] = row[1]
             temp['time_end'] = row[2]
             temp['status'] = row[3]
+            temp['id_bill'] = row[4]
             lichsu.append(temp)
     try:
         cursor.execute('select * from user_image where user_id = %s', (id_account,))
@@ -517,6 +517,12 @@ def write_post(id_room):
     conn.close()
     print(id_room,user_id,post)
     return redirect(url_for('view.detail', room_id=id_room))
+
+@main_blp.route('/insert_star/<room_id>')
+def insert_star(room_id):
+    star = request.args.get('star')
+    print(room_id, star)
+
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)

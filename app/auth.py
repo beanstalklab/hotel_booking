@@ -190,29 +190,7 @@ def customer_booking(room_id):
             
         flash('Bạn đã đặt phòng thành công')
         return redirect(url_for('view.profile'))
-    #     try:
-    #         cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], room_id, checkin, checkout))
-    #         conn.commit()
-    #         print('insert datphong ok')
-    #         cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], room_id, checkin, checkout, ))
-    #         id_datphong = cursor.fetchone()
-    #         print(id_datphong)
-    #         # # Generate bill_id
-    #         bill_id = str(id_datphong[0]) + "_" + str(customer[0])
-    #         print(bill_id, total_money, id_datphong[0])
-    #         cursor.execute("insert into hoadon (`id_bill`,`bookroom_id`, `tongtien`, `tinhtrang`) VALUES ({},{},{}, 'Chưa thanh toán')".format(bill_id,id_datphong[0], total_money))
-    #         conn.commit()
-    #         print('Thanh cong')
-    #         conn.close()
-    #         flash('Bạn đã đặt phòng thành công')
-    #         return redirect(url_for('view.profie'))
-    #     except:
-    #         conn.rollback()
-    #         return (redirect('/home'))
 
-    # else:
-    #     flash('Bạn cần hoàn thiện thông tin cá nhân để đặt phòng')
-    #     return render_template('view.profile')
 def get_date(dates):
     temp = dates.split('/')
     return  datetime.date(int(temp[2]),int(temp[0]),int(temp[1]))
@@ -311,6 +289,7 @@ def edit_profile_submit():
                     print('insert')
 
             except:
+                flash('Không cập nhật thành công', 'alert alert-warning')
                 print('Update unseccuessfully')
                 conn.rollback()
         else:
@@ -324,7 +303,7 @@ def edit_profile_submit():
                 cursor.execute('insert into user_image value (NULL, %s, %s)', (account_id, user_image,))
                 conn.commit()
                 print('Insert khachhang seccuessfully')
-                msg='Cập nhật thông tin thành công'
+                flash('Cập nhật thông tin thành công', 'alert alert-success')
 
             except:
                 print('Insert khachhang unseccuessfully')

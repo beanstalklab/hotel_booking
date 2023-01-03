@@ -247,23 +247,23 @@ def submit_booking():
     temp['province'] = province
     temp['room'] = room
     print(end_time)
-    # if id_customer:
-    #     cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
-    #     id_room = cursor.fetchone()
-    #     cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
-    #     conn.commit()
-    #     conn.close()
-    # else:
-    #     cursor.execute('insert into khachhang values (NULL, %s, %s, NULL, %s, %s, %s, NULL, NULL, NULL, NULL,1)', (firstname, lastname, identity, gender, phone))
-    #     conn.commit()
-    #     cursor.execute('SELECT * FROM khachhang where customer_identity = %s', (identity, ))
-    #     id_customer = cursor.fetchone()[0]
-    #     cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
-    #     id_room = cursor.fetchone()[0]
-    #     cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
-    #     conn.commit()
-    #     conn.close()
-    return render_template('admin/booking_detail.html', temp=temp)
+    if id_customer:
+        cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
+        id_room = cursor.fetchone()
+        cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
+        conn.commit()
+        conn.close()
+    else:
+        cursor.execute('insert into khachhang values (NULL, %s, %s, NULL, %s, %s, %s, NULL, NULL, NULL, NULL,1)', (firstname, lastname, identity, gender, phone))
+        conn.commit()
+        cursor.execute('SELECT * FROM khachhang where customer_identity = %s', (identity, ))
+        id_customer = cursor.fetchone()[0]
+        cursor.execute('select room_id from phong where room_name like "%{}%";'.format(room))
+        id_room = cursor.fetchone()[0]
+        cursor.execute('INSERT INTO datphong values (NULL, %s, %s, %s, %s)', (id_customer, id_room, start_time, end_time,))
+        conn.commit()
+        conn.close()
+    return redirect('admin_view.dashboard')
 def get_customer_id(cursor, identity):
     sql = '''SELECT * FROM khachhang where customer_identity = %s'''
     cursor.execute(sql, (identity,))
@@ -272,6 +272,22 @@ def get_customer_id(cursor, identity):
         return data[0]
     else:
         return ''
+@admin_blp.route('/submit_bill_purchase/<bill_id>')
+def submit_bill_purchase(bill_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('UPDATE hoadon set tinhtrang = "Đã thanh toán" where id_bill = %s', (bill_id,))
+        conn.commit()
+        conn.close()
+        flash('Thanh toán thành công!', 'alert alert-success')
+        return redirect('/dashboard')
+    except:
+        conn.rollback()
+        conn.close()
+        flash('Thanh toán thất bại', 'alert alert-warning')
+        return redirect(url_for('adview.detail_bill', bill_id=bill_id))
+
 @admin_blp.route('/convenient')
 def convenient():
     pass

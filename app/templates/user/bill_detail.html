@@ -1,0 +1,133 @@
+{%extends 'nav_bar.html'%}
+{%block content%}
+<div class="container">
+    <div class="col-md-12">
+        <div class="card mb-3 shadow">
+            <div class="card-body bold-text">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Mã hóa đơn</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{hoadon}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tên khách hàng</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{khachhang.1}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Số CCCD/CMT</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{khachhang.2}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tên khách sạn</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.1}}
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Loại phòng</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.6}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Địa chỉ khách sạn</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.2}}
+                    </div>
+                    <hr>
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tỉnh thành</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.3}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Dịch vụ</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <ul>
+                            {%if dichvu%}
+                                {%for item in dichvu%}
+                            <li>
+                                {{item.0}}: {{item.1}}đ
+                            </li>
+                            {%endfor%}
+                                {%endif%}
+                        </ul>
+                        
+                    </div>
+                    
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Ngày đến</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.4.strftime("%d/%m/%Y")}}
+                    </div>
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Ngày đi</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.5.strftime("%d/%m/%Y")}}
+                    </div>
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tổng số ngày</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                       {{(phong.5 - phong.4).days}} ngày/đêm
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Giá phòng</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{phong.7}}đ
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tổng tiền</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{khachhang.3}}đ
+                    </div>
+                </div>
+                <hr>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+{%include 'footer_admin.html'%}
+{%endblock%}

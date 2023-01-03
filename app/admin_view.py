@@ -1,3 +1,4 @@
+import datetime
 import math
 from flask import Blueprint, redirect, render_template, request, session, url_for, jsonify, flash
 from app.db_utils import connect_db, get_cursor
@@ -20,7 +21,62 @@ def logout():
     return redirect(url_for('auth.login'))
 @adview_blp.route('/dashboard')
 def dashboard():
-    return render_template('admin/dashboard.html', title='Dashboard')
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    cursor.execute('''select hoadon.id_bill, concat(khachhang.first_name," ", khachhang.last_name), phong.room_id, hoadon.total_money, hoadon.tinhtrang
+                    from hoadon 
+                    inner join datphong on datphong.bookroom_id = hoadon.bookroom_id
+                    inner join khachhang on khachhang.customer_id = datphong.customer_id
+                    inner join phong on datphong.room_id = phong.room_id;
+    ''')
+    data = cursor.fetchall()
+    final_data = []
+    for row in data:
+        temp = {}
+        temp['bill_id'] = row[0]
+        temp['customer_name'] = row[1]
+        temp['room_id'] = row[2]
+        temp['total_money'] = row[3]
+        temp['tinhtrang'] = row[4]
+        final_data.append(temp)
+    return render_template('admin/dashboard.html', title='Dashboard', data=final_data)
+
+def get_date(dates):
+    temp = dates.split('-')
+    return  datetime.date(int(temp[2]),int(temp[0]),int(temp[1]))
+    
+@adview_blp.route('/detail_bill/<bill_id>')
+def detail_bill(bill_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    cursor.execute('''select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money
+                    from khachhang 
+                    inner join datphong on datphong.customer_id = khachhang.customer_id
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    where hoadon.id_bill = %s''', (bill_id,))
+    khachhang = cursor.fetchone()
+    cursor.execute('''select phong.room_id, phong.room_name, phong.room_address, tinhthanh.province_name, datphong.time_start, datphong.time_end, loaiphong.room_name, phong.room_price
+                    from phong 
+                    inner join datphong on datphong.room_id = phong.room_id
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    inner join tinhthanh on tinhthanh.province_id = phong.id_province
+                    inner join loaiphong on loaiphong.room_id = phong.id_roomtype
+                    where hoadon.id_bill = %s
+                    ''', (bill_id, ))
+    phong = cursor.fetchone()
+    # checkin = phong[4]
+    # checkout = phong[5]
+    # print(checkout - checkin)
+    cursor.execute(''' select dichvu.service_name, dichvu.service_price, ql_dichvu.soluong from ql_dichvu 
+                    inner join datphong on datphong.bookroom_id = ql_dichvu.id_dangky
+                    inner join dichvu on dichvu.service_id = ql_dichvu.id_dichvu
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    where hoadon.id_bill = %s;''', (bill_id,))
+    dichvu = cursor.fetchall()
+    print(khachhang)
+    print(phong)
+    print(dichvu)
+    return render_template('user/bill_detail.html',hoadon=bill_id, dichvu=dichvu, khachhang=khachhang, phong=phong)
 @adview_blp.route('/profile')
 def profile():
     msg = {}

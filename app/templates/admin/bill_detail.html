@@ -1,0 +1,129 @@
+{%extends 'admin_home.html'%}
+{%block content%}
+<div class="col-md-12">
+  <div class="card">
+    <form id="TypeValidation" autocomplete="off" class="form-horizontal" action="{{url_for('admin.submit_bill_purchase', bill_id=hoadon)}}">
+      <div class="card-header card-header-text" data-background-color="rose">
+        <h4 class="card-title">Cập nhật hóa đơn</h4>
+      </div>
+      <div class="card-header card-header-text" data-background-color="rose"> <a href="#">Xóa hóa đơn</a>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Mã hóa đơn</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" id='room_id' name="room_id" required="true" value="{{hoadon}}"
+                readonly />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Tên khách hàng</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <div class="form-control">{{khachhang.1}}</div>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label">Số CCCD/CMT</label>
+              <div class="form-control">{{khachhang.2}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Tên phòng</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" name="room_name" id="room_name" value="{{phong.1}}" />
+            </div>
+          </div>
+          <label class="col-sm-2 label-on-left">Loại phòng</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" name="room_type" id="room_type" value="{{phong.6}}" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Địa chỉ</label>
+          <div class="col-sm-3">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <div class="form-control">{{phong.2}}</div>
+
+            </div>
+          </div>
+          <label class="col-sm-2 label-on-left">Tỉnh thành</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <div class="form-control">{{phong.3}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Ngày đến</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating column-sizing">
+              <label class="control-label"></label>
+              <div class="form-control">{{phong.4.strftime("%d/%m/%Y")}}</div>
+            </div>
+          </div>
+          <label class="col-sm-1 label-on-left">Ngày đi</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating column-sizing">
+              <label class="control-label"></label>
+              <div class="form-control">{{phong.5.strftime("%d/%m/%Y")}}</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Giá phòng</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <div class="form-control">{{phong.7}}</div>
+            </div>
+          </div>
+          <label class="col-sm-2 label-on-left">Tổng tiền</label>
+          <div class="col-sm-2">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <input class="form-control" type="text" id="room_price" name="room_price" number="true"
+                value="{{khachhang.3}}" />
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <label class="col-sm-2 label-on-left">Dịch vụ</label>
+          <div class="col-sm-5">
+            <div class="form-group label-floating">
+              <label class="control-label"></label>
+              <div class="form-control">
+                {%if dichvu%}
+                {%for item in dichvu%}
+                {{item.0}},
+                {%endfor%}
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer text-center">
+          <button style="margin-right: 50px;" type="submit" class="btn btn-rose btn-fill">Lưu</button>
+          <button style="margin-left: 20px ;" type="submit" class="btn btn-rose btn-fill">Thanh toán</button>
+        </div>
+    </form>
+  </div>
+</div>
+{%include 'footer_admin.html'%}
+{%endblock%}
