@@ -87,12 +87,12 @@
                             src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
                             alt="room image">
                         <div class="content-details fadeIn-top">
-                            <h3>this is a title</h3>
+                            <h3>{{item[0]['room_name']}}</h3>
                             <p>this is a short description</p>
                         </div>
                     </a>
                     <small
-                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4" id="fomat-money">
+                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4 fomat-money">
                         {{item[0]['room_price']}} VNĐ/Đêm
                     </small>
                 </div>
