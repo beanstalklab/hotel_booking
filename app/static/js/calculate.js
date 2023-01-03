@@ -53,7 +53,6 @@ function calc() {
     const days = numOfDays(starDay, endDay)
     document.getElementById("days").innerHTML = days + " đêm";
     document.getElementById("calc-room").innerHTML = days * price + "đ";
-    document.getElementById("calc-all").innerHTML = days * price + "đ";
     document.getElementById("calc-all").innerHTML = days * price + sum;
 
 }

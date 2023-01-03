@@ -125,6 +125,12 @@ def register_submit():
         account = cursor.fetchall()
         if account:
             flash('Email đã tồn tại!')
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            flash('Invalid email address !')
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            flash('Username must contain only characters and numbers !')
+        elif not re.match(r'^(?=\S{8,18}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])', password):
+            flash('Password is uncomfortable')
         elif not username or not password or not email:
             flash('Please fill out the form !')
         elif not (repassword == password):

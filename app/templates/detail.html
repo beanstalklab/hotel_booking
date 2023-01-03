@@ -36,24 +36,7 @@
         </div>
 
         <div class="col-6 py-2 d-flex justify-content-end">
-            <div class="stars">
-                <form action="{{url_for('view.insert_star',room_id = data[0])}}" name="rating">
-                    <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-                    <label class="star star-5" for="star-5"></label>
-                    <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-                    <label class="star star-4" for="star-4"></label>
-                    <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-                    <label class="star star-3" for="star-3"></label>
-                    <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-                    <label class="star star-2" for="star-2"></label>
-                    <input class="star star-1" id="star-1" type="radio"value='1' name="star" />
-                    <label class="star star-1" for="star-1"></label>
-                    <div> <i class="fas fa-star"></i>
-                        <input type="submit" id="btnSubmit" value="Đánh giá">
-                    </div>
-                </form>
-            </div>
-            <div id="result"></div>
+            
         </div>
     </div>
 
@@ -148,7 +131,7 @@
                         <h2>Quyền lợi</h2>
                         <div>
                             <i class="fas fa-user-shield"></i>
-                            <span>An Ninh Tuyet Doi</span>
+                            <span>An ninh tuyệt đối</span>
                         </div>
                         <div>
                             <i class="far fa-thumbs-up"></i>
@@ -176,11 +159,11 @@
                             action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
                             <div class="row">
                                 <div class="col-auto">
-                                    <small id="price">{{data['room_price']}}</small> <span>đ/đêm</span>
+                                    <small id="price">{{data['room_price']}}<span>đ /đêm</span> </small>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-star"></i>
-                                    <small>Rating: 4,69 </small>
+                                    <small>Rating: {{data['rating']}} </small>
                                 </div>
                             </div>
 
@@ -351,6 +334,7 @@
                 <p style="font-weight: bold;">{{data['user_name']}}</p>
                 <small>{{data['date_post'].strftime("%d/%m/%Y")}}</small>
             </div>
+
             <p>{{data['post'] | safe}}</p>
             {%if data['user_id'] == session.id %}
             <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}">Xóa</a>
@@ -371,10 +355,22 @@
         <h1>Đánh giá</h1>
         {%if session.id%}
         <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
-            <div class="form-group">
-                <label for="input-post">Nhập nội dung đánh giá</label>
-                <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
-            </div>
+            <div class="stars">
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio"value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+        </div>
+        <div class="form-group">
+            <label for="input-post">Nhập nội dung đánh giá</label>
+            <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
+        </div>
             <button type="submit" class="btn btn-primary mt-1">Submit</button>
         </form>
         <div id="result-form"></div>
@@ -384,22 +380,6 @@
 
 </div>
 <!-- End Info -->
-<script>
-    $(document).ready(function () {
-        $('#btnSubmit').click(function () {
-            var check = $('input[type="radio"]:checked');
-            $.ajax({
-                method: 'POST',
-                url: '/insert_star',
-                data: check,
-                cache: false,
-                success: function (data) {
-                    $("#result").html(data);
-                }
-            })
-        })
-    })
-</script>
 <script src="{{url_for('static', filename='js/calculate.js')}}"></script>
 
 {%include 'footer.html'%}

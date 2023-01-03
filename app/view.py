@@ -222,6 +222,15 @@ def room(page):
         temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                      'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
         room_id = int(data[0])
+        cursor.execute('''select avg(danhgia.rating) from danhgia
+                            where danhgia.room_id = %s
+                            GROUP BY danhgia.room_id; ''', (room_id,))
+        rating = cursor.fetchone()
+        if rating:
+            temp_data['rating'] = math.ceil(rating[0])
+        else:
+            temp_data['rating'] = 3
+        print(rating)
         try:
             cursor.execute(
                 'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
@@ -291,7 +300,8 @@ def detail(room_id):
     
     cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, taikhoan.account_id 
                 from binhluan
-                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s order by binhluan.date_post desc limit 5''', (room_id))
+                inner join taikhoan on taikhoan.account_id = binhluan.user_id 
+                where binhluan.room_id  = %s order by binhluan.date_post desc limit 5''', (room_id))
     posts = cursor.fetchall()
     post_list = []
     if posts:
@@ -440,6 +450,15 @@ def room_filter(page):
         temp_data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                      'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_isdelete': data[6]}
         room_id = int(data[0])
+        cursor.execute('''select avg(danhgia.rating) from danhgia
+                            where danhgia.room_id = %s
+                            GROUP BY danhgia.room_id; ''', (room_id,))
+        rating = cursor.fetchone()
+        if rating:
+            temp_data['rating'] = math.ceil(rating[0])
+        else:
+            temp_data['rating'] = 3
+        print(rating)
         try:
             cursor.execute(
                 'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
@@ -511,17 +530,40 @@ def write_post(id_room):
     conn = connect_db()
     cursor = get_cursor(conn)
     post = request.args.get('body')
-    user_id = session['id']
-    cursor.execute('insert into binhluan(`room_id`, `user_id`, `post`) values ({}, {},"{}")'.format(id_room,user_id,post))
-    conn.commit()
-    conn.close()
-    print(id_room,user_id,post)
-    return redirect(url_for('view.detail', room_id=id_room))
-
-@main_blp.route('/insert_star/<room_id>')
-def insert_star(room_id):
     star = request.args.get('star')
-    print(room_id, star)
+    user_id = session['id']
+    if post:
+        try:
+            cursor.execute('insert into binhluan(`room_id`, `user_id`, `post`) values ({}, {},"{}")'.format(id_room,user_id,post))
+            conn.commit()
+        except:
+            conn.rollback()
+    conn.close()
+    if star:
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        cursor.execute('''select * from danhgia where account_id = %s and room_id = %s;''', (user_id, id_room,))
+        rating = cursor.fetchone()
+        print(rating)
+        if rating:
+            try:
+                cursor.execute('''delete from danhgia where `account_id` = {} and `room_id` = {};'''.format(user_id, id_room))
+                cursor.execute('insert into danhgia values (%s, %s, %s)', (id_room, user_id, star,))
+                conn.commit()
+                print('update thanh cong')
+            except:
+                print('khong the update')
+                conn.rollback()
+        else:
+            try:
+                cursor.execute('insert into danhgia values (%s, %s, %s)', (id_room, user_id, star,))
+                conn.commit()
+            except:
+                conn.rollback()
+        conn.close()
+    
+    print(id_room,user_id,post, star)
+    return redirect(url_for('view.detail', room_id=id_room))
 
 @main_blp.route('/folder_image/<folder>/<name>')
 def image_file(folder, name):
