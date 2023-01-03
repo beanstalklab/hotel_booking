@@ -135,7 +135,7 @@ def register_submit():
                            (email, username, password_hash, ))
             conn.commit()
             msg = 'Đăng ký tài khoản thành công'
-            return redirect('/login', msg)
+            return redirect('/login')
     return redirect('/register')
 @auth_blp.route('/customer_booking/<room_id>', methods=['get'])
 def customer_booking(room_id):

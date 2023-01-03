@@ -94,7 +94,7 @@
     <!-- general -->
     <div class="row p-0 my-5  d-flex justify-content-around">
         <!-- left -->
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="card shadow rounded">
                 <div class="card-body">
                     <h1>Mô tả</h1>
@@ -165,7 +165,7 @@
         </div>
         <!-- right (BOOKING) -->
 
-        <div class="col-md-3">
+        <div class="col-md-4">
                 <div class="card shadow rounded m-0 p-3">
                     <div class="card-body">
                         <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
@@ -174,7 +174,7 @@
                                 action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
                                 <div class="row">
                                     <div class="col-auto">
-                                        <small id="price">{{data['room_price']}}</small> <span>đ/đêm</span>
+                                        <small class="fomat-money" id="price">{{data['room_price']}}</small> <span>đ/đêm</span>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-star"></i>
@@ -250,7 +250,7 @@
                                     <div type="button" class="btn" onclick="calc()">Ghi nhận</div>
 
                                     <div class="row row-cols-2">
-                                        <div class="col">{{data['room_price']}} x <span id="days"></span> </div>
+                                        <div class="col fomat-money">{{data['room_price']}} x <span id="days"></span> </div>
                                         <div class="col" id="calc-room">0</div>
 
 
