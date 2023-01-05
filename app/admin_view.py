@@ -167,7 +167,6 @@ def room(page):
     search_text = request.args.get('search_text')
     try:
         limit = 5
-
         offset = page * limit - limit
         conn = connect_db()
         cursor = get_cursor(conn)
