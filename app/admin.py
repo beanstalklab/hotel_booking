@@ -1,6 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, session, url_for, jsonify, flash
 from app.db_utils import connect_db, get_cursor
-from datetime import timedelta
 from app.sql import *
 import os
 admin_blp = Blueprint(

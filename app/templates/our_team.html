@@ -1,0 +1,37 @@
+{%extends 'nav_bar.html'%}
+{%block content%}
+
+<div class="container">
+    <div><h2>Chiêm ngưỡng dàn hotboy của nhóm</h2></div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+        <div>
+            <div>
+                <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='viet_anh.jpg', folder = 'founder')}}" alt="">
+            </div>
+            <div>
+                <p> Nguyễn Đình Việt Anh</p>
+                <p>Mã sinh viên: 20002029</p>
+                <p>Sinh viên ngành: Khoa học Dữ liệu</p>
+                <p>Email: nguyendinhvietanh_t65@hus.edu.vn</p>
+            </div>
+            
+        </div>
+        <div>
+            <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='hung_do.jpg', folder = 'founder')}}" alt="">
+            <p>Đỗ Mạnh Hùng </p>
+            <p>Mã sinh viên: 20002029</p>
+            <p>Sinh viên ngành: Khoa học Dữ liệu</p>
+            <p>Email: domanhhung_t65@hus.edu.vn</p>
+        </div>
+        <div>
+            <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='minh_hien.jpg', folder = 'founder')}}" alt="">
+            <p>Đoàn Minh Hiển</p>
+            <p>Mã sinh viên: 20002029</p>
+            <p>Sinh viên ngành: Khoa học Dữ liệu</p>
+            <p>Email: doanminhhien_t65@hus.edu.vn</p>
+        </div>
+    </div>
+    
+</div>
+{%include 'footer.html'%}
+{%endblock%}

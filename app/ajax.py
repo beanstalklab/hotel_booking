@@ -1,15 +1,10 @@
 from flask import (
     Blueprint,
-    redirect,
     render_template,
     request,
-    session,
-    url_for,
     jsonify,
-    flash,
 )
 from app.db_utils import connect_db, get_cursor
-from datetime import timedelta
 from app.sql import *
 
 ajax_blp = Blueprint(
@@ -85,10 +80,21 @@ def caculate():
     data = request.form['karaoke']
     print('connect')
     return
+@ajax_blp.route('/ajax_bill_search', methods=["POST", "GET"])
+def ajax_bill_search():
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    if request.method == "POST":
+        queryString = request.form['query']
+        cursor.execute('''select * from hoadon''')
+        result = cursor.fetchall()
+        print(queryString, result)
+    return jsonify('success')
 @ajax_blp.route("/ajaxlivesearch", methods=["POST", "GET"])
-def ajaxlivesearch():
+def ajaxlivesearch_room():
     conn = connect_db()
     cur = get_cursor(conn)
+    print('hello')
     if request.method == "POST":
         search_word = request.form["query"]
         print(search_word)

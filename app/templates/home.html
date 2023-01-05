@@ -1,7 +1,5 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
-
-
 <body>
     <!-- Carousel -->
     <div class="container-fluid p-0">
@@ -100,11 +98,11 @@
                         <div class="d-flex justify-content-between mb-3" style="height: 15%">
                             <h5 class="mb-0">{{item[0]['room_name']}}</h5>
                             <div class="ps-2">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
+                                {%if item[0]['rating']%}
+                                {%for i in range(item[0]['rating'])%}
+                                    <small class="fa fa-star text-primary"></small>
+                                {%endfor%}
+                                {%endif%}
                             </div>
                         </div>
                         <div class="d-flex mb-3" style="height: 10%">

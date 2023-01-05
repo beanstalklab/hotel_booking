@@ -11,7 +11,9 @@ adview_blp = Blueprint(
 @adview_blp.route('/home')
 def admin_home():
     return render_template('admin_home.html')
-
+@adview_blp.route('/index')
+def index():
+    return render_template('index.html')
 @adview_blp.route('/logout')
 def logout():
     session.pop('loggedin', None)
@@ -21,25 +23,50 @@ def logout():
     return redirect(url_for('auth.login'))
 @adview_blp.route('/dashboard')
 def dashboard():
-    conn = connect_db()
-    cursor = get_cursor(conn)
-    cursor.execute('''select hoadon.id_bill, concat(khachhang.first_name," ", khachhang.last_name), phong.room_id, hoadon.total_money, hoadon.tinhtrang
-                    from hoadon 
-                    inner join datphong on datphong.bookroom_id = hoadon.bookroom_id
-                    inner join khachhang on khachhang.customer_id = datphong.customer_id
-                    inner join phong on datphong.room_id = phong.room_id;
-    ''')
-    data = cursor.fetchall()
-    final_data = []
-    for row in data:
-        temp = {}
-        temp['bill_id'] = row[0]
-        temp['customer_name'] = row[1]
-        temp['room_id'] = row[2]
-        temp['total_money'] = row[3]
-        temp['tinhtrang'] = row[4]
-        final_data.append(temp)
-    return render_template('admin/dashboard.html', title='Dashboard', data=final_data)
+    search_text = request.args.get('search_text')
+    print(search_text)
+    try:
+        temp = search_text.lower()
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        cursor.execute('''select hoadon.id_bill, concat(khachhang.first_name," ", khachhang.last_name), phong.room_id, hoadon.total_money, hoadon.tinhtrang
+                        from hoadon 
+                        inner join datphong on datphong.bookroom_id = hoadon.bookroom_id
+                        inner join khachhang on khachhang.customer_id = datphong.customer_id
+                        inner join phong on datphong.room_id = phong.room_id
+                        where hoadon.id_bill like "%{}%" or LOWER(phong.room_name) like "%{}%" or LOWER(khachhang.first_name) like "%{}%" or LOWER(khachhang.last_name) like "%{}%";
+        '''.format(temp,temp,temp,temp))
+        data = cursor.fetchall()
+        final_data = []
+        for row in data:
+            temp = {}
+            temp['bill_id'] = row[0]
+            temp['customer_name'] = row[1]
+            temp['room_id'] = row[2]
+            temp['total_money'] = row[3]
+            temp['tinhtrang'] = row[4]
+            final_data.append(temp)
+        return render_template('admin/dashboard.html', title='Dashboard', data=final_data, search_text=search_text)
+    except:
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        cursor.execute('''select hoadon.id_bill, concat(khachhang.first_name," ", khachhang.last_name), phong.room_id, hoadon.total_money, hoadon.tinhtrang
+                        from hoadon 
+                        inner join datphong on datphong.bookroom_id = hoadon.bookroom_id
+                        inner join khachhang on khachhang.customer_id = datphong.customer_id
+                        inner join phong on datphong.room_id = phong.room_id;
+        ''')
+        data = cursor.fetchall()
+        final_data = []
+        for row in data:
+            temp = {}
+            temp['bill_id'] = row[0]
+            temp['customer_name'] = row[1]
+            temp['room_id'] = row[2]
+            temp['total_money'] = row[3]
+            temp['tinhtrang'] = row[4]
+            final_data.append(temp)
+        return render_template('admin/dashboard.html', title='Dashboard', data=final_data, search_text=search_text)
 
 def get_date(dates):
     temp = dates.split('-')
@@ -137,55 +164,100 @@ def profile():
 @adview_blp.route('/manage_rooms', defaults={'page': 1})
 @adview_blp.route('/manage_rooms/<int:page>', methods=['GET', 'POST'])
 def room(page):
-    limit = 5
-
-    offset = page * limit - limit
-    conn = connect_db()
-    cursor = get_cursor(conn)
+    search_text = request.args.get('search_text')
     try:
-        cursor.execute('SELECT * FROM phong where room_isdelete = 1')
-        conn.commit()
-    except:
-        conn.rollback()
-    total_row = cursor.rowcount
-    total_page = math.ceil(total_row/limit)
+        limit = 5
 
-    next = page + 1
-    prev = page - 1
-    try:
-        cursor.execute('SELECT * FROM phong')
-        conn.commit()
-    except:
-        conn.rollback()
-    conn.close()
-    total_row = cursor.rowcount
-    total_page = math.ceil(total_row/limit)
-    
-    conn = connect_db()
-    cursor = get_cursor(conn)
-    phong=''
-    try:
-        cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id LIMIT %s OFFSET %s;', (limit, offset,))
-        conn.commit()
-        phong = cursor.fetchall()
-    except:
-        conn.rollback()
-    final_data = []
-    for row in phong:
-        temp = {}
-        temp['room_id'] = row[0]
-        temp['room_name'] = row[1]
-        temp['room_address'] = row[2]
-        temp['room_performance'] = row[3]
-        temp['room_price'] = row[4]
-        temp['room_type'] = row[5]
-        temp['room_province'] = row[6]
-        temp['room_isdelete'] = 'Active'
+        offset = page * limit - limit
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        try:
+            cursor.execute('SELECT * FROM phong where room_isdelete = 1')
+            conn.commit()
+        except:
+            conn.rollback()
+        total_row = cursor.rowcount
+        total_page = math.ceil(total_row/limit)
 
-        final_data.append(temp)
-    conn.close()
-    # print(final_data)
-    return render_template('admin/room.html', data = final_data, page=total_page, next=next, prev=prev)
+        next = page + 1
+        prev = page - 1
+        try:
+            cursor.execute('SELECT * FROM phong')
+            conn.commit()
+        except:
+            conn.rollback()
+        conn.close()
+        total_row = cursor.rowcount
+        total_page = math.ceil(total_row/limit)
+        
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        phong=''
+        try:
+            cursor.execute('select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id LIMIT %s OFFSET %s;', (limit, offset,))
+            conn.commit()
+            phong = cursor.fetchall()
+        except:
+            conn.rollback()
+        final_data = []
+        for row in phong:
+            temp = {}
+            temp['room_id'] = row[0]
+            temp['room_name'] = row[1]
+            temp['room_address'] = row[2]
+            temp['room_performance'] = row[3]
+            temp['room_price'] = row[4]
+            temp['room_type'] = row[5]
+            temp['room_province'] = row[6]
+            temp['room_isdelete'] = 'Active'
+
+            final_data.append(temp)
+        conn.close()
+        # print(final_data)
+        return render_template('admin/room.html', data = final_data, page=total_page, next=next, prev=prev)
+    except:
+        limit = 5
+        offset = page * limit - limit
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        try:
+            cursor.execute('SELECT * FROM phong where room_isdelete = 1')
+            conn.commit()
+        except:
+            conn.rollback()
+        total_row = cursor.rowcount
+        total_page = math.ceil(total_row/limit)
+
+        next = page + 1
+        prev = page - 1
+        
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        phong=''
+        temp=search_text.lower()
+        try:
+            cursor.execute('''select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province 
+            where phong.room_isdelete = 1 and LOWER(phong.room_name) like "%{}%" or tinhthanh.province_name like "%{}%" phong.room_address like "%{}%" order by phong.room_id LIMIT {} OFFSET {};''', (temp, temp, temp, limit, offset,))
+            conn.commit()
+            phong = cursor.fetchall()
+        except:
+            conn.rollback()
+        final_data = []
+        for row in phong:
+            temp = {}
+            temp['room_id'] = row[0]
+            temp['room_name'] = row[1]
+            temp['room_address'] = row[2]
+            temp['room_performance'] = row[3]
+            temp['room_price'] = row[4]
+            temp['room_type'] = row[5]
+            temp['room_province'] = row[6]
+            temp['room_isdelete'] = 'Active'
+
+            final_data.append(temp)
+        conn.close()
+        # print(final_data)
+        return render_template('admin/room.html', data = final_data, page=total_page, next=next, prev=prev, search_text=search_text)
 @adview_blp.route('/room_filter', defaults={'page': 1})
 @adview_blp.route('/room_filter/<int:page>')
 def filter(page):

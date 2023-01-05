@@ -64,7 +64,9 @@
                                 <h6 class="bold-text mb-0">Ngày sinh</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
+                                {%if khachhang.customer_date %}
                                 {{ khachhang.customer_date.strftime("%d/%m/%Y") }}
+                                {%endif%}
                             </div>
                         </div>
                         <hr>
@@ -73,7 +75,9 @@
                                 <h6 class="bold-text mb-0">Email</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
+                                {%if info.email%}
                                 {{ info.email }}
+                                {%endif%}
                             </div>
                         </div>
                         <hr>
@@ -82,7 +86,9 @@
                                 <h6 class="bold-text mb-0">Số điện thoại</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
+                                {%if khachhang.customer_phone%}
                                 {{khachhang.customer_phone}}
+                                {%endif%}
                             </div>
                         </div>
                         <hr>
@@ -90,8 +96,10 @@
                             <div class="col-sm-3">
                                 <h6 class="bold-text mb-0">Địa chỉ thường trú</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-9 text-secondary"> 
+                                {%if khachhang.customer_address%}
                                 {{khachhang.customer_address}}
+                                {%endif%}
                             </div>
                         </div>
                         <hr>

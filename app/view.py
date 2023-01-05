@@ -29,6 +29,14 @@ def home():
         room_id = data[0]
         conn = connect_db()
         cursor = get_cursor(conn)
+        cursor.execute('''select avg(danhgia.rating) from danhgia
+                            where danhgia.room_id = %s
+                            GROUP BY danhgia.room_id; ''', (room_id,))
+        rating = cursor.fetchone()
+        if rating:
+            temp_data['rating'] = math.ceil(rating[0])
+        else:
+            temp_data['rating'] = 3
         try:
             cursor.execute(
                 'SELECT image_link, image_rank from hinhanh where room_id = %s', (room_id,))
@@ -44,7 +52,12 @@ def home():
         final_data.append((temp_data, img))
     conn.close()
     return render_template('home.html', data=final_data)
-
+@main_blp.route('/about')
+def about():
+    return render_template('about.html')
+@main_blp.route('/our_team')
+def our_team():
+    return render_template('our_team.html')
 @main_blp.route('/profile', methods=['GET'])
 def profile():
     msg = {}
@@ -103,8 +116,8 @@ def profile():
     conn.close()
     return render_template('user/profile.html', info=info,khachhang=khachhang,msg=msg, lichsu=lichsu,img=img)
 
-@main_blp.route('/blog_customer/<account_id>')
-def blog_customer(account_id):
+@main_blp.route('/blog_customer/<account_name>/<account_id>')
+def blog_customer(account_id, account_name):
     conn = connect_db()
     cursor = get_cursor(conn)
     posts=''
@@ -124,30 +137,7 @@ def blog_customer(account_id):
             if img:
                 final_img.append(img[2])
         posts.append((temp, final_img))
-    # try:
-
-    #     cursor.execute('select * from baiviet where account_id = %s where status = 0', (account_id,))
-    #     data = cursor.fetchall()
-    #     posts = []
-    #     for row in data:
-    #         temp = {}
-    #         temp['post_id'] = row[0]
-    #         temp['title'] = row[2]
-    #         temp['body'] = row[3]
-    #         temp['time'] = row[4]
-    #         cursor.execute('select * from blog_image where post_id = %s', (row[0],))
-    #         img_list = cursor.fetchall()
-    #         final_img = []
-    #         for img in img_list:
-    #             if img:
-    #                 index = img[2].index('/')
-    #                 img = {'folder': img[2][0:index],
-    #                         'name': img[2][index+1:]}
-    #                 final_img.append(img)
-    #         posts.append((temp, final_img))
-    # except:
-    #     conn.rollback()
-    return render_template('user/blog_user.html', blogs = posts)
+    return render_template('user/blog_user.html', blogs = posts, account_name=account_name)
 
 @main_blp.route('/write_blog/<account_id>')
 def write_blog(account_id):
@@ -211,7 +201,11 @@ def room(page):
 
     try:
         cursor.execute(
-        'SELECT * FROM phong where room_isdelete = 1 ORDER BY room_id ASC LIMIT %s OFFSET %s', (limit, offset,))
+            '''SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
+            FROM phong 
+            inner join danhgia on danhgia.room_id = phong.room_id 
+            where room_isdelete = 1 GROUP BY phong.room_id 
+            ORDER BY avg(danhgia.rating) DESC LIMIT {} OFFSET {}'''.format(limit, offset))
         conn.commit()
     except:
         conn.rollback()
@@ -266,6 +260,14 @@ def detail(room_id):
 
     data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                     'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_province': data[6]}
+    cursor.execute('''select avg(danhgia.rating) from danhgia
+                            where danhgia.room_id = %s
+                            GROUP BY danhgia.room_id; ''', (room_id,))
+    rating = cursor.fetchone()
+    if rating:
+        data['rating'] = round(rating[0],1)
+    else:
+        data['rating'] = 3.1
     try:
         cursor.execute(
             'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
@@ -298,10 +300,12 @@ def detail(room_id):
     except:
         print('errro')
     
-    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, taikhoan.account_id 
-                from binhluan
-                inner join taikhoan on taikhoan.account_id = binhluan.user_id 
-                where binhluan.room_id  = %s order by binhluan.date_post desc limit 5''', (room_id))
+    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, binhluan.user_id, danhgia.rating from taikhoan
+                    inner join binhluan on binhluan.user_id = taikhoan.account_id
+                    INNER join danhgia on danhgia.account_id = taikhoan.account_id
+                    INNER JOIN phong on phong.room_id = binhluan.room_id 
+                    where binhluan.room_id = danhgia.room_id and binhluan.user_id = danhgia.account_id and binhluan.room_id = %s order by binhluan.date_post desc''', (room_id))
+    row_comment = cursor.rowcount
     posts = cursor.fetchall()
     post_list = []
     if posts:
@@ -313,10 +317,22 @@ def detail(room_id):
             temp['post'] = row[3]
             temp['date_post'] = row[4]
             temp['user_id'] = row[5]
+            temp['rating'] = row[6]
             post_list.append(temp)
+    try:
+        cursor.execute('select danhgia.rating from danhgia where danhgia.account_id = %s and danhgia.room_id = %s', (session['id'], room_id, ))
+    except:
+        cursor.execute('select danhgia.rating from danhgia where danhgia.account_id = %s and danhgia.room_id = %s', (1, room_id, ))
+       
+    user_rating = cursor.fetchone()
+    if user_rating:
+        user_rating = int(user_rating[0])
+    else:
+        user_rating = 0
+    print(user_rating)
     conn.close()
     
-    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list)
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list, user_rate=user_rating, num_cmt=row_comment)
 @main_blp.route('/full_detail_comment/<room_id>', methods=['GET', 'POST'])
 def full_detail_comment(room_id):
     msg = ''
@@ -332,6 +348,14 @@ def full_detail_comment(room_id):
 
     data = {'room_id': data[0], 'room_name': data[1], 'room_address': data[2],
                     'room_performance': data[3], 'room_price': data[4], 'id_typeroom': data[5], 'room_province': data[6]}
+    cursor.execute('''select avg(danhgia.rating) from danhgia
+                            where danhgia.room_id = %s
+                            GROUP BY danhgia.room_id; ''', (room_id,))
+    rating = cursor.fetchone()
+    if rating:
+        data['rating'] = round(rating[0],1)
+    else:
+        data['rating'] = 3.1
     try:
         cursor.execute(
             'SELECT image_link, image_rank from hinhanh where room_id = % s;', (room_id,))
@@ -364,9 +388,11 @@ def full_detail_comment(room_id):
     except:
         print('errro')
     
-    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, taikhoan.account_id 
-                from binhluan
-                inner join taikhoan on taikhoan.account_id = binhluan.user_id where room_id  = %s order by binhluan.date_post desc''', (room_id))
+    cursor.execute('''select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, binhluan.user_id, danhgia.rating from taikhoan
+                    inner join binhluan on binhluan.user_id = taikhoan.account_id
+                    INNER join danhgia on danhgia.account_id = taikhoan.account_id
+                    INNER JOIN phong on phong.room_id = binhluan.room_id 
+                    where binhluan.room_id = danhgia.room_id and binhluan.user_id = danhgia.account_id and binhluan.room_id = %s; order by binhluan.date_post desc''', (room_id))
     posts = cursor.fetchall()
     post_list = []
     if posts:
@@ -378,10 +404,15 @@ def full_detail_comment(room_id):
             temp['post'] = row[3]
             temp['date_post'] = row[4]
             temp['user_id'] = row[5]
+            temp['rating'] = row[6]
+
             post_list.append(temp)
     conn.close()
+    cursor.execute('select danhgia.rating from danhgia where danhgia.account_id = %s and danhgia.room_id = %s', (session['id'], room_id, ))
+    user_rating = cursor.fetchone()[0]
+    conn.close()
     
-    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list, full='full')
+    return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list, user_rate=user_rating)
 @main_blp.route('/delete_comment/<room_id>/<post_id>')
 def delete_comment(post_id, room_id):
     conn = connect_db()
@@ -438,7 +469,10 @@ def room_filter(page):
         else:
             try:
                 cursor.execute(
-                    'SELECT * FROM phong where room_isdelete = 1 ORDER BY room_id ASC LIMIT {} OFFSET {}'.format(limit, offset))
+                    '''SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
+                    FROM phong 
+                    inner join danhgia on danhgia.room_id = phong.room_id 
+                    where room_isdelete = 1 GROUP BY phong.room_id ORDER BY avg(danhgia.rating) DESC LIMIT {} OFFSET {}'''.format(limit, offset))
                 conn.commit()
             except:
                 conn.rollback()
