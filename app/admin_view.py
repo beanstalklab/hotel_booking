@@ -165,6 +165,7 @@ def profile():
 @adview_blp.route('/manage_rooms/<int:page>', methods=['GET', 'POST'])
 def room(page):
     search_text = request.args.get('search_text')
+    print(search_text)
     try:
         limit = 5
         offset = page * limit - limit
