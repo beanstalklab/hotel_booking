@@ -97,10 +97,10 @@
                     <div class="p-4 mt-2 resize-info" style="height: 50%;">
                         <div class="d-flex justify-content-between mb-3" style="height: 15%">
                             <h5 class="mb-0">{{item[0]['room_name']}}</h5>
-                            <div class="ps-2">
+                            <div class="d-flex">
                                 {%if item[0]['rating']%}
                                 {%for i in range(item[0]['rating'])%}
-                                    <small class="fa fa-star text-primary"></small>
+                                    <small class="fa fa-star text-primary" style="padding-left: 2px;"></small>
                                 {%endfor%}
                                 {%endif%}
                             </div>
