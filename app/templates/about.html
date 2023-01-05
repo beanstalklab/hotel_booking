@@ -2,10 +2,20 @@
 {%block content%}
 
 <div class="container">
+
+     <!-- Breadcrumb -->
+     <nav class="main-breadcrumb mt-2">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Chính sách</li>
+        </ol>
+    </nav>
+    <!-- End Breadcrumb -->
+
     <div class="card shadow m-3">
         <div class="card-body">
             <div class="mb-3">
-                <label class="form-label" for="title">Nội quy phòng</label>
+                <label class="form-label" for="title"><h3>Nội quy phòng</h3></label>
             </div>
             <div class="mb-3">
                 <div class="form-control">
@@ -30,9 +40,9 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="txtPost">Chính sách hoàn hủy</label>
+                <label class="form-label" for="txtPost"><h3>Chính sách hoàn hủy</h3></label>
                 <div class="form-control">
-                    *KHÔNG HOÀN HUỶ chỉ dời lịch cho khách:
+                    <b>*KHÔNG HOÀN HỦY chỉ dời lịch cho khách:</b>
                     <ul>
                         <li>
                             Dời lịch miễn phí 3 tháng khi khách không thể đi.
@@ -44,9 +54,9 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="txtPost">Hợp tác với các tổ chức phi lợi nhuận</label>
+                <label class="form-label" for="txtPost"><h3>Hợp tác với các tổ chức phi lợi nhuận</h3></label>
                 <div class="form-control">
-                    CloudTravel hỗ trợ các tổ chức phi lợi nhuận kết nối mọi người với nơi cư trú tạm thời, tài nguyên
+                    Cloud Travel hỗ trợ các tổ chức phi lợi nhuận kết nối mọi người với nơi cư trú tạm thời, tài nguyên
                     và
                     sự hỗ trợ đặc biệt trong thời gian khủng hoảng. Chúng tôi cũng hỗ trợ họ tìm đến nhà ở miễn phí và
                     giảm giá do cộng đồng chủ nhà Airbnb cung cấp.
@@ -54,7 +64,7 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="txtPost"> Đầu tư vào sự bình đẳng</label>
+                <label class="form-label" for="txtPost"><h3>Đầu tư vào sự bình đẳng</h3></label>
                 <div class="form-control">
                     Chúng tôi tin tưởng vào việc sử dụng sức mạnh và nguồn lực của mình để đóng góp vào một thế giới
                     bình đẳng hơn.
@@ -64,7 +74,7 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="txtPost"> Hiểu về tác động của chúng tôi</label>
+                <label class="form-label" for="txtPost"><h3>Hiểu về tác động của chúng tôi</h3></label>
                 <div class="form-control">
                     Chúng tôi hướng đến đưa tác động của chương trình trợ cấp và cung cấp chỗ ở vào việc cải thiện sức
                     khỏe tâm lý xã

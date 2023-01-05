@@ -1,37 +1,56 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
 
-<div class="container">
-    <div><h2>Chiêm ngưỡng dàn hotboy của nhóm</h2></div>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-        <div>
-            <div>
-                <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='viet_anh.jpg', folder = 'founder')}}" alt="">
+<div class="container my-5">
+    <div>
+        <h2>Chiêm ngưỡng dàn hotboy của nhóm</h2>
+    </div>
+    <div class="row d-flex justify-content-around">
+        <div class="card col-3">
+            <img style="height: 300px; width: 200px;"
+                src="{{url_for('view.image_file',name='viet_anh.jpg', folder = 'founder')}}" alt="">
+            <div class="card-body">
+                <div>
+                    <h3> Nguyễn Đình Việt Anh</h3>
+                    <p><b>Mã sinh viên:</b> 20002029</p>
+                    <p><b>Sinh viên ngành:</b> Khoa học Dữ liệu</p>
+                    <p><b>Email:</b> nguyendinhvietanh_t65@hus.edu.vn</p>
+                </div>
             </div>
-            <div>
-                <p> Nguyễn Đình Việt Anh</p>
-                <p>Mã sinh viên: 20002029</p>
-                <p>Sinh viên ngành: Khoa học Dữ liệu</p>
-                <p>Email: nguyendinhvietanh_t65@hus.edu.vn</p>
+
+
+        </div>
+        <div class="card col-3">
+            <img style="height: 300px; width: 200px;"
+                src="{{url_for('view.image_file',name='hung_do.jpg', folder = 'founder')}}" alt="">
+
+            <div class="card-body">
+                <h3>Đỗ Mạnh Hùng </h3>
+                <p><b>Mã sinh viên:</b> 20002029</p>
+                <p><b>Sinh viên ngành:</b> Khoa học Dữ liệu</p>
+                <p><b>Email:</b> domanhhung_t65@hus.edu.vn</p>
             </div>
-            
+
+
         </div>
-        <div>
-            <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='hung_do.jpg', folder = 'founder')}}" alt="">
-            <p>Đỗ Mạnh Hùng </p>
-            <p>Mã sinh viên: 20002029</p>
-            <p>Sinh viên ngành: Khoa học Dữ liệu</p>
-            <p>Email: domanhhung_t65@hus.edu.vn</p>
-        </div>
-        <div>
-            <img style="height: 300px; width: 200px;" src="{{url_for('view.image_file',name='minh_hien.jpg', folder = 'founder')}}" alt="">
-            <p>Đoàn Minh Hiển</p>
-            <p>Mã sinh viên: 20002029</p>
-            <p>Sinh viên ngành: Khoa học Dữ liệu</p>
-            <p>Email: doanminhhien_t65@hus.edu.vn</p>
+        <div class="card col-3">
+            <img style="height: 300px; width: 200px;"
+                src="{{url_for('view.image_file',name='minh_hien.jpg', folder = 'founder')}}" alt="">
+            <div class="card-body">
+
+
+                <div>
+
+                    <h3>Đoàn Minh Hiển</h3>
+                    <p><b>Mã sinh viên:</b> 20002029</p>
+                    <p><b>Sinh viên ngành:</b> Khoa học Dữ liệu</p>
+                    <p><b>Email:</b> doanminhhien_t65@hus.edu.vn</p>
+                </div>
+            </div>
+
         </div>
     </div>
-    
+
 </div>
 {%include 'footer.html'%}
 {%endblock%}

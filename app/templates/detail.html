@@ -204,7 +204,8 @@
                                                 <input type="text" class="datepicker form-control" id="end-date"
                                                     name="end" placeholder="Check Out" />
                                                 <label for="end-date">
-                                                    <i class="fa-solid fa-calendar-days" style="font-size: 13px;"></i> Ngày đi
+                                                    <i class="fa-solid fa-calendar-days" style="font-size: 13px;"></i>
+                                                    Ngày đi
                                                 </label>
 
                                             </div>
@@ -336,10 +337,10 @@
                 </div>
             </div>
 
-
         </div>
     </div>
-    <hr class="dropdown-divider">
+
+    <hr class="dropdown-divider my-5">
 
     <div>
         {%if post_list%}
@@ -354,9 +355,11 @@
 
             <p>{{data['post'] | safe}}</p>
             {%if data['user_id'] == session.id %}
-            <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}" class="btn btn-primary mt-1">Xóa</a>
+            <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
+                class="btn btn-primary mt-1">Xóa</a>
             {%else%}
-            <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}" class="btn btn-primary mt-1">Xem trang cá nhân</a>
+            <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
+                class="btn btn-primary mt-1">Xem trang cá nhân</a>
             {%endif%}
         </div>
 

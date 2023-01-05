@@ -11,11 +11,11 @@
 
 
 .datepicker.dropdown-menu table {
-    background-color: #F58887;
+    background-color: #6996e3;
 }
 
 .datepicker.dropdown-menu table thead {
-    background-color: #F58887;
+    background-color: #6996e3;
 }
 
 .datepicker.dropdown-menu table thead tr {
@@ -95,7 +95,7 @@
 .datepicker.dropdown-menu table tr th.prev,
 .datepicker.dropdown-menu table tr th.next {
     color: #ffffff;
-    background-color: #ca6563;
+    background-color: #5085e2;
     border-radius: 0;
 }
 
@@ -104,7 +104,7 @@
     font-size: 12px;
     line-height: 2;
     color: #ffffff;
-    background-color: #ca6563;
+    background-color: #5085e2;
     border-radius: 0;
 }
 
