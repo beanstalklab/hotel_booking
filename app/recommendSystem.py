@@ -77,7 +77,7 @@ def predict_top_k_items_of_user(u_index, k_users):
             items.append((i_index, rating))
     items = sorted(items, key=lambda tup: tup[1])
     items = list(reversed(items))
-    return items
+    return items[:6]
 
 
 ratings_matrix = importData()
@@ -85,8 +85,8 @@ mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
 mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
 user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 
+
 def get_result(user_id):
     result_predict  = predict_top_k_items_of_user(user_id, 5)
     return result_predict
-# print(get_result(31))
-
+# print(get_result(1))

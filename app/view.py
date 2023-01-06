@@ -19,7 +19,7 @@ import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app"
+    "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
 )
 from recommendSystem import *
 
@@ -517,7 +517,11 @@ def detail(room_id):
  ### Start recommend system
     final_data = []
     result = ''
-    
+    user_id = session["id"]
+    print('l')
+    result = get_result(int(user_id))
+    print('k')
+    print(result)
     try:
         user_id = session["id"]
         print('l')
