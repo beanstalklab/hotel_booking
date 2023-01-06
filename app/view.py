@@ -4,6 +4,10 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from app.db_utils import connect_db, get_cursor
 from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE
 from app.sql import *
+import pandas as pd
+import sys
+sys.path.append("D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app")
+from recommendSystem import *
 main_blp = Blueprint(
     "view", __name__, template_folder='templates', static_folder='static')
 
@@ -330,6 +334,27 @@ def detail(room_id):
     else:
         user_rating = 0
     print(user_rating)
+    cursor.execute('select * from danhgia')
+    temp = cursor.fetchall()
+    json_data = []
+    for row in temp:
+        temp = {}
+        temp['account_id'] = row[0]
+        temp['room_id'] = row[1]
+        temp['rating'] = row[2]
+        json_data.append(temp)
+    try:
+        user_id = session['id']
+        rating_data = pd.DataFrame.from_dict(json_data, orient='columns')
+        hotel_rating_user =rating_data.pivot_table(index='account_id', columns='room_id', values='rating')
+        ratings_matrix = hotel_rating_user.values
+        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+        user_similarity_matrix = get_user_similarity_matrix(mean_centered_ratings_matrix)
+        result  = predict_top_k_items_of_user(user_id, 2,ratings_matrix, user_similarity_matrix, mean_centered_ratings_matrix)
+        print(len(result))
+    except:
+        pass
     conn.close()
     
     return render_template('detail.html', data=data, msg=msg, img=list_img,num=number_img, mota=mota, loaiphong=loaiphong, province=province, post_list=post_list, user_rate=user_rating, num_cmt=row_comment)
@@ -570,6 +595,7 @@ def write_post(id_room):
         try:
             cursor.execute('insert into binhluan(`room_id`, `user_id`, `post`) values ({}, {},"{}")'.format(id_room,user_id,post))
             conn.commit()
+            print('insert comment')
         except:
             conn.rollback()
     conn.close()
@@ -582,7 +608,7 @@ def write_post(id_room):
         if rating:
             try:
                 cursor.execute('''delete from danhgia where `account_id` = {} and `room_id` = {};'''.format(user_id, id_room))
-                cursor.execute('insert into danhgia values (%s, %s, %s)', (id_room, user_id, star,))
+                cursor.execute('insert into danhgia values (%s, %s, %s)', (user_id, id_room, star,))
                 conn.commit()
                 print('update thanh cong')
             except:
@@ -590,10 +616,12 @@ def write_post(id_room):
                 conn.rollback()
         else:
             try:
-                cursor.execute('insert into danhgia values (%s, %s, %s)', (id_room, user_id, star,))
+                cursor.execute('insert into danhgia values (%s, %s, %s)', (user_id, id_room, star,))
                 conn.commit()
+                print('insert star')
             except:
                 conn.rollback()
+    
         conn.close()
     
     print(id_room,user_id,post, star)

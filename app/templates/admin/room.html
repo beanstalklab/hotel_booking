@@ -20,7 +20,7 @@
                 {%else%}
                 <form action="/manage_rooms" autocomplete="off">
                     <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search"
-                        value="{{search_text}}">
+                        >
                     <button class="btn" type="submit">Submit</button>
                 </form>
                 {%endif%}
@@ -159,6 +159,9 @@
                 <!-- end col-md-12 -->
             </div>
             <!-- end row -->
+            {%if amount%}
+            <p class="card"> <strong>Số lượng: {{amount}}</strong> </p>
+            {%endif%}
         </div>
         <nav>
             <ul class="pagination pagination-info">

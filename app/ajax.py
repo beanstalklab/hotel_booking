@@ -90,45 +90,6 @@ def ajax_bill_search():
         result = cursor.fetchall()
         print(queryString, result)
     return jsonify('success')
-@ajax_blp.route("/ajaxlivesearch", methods=["POST", "GET"])
-def ajaxlivesearch_room():
-    conn = connect_db()
-    cur = get_cursor(conn)
-    print('hello')
-    if request.method == "POST":
-        search_word = request.form["query"]
-        print(search_word)
-        if search_word == "":
-            cur.execute(
-                'select phong.room_id, room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id;'
-            )
-            room = cur.fetchall()
-        else:
-            query = """select phong.room_id, room_address, room_performence, room_price, loaiphong.room_name as room_type ,province_name from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province 
-WHERE room_address LIKE %s OR room_performence LIKE %s OR loaiphong.room_name LIKE %s  OR  province_name like %s ORDER BY phong.room_id DESC LIMIT 20""", (
-                search_word,
-                search_word,
-                search_word,
-                search_word,
-            )
-            cur.execute(query)
-            numrows = int(cur.rowcount)
-            room = cur.fetchall()
-            print(numrows)
-    final_data = []
-    for row in room:
-        temp = {}
-        temp["room_id"] = row[0]
-        temp["room_name"] = row[1]
-        temp["room_address"] = row[2]
-        temp["room_performance"] = row[3]
-        temp["room_price"] = row[4]
-        temp["room_type"] = row[5]
-        # temp['room_province'] = row[6]
-        final_data.append(temp)
-    return jsonify({"htmlresponse": render_template("admin/room.html", room=room)})
-
-
 @ajax_blp.route("/ajaxpost", methods=["POST", "GET"])
 def ajaxpost():
     conn = connect_db()
