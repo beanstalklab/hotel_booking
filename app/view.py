@@ -19,7 +19,7 @@ import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app"
+    "D:\\CƠ CỞ WEB\\WEB\project\\final\\app"
 )
 from recommendSystem import *
 
@@ -474,22 +474,8 @@ def detail(room_id):
  ### Start recommend system
     try:
         user_id = session["id"]
-        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        hotel_rating_user = rating_data.pivot_table(
-            index="account_id", columns="room_id", values="rating"
-        )
-        ratings_matrix = hotel_rating_user.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(
-            mean_centered_ratings_matrix
-        )
         result = predict_top_k_items_of_user(
-            user_id,
-            2,
-            ratings_matrix,
-            user_similarity_matrix,
-            mean_centered_ratings_matrix,
+            user_id
         )
         print(result)
         list_room_rmd = []
@@ -695,34 +681,21 @@ def full_detail_comment(room_id):
         temp["account_id"] = row[0]
         temp["room_id"] = row[1]
         temp["rating"] = row[2]
-        json_data.append(temp)
     final_data = []
  ### Start recommend system
+    user_id = session["id"]
+        # rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
+        # hotel_rating_user = rating_data.pivot_table(index="account_id", columns="room_id", values="rating")
+       
+    result = result_pre(1)
+    print("AAAAAAAAAAAAAAAAA", result)
     try:
-        user_id = session["id"]
-        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        hotel_rating_user = rating_data.pivot_table(
-            index="account_id", columns="room_id", values="rating"
-        )
-        ratings_matrix = hotel_rating_user.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(
-            mean_centered_ratings_matrix
-        )
-        result = predict_top_k_items_of_user(
-            user_id,
-            2,
-            ratings_matrix,
-            user_similarity_matrix,
-            mean_centered_ratings_matrix,
-        )
-        print(result)
+       
         list_room_rmd = []
         for i in result:
+            print(i)
             list_room_rmd.append(i[0])
         # print(user_id,len(list_room_rmd))
-        
         
         try:
             cursor.execute(
