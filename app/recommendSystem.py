@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 import pymysql
+from sklearn.metrics.pairwise import cosine_similarity
 
 def connect_db():
     conn = pymysql.connect(
@@ -85,7 +85,8 @@ mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
 mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
 user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 
-def result_pre(user_id):
-    result_predict  = predict_top_k_items_of_user(user_id, 2)
+
+def get_result(user_id):
+    result_predict  = predict_top_k_items_of_user(user_id, 5)
     return result_predict
-print(result_pre(1))
+print(get_result(21))

@@ -23,19 +23,20 @@
             <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
             <li class="breadcrumb-item"><a href="{{url_for('view.room')}}">Các phòng</a></li>
             <li class="breadcrumb-item active">Chi tiết</li>
+            
         </ol>
     </nav>
     <!-- End Breadcrumb -->
 
     <div class="">
-        <h1>{{data['hotel_name']}}</h1>
+        <h1>{{data['room_name']}}</h1>
     </div>
 
     <div class="row">
         <div class="col-6 py-2 d-flex">
-            <div>
+            <div><span>{{data['rating']}}</span>
                 <i class="fas fa-star"></i>
-                <span>đánh giá</span>
+                <span>Đánh giá</span>
             </div>
 
             <div class="mx-4">
@@ -47,18 +48,22 @@
         </div>
 
         <div class="col-6 py-2 d-flex justify-content-end">
-            <div class="">
-                <a href="" class="text-dark text-decoration-none">
-                    <i class="fas fa-share"></i>
-                    <span>chia sẻ</span>
-                </a>
-            </div>
+            
+            {%if session.id%}
             <div class="mx-4">
-                <a href="" class="text-dark text-decoration-none">
+                {%if yeuthich%}
+                <a href="{{url_for('view.delete_favorite', room_id = data['room_id'], account_id=session.id)}}" class="text-dark text-decoration-none">
+                    <i class="fas fa-heart"></i>
+                    <span>Đã yêu thích</span>
+                </a>
+                {%else%}
+                <a href="{{url_for('view.favorite', room_id = data['room_id'], account_id=session.id)}}" class="text-dark text-decoration-none">
                     <i class="fas fa-heart"></i>
                     <span>Yêu thích</span>
                 </a>
+                {%endif%}
             </div>
+            {%endif%}
         </div>
     </div>
 
@@ -153,7 +158,7 @@
                         <h2>Quyền lợi</h2>
                         <div>
                             <i class="fas fa-user-shield"></i>
-                            <span>An Ninh Tuyet Doi</span>
+                            <span>An ninh tuyệt đối</span>
                         </div>
                         <div>
                             <i class="far fa-thumbs-up"></i>

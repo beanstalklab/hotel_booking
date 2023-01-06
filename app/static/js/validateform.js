@@ -113,7 +113,7 @@ function validateRegister() {
 function validateReset() {
     let mail = document.getElementById("email").value;
     let password = document.getElementById("password").value;
-    let repassword = document.getElementById("repassword".value);
+    let repassword = document.getElementById("repassword").value;
     let regexMail = /[^@]+@[^@]+\.[^@]+/;
     let regexPass = /^(?=\S{8,18}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])/
 

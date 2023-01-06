@@ -74,7 +74,8 @@
                         </div>
                     </a>
                     <small
-                        class="position-absolute start-0 top-100 translate-middle-y text-white rounded py-1 px-3 ms-4 fomat-money" style="background-color:  #487dd9; font-weight: bold;"> 
+                        class="position-absolute start-0 top-100 translate-middle-y text-white rounded py-1 px-3 ms-4 fomat-money"
+                        style="background-color:  #487dd9; font-weight: bold;">
                         {{item[0]['room_price']}} VNĐ/Đêm
                     </small>
                 </div>
@@ -100,7 +101,7 @@
                     <div class="d-flex justify-content-between mb-1" style="height: 20%">
                         <a class="btn btn-sm btn-primary rounded py-2 px-4"
                             href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">Chi tiết</a>
-                        <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Đặt lịch ngay</a>
+                        <a class="btn btn-sm btn-dark rounded py-2 px-4" href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">Đặt lịch ngay</a>
                     </div>
                 </div>
             </div>
@@ -116,54 +117,56 @@
     {%endif%}
 
     <!-- pagination -->
-    <nav class="mt-4 d-flex justify-content-end">
+    <nav class=" mt-4 d-flex justify-content-end">
 
-        {%if id_filter %}
-        <ul class="pagination">
-            {%if prev or next%}
+                            {%if id_filter %}
+                            <ul class="pagination">
+                                {%if prev or next%}
 
-            <li class="page-item">
-                {%if prev >= 1%}
-                <a class="page-link" href="{{url_for('view.room_filter', page=prev, filter=id_filter)}}">Previous</a>
-                {%endif%}
-            </li>
-            {% for page in range(page)%}
-            <li class="page-item number-page">
-                <a class="page-link"
-                    href="{{url_for('view.room_filter', page=loop.index, filter=id_filter)}}">{{loop.index}}</a>
-            </li>
-            {%endfor%}
-            <li class="page-item">
-                {% if next <= page %} <a class="page-link"
-                    href="{{url_for('view.room_filter', page=next, filter=id_filter)}}">Next</a>
-                    {%endif%}
-            </li>
-            {%endif%}
-        </ul>
-        {%else%}
-        <ul class="pagination">
-            {%if prev or next%}
+                                <li class="page-item">
+                                    {%if prev >= 1%}
+                                    <a class="page-link"
+                                        href="{{url_for('view.room_filter', page=prev, filter=id_filter)}}">Previous</a>
+                                    {%endif%}
+                                </li>
+                                {% for page in range(page)%}
+                                <li class="page-item number-page">
+                                    <a class="page-link"
+                                        href="{{url_for('view.room_filter', page=loop.index, filter=id_filter)}}">{{loop.index}}</a>
+                                </li>
+                                {%endfor%}
+                                <li class="page-item">
+                                    {% if next <= page %} <a class="page-link"
+                                        href="{{url_for('view.room_filter', page=next, filter=id_filter)}}">Next
+                        </a>
+                        {%endif%}
+                        </li>
+                        {%endif%}
+                        </ul>
+                        {%else%}
+                        <ul class="pagination">
+                            {%if prev or next%}
 
-            <li class="page-item">
-                {%if prev >= 1%}
-                <a class="page-link" href="{{url_for('view.room', page=prev)}}">Previous</a>
-                {%endif%}
-            </li>
-            {% for page in range(page)%}
-            <li class="page-item acti">
-                <a class="page-link" href="/page/{{loop.index}}">{{loop.index}}</a>
-            </li>
-            {%endfor%}
-            <li class="page-item">
-                {% if next <= page %} <a class="page-link" href="/page/{{next}}">Next</a>
-                    {%endif%}
-            </li>
-            {%endif%}
-        </ul>
-        {%endif%}
-    </nav>
-    <!-- end pagination -->
-</div>
-{%include 'footer.html'%}
+                            <li class="page-item">
+                                {%if prev >= 1%}
+                                <a class="page-link" href="{{url_for('view.room', page=prev)}}">Previous</a>
+                                {%endif%}
+                            </li>
+                            {% for page in range(page)%}
+                            <li class="page-item acti">
+                                <a class="page-link" href="/page/{{loop.index}}">{{loop.index}}</a>
+                            </li>
+                            {%endfor%}
+                            <li class="page-item">
+                                {% if next <= page %} <a class="page-link" href="/page/{{next}}">Next</a>
+                                    {%endif%}
+                            </li>
+                            {%endif%}
+                        </ul>
+                        {%endif%}
+                        </nav>
+                        <!-- end pagination -->
+                    </div>
+                    {%include 'footer.html'%}
 
-{%endblock%}
+                    {%endblock%}

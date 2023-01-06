@@ -137,9 +137,10 @@
                                     <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.status}}</td>
                                     {%if row.status == "Đã thanh toán"%}
-                                    <td><a href="{{url_for('adview.detail_bill', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
+                                    <td><a href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
                                     {%else%}
-                                    <td><a href="#">Hủy đăng ký</a></td>
+                                    <td><a href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
+                                    <td><a href="{{url_for('auth.customer_delete_booking',bookroom_id = row.bookroom_id, bill_id=row.id_bill)}}">Hủy đăng ký</a></td>
                                     {%endif%}
                                 </tr>
                                 {%endfor%}

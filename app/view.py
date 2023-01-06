@@ -156,6 +156,7 @@ def profile():
             temp["time_end"] = row[2]
             temp["status"] = row[3]
             temp["id_bill"] = row[4]
+            temp['bookroom_id'] = row[5]
             lichsu.append(temp)
     try:
         cursor.execute("select * from user_image where user_id = %s", (id_account,))
@@ -178,7 +179,53 @@ def profile():
         img=img,
     )
 
-
+@main_blp.route('/customer_bill_detail/<bill_id>')
+def customer_bill_detail(bill_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    cursor.execute(
+        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money
+                    from khachhang 
+                    inner join datphong on datphong.customer_id = khachhang.customer_id
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    where hoadon.id_bill = %s""",
+        (bill_id,),
+    )
+    khachhang = cursor.fetchone()
+    cursor.execute(
+        """select phong.room_id, phong.room_name, phong.room_address, tinhthanh.province_name, datphong.time_start, datphong.time_end, loaiphong.room_name, phong.room_price
+                    from phong 
+                    inner join datphong on datphong.room_id = phong.room_id
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    inner join tinhthanh on tinhthanh.province_id = phong.id_province
+                    inner join loaiphong on loaiphong.room_id = phong.id_roomtype
+                    where hoadon.id_bill = %s
+                    """,
+        (bill_id,),
+    )
+    phong = cursor.fetchone()
+    # checkin = phong[4]
+    # checkout = phong[5]
+    # print(checkout - checkin)
+    cursor.execute(
+        """ select dichvu.service_name, dichvu.service_price, ql_dichvu.soluong from ql_dichvu 
+                    inner join datphong on datphong.bookroom_id = ql_dichvu.id_dangky
+                    inner join dichvu on dichvu.service_id = ql_dichvu.id_dichvu
+                    inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
+                    where hoadon.id_bill = %s;""",
+        (bill_id,),
+    )
+    dichvu = cursor.fetchall()
+    print(khachhang)
+    print(phong)
+    print(dichvu)
+    return render_template(
+        "user/bill_detail.html",
+        hoadon=bill_id,
+        dichvu=dichvu,
+        khachhang=khachhang,
+        phong=phong,
+    )
 @main_blp.route("/blog_customer/<account_name>/<account_id>")
 def blog_customer(account_id, account_name):
     conn = connect_db()
@@ -347,13 +394,18 @@ def detail(room_id):
     msg = ""
     conn = connect_db()
     cursor = get_cursor(conn)
+    yeuthich = ''
+    try: 
+        cursor.execute('select * from yeuthich where room_id = %s and account_id = %s', (room_id, session['id']))
+        yeuthich = cursor.fetchone()
+    except:
+        pass
     try:
         cursor.execute("SELECT * FROM phong where room_id = %s", (room_id,))
         conn.commit()
     except:
         conn.rollback()
     data = cursor.fetchone()
-
     data = {
         "room_id": data[0],
         "room_name": data[1],
@@ -461,43 +513,34 @@ def detail(room_id):
     else:
         user_rating = 0
     print(user_rating)
-    cursor.execute("select * from danhgia")
-    temp = cursor.fetchall()
-    json_data = []
-    for row in temp:
-        temp = {}
-        temp["account_id"] = row[0]
-        temp["room_id"] = row[1]
-        temp["rating"] = row[2]
-        json_data.append(temp)
-    final_data = []
+
  ### Start recommend system
+    final_data = []
+    result = ''
+    
     try:
         user_id = session["id"]
-        result = predict_top_k_items_of_user(
-            user_id
-        )
+        print( user_id )
+        result = get_result(int(user_id))
+        print('k')
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        # print(user_id,len(list_room_rmd))
-        
-        
-        try:
-            cursor.execute(
-                """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
-                FROM phong 
-                inner join danhgia on danhgia.room_id = phong.room_id 
-                where phong.room_id in {} and danhgia.account_id={}
-                    GROUP BY phong.room_id 
-                LIMIT 6""".format(
-                tuple(list_room_rmd), user_id
-                )
+        print(user_id,len(list_room_rmd))
+        cursor.execute(
+            """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
+            FROM phong 
+            inner join danhgia on danhgia.room_id = phong.room_id 
+            where phong.room_id in {} and danhgia.account_id={}
+                GROUP BY phong.room_id 
+               """.format(
+            tuple(list_room_rmd), user_id
             )
-        except:
-            pass
+        )
+      
         recommend_hotel = cursor.fetchall()
+        print(len(recommend_hotel))
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
@@ -552,7 +595,8 @@ def detail(room_id):
         post_list=post_list,
         user_rate=user_rating,
         num_cmt=row_comment,
-        recommend=final_data
+        recommend=final_data,
+        yeuthich = yeuthich
     )
 
 
@@ -1059,7 +1103,28 @@ def write_post(id_room):
     print(id_room, user_id, post, star)
     return redirect(url_for("view.detail", room_id=id_room))
 
-
+@main_blp.route("/favorite/<room_id>/<account_id>")
+def favorite(room_id, account_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('INSERT into yeuthich values (%s, %s)', (room_id, account_id))
+        conn.commit()
+    except:
+        conn.rollback()
+    conn.close()
+    return redirect(url_for("view.detail", room_id=room_id))
+@main_blp.route("/delete_favorite/<room_id>/<account_id>")
+def delete_favorite(room_id, account_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute('DELETE FROM yeuthich WHERE room_id = %s and account_id = %s', (room_id, account_id))
+        conn.commit()
+    except:
+        conn.rollback()
+    conn.close()
+    return redirect(url_for("view.detail", room_id=room_id))
 @main_blp.route("/folder_image/<folder>/<name>")
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
