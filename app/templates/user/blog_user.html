@@ -26,7 +26,7 @@
     {%endfor%}
     {%endif%}
     {%endwith%}
-    {%if session.id%}
+    {%if session.id == account_blog_id%}
 
 </div>
 <div class="container">
@@ -69,9 +69,11 @@
 
             
             <div>
+                {%if img%}
                 {%for img in blog[1]%}
                 <img class="mx-1 zoom" src="{{url_for('view.blog_image', name=img)}}" style="height: 12%; width: 12%; border-radius: 2px;" alt="">
                 {%endfor%}
+                {%endif%}
             </div>
         </div>
     </div>

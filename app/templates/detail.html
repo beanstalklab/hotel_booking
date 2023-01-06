@@ -319,9 +319,8 @@
 
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <a class="btn btn-secondary" data-bs-dismiss="modal" href="{{ url_for('auth.login') }}">Đăng
+                                                <a class="btn btn-secondary"
+                                                    href="{{ url_for('auth.login') }}">Đăng
                                                     nhập</a>
                                             </div>
                                         </div>
@@ -341,7 +340,9 @@
     </div>
 
     <hr class="dropdown-divider my-5">
-
+    {%if full%}
+    <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
+    {%endif%}
     <div>
         {%if post_list%}
         {%for data in post_list%}
@@ -367,11 +368,11 @@
         {%endif%}
         {%if not full%}
         {%if num_cmt > 5%}
-        <div><a href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
+        <div><a class="btn btn-primary mt-1" href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
             {%endif%}
         </div>
         {%else%}
-        <div><a href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
+        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
         {%endif%}
         <h1>Đánh giá</h1>
         {%if session.id%}
@@ -455,7 +456,62 @@
         {%endif%}
     </div>
 </div>
-
+<div>
+    <div class="row gy-4">
+        {%if recommend%}
+        {%for item in recommend %}
+        {%if item %}
+        <div class="col-lg-4 col-md-6">
+            <div class="shadow rounded cart-image">
+                <div class="content position-relative" style="height: 50%;">
+                    <a href="{{url_for('view.detail', room_id = item[0]['room_id'])}}" target="_blank">
+                        <div class="content-overlay"></div>
+                        <img class="resize-image rounded-top"
+                            src="{{url_for('view.image_file',name= item[1]['name'], folder = item[1]['folder'])}}"
+                            alt="room image">
+                        <div class="content-details fadeIn-top">
+                            <h3>{{item[0]['room_name']}}</h3>
+                            <p>Give you a wonderfull holiday!</p>
+                        </div>
+                    </a>
+                    <small
+                        class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4 fomat-money">
+                        {{item[0]['room_price']}} VNĐ/Đêm
+                    </small>
+                </div>
+                <div class="p-4 mt-2 resize-info" style="height: 50%;">
+                    <div class="d-flex justify-content-between mb-3" style="height: 15%">
+                        <h5 class="mb-0">{{item[0]['room_name']}}</h5>
+                        <div class="d-flex">
+                            {%if item[0]['rating']%}
+                            {%for i in range(item[0]['rating'])%}
+                            <small class="fa fa-star text-primary" style="padding-left: 2px;"></small>
+                            {%endfor%}
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3" style="height: 10%">
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
+                            Bed</small>
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
+                            Bath</small>
+                        <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                    </div>
+                    <p class="text-body mb-3 text-limit" style="height: 25%">{{item[0]['room_address']}}</p>
+                    <div class="d-flex justify-content-between mb-1" style="height: 20%">
+                        <a class="btn btn-sm btn-primary rounded py-2 px-4"
+                            href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">Chi tiết</a>
+                        <a class="btn btn-sm btn-dark rounded py-2 px-4"
+                            href="{{url_for('view.detail', room_id = item[0]['room_id'])}}">Đặt lịch ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
 </div>
 <!-- End Info -->
 

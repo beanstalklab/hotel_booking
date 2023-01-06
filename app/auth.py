@@ -143,7 +143,7 @@ def register_submit():
             msg = 'Đăng ký tài khoản thành công'
             return redirect('/login')
     return redirect('/register')
-@auth_blp.route('/customer_booking/<room_id>', methods=['get'])
+@auth_blp.route('/customer_booking/<room_id>')
 def customer_booking(room_id):
     # create connect to database
     conn = connect_db()

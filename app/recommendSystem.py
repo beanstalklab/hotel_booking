@@ -1,16 +1,7 @@
-import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity
-from scipy import sparse
-import math
 from numpy.linalg import norm
 import sys
-import pymysql
-sys.path.append("D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app")
-from flask import Flask, render_template
-
 # indices for vector (lấy ra chỉ số đc rating của các vector)
 def specified_rating_indices(u):
     return list(map(list, np.where(np.isfinite(u))))
@@ -29,21 +20,21 @@ def get_mean_centered_ratings_matrix(ratings_matrix):
     return mean_centered_ratings_matrix
 
 
-def similarity(u, v):
-    cosine = np.dot(u, v) / (norm(u) * norm(v) + 1e-8)
-    return np.around(cosine, 5)
+# def similarity(u, v):
+#     cosine = np.dot(u, v) / (norm(u) * norm(v) + 1e-8)
+#     return np.around(cosine, 5)
 
-def get_user_similarity_value_for(u_index, mean_centered_ratings_matrix):
-    user_ratings = mean_centered_ratings_matrix[u_index, :]
-    similarity_value = np.array([similarity(mean_centered_ratings_matrix[i, :], user_ratings) for i in range(mean_centered_ratings_matrix.shape[0])])
-    return similarity_value
+# def get_user_similarity_value_for(u_index, mean_centered_ratings_matrix):
+#     user_ratings = mean_centered_ratings_matrix[u_index, :]
+#     similarity_value = np.array([similarity(mean_centered_ratings_matrix[i, :], user_ratings) for i in range(mean_centered_ratings_matrix.shape[0])])
+#     return similarity_value
 
-def get_user_similarity_matrix(mean_centered_ratings_matrix):
-    similarity_matrix = []
-    for u_index in range(mean_centered_ratings_matrix.shape[0]):
-        similarity_value = get_user_similarity_value_for(u_index, mean_centered_ratings_matrix)
-        similarity_matrix.append(similarity_value)
-    return np.array(similarity_matrix)
+# def get_user_similarity_matrix(mean_centered_ratings_matrix):
+#     similarity_matrix = []
+#     for u_index in range(mean_centered_ratings_matrix.shape[0]):
+#         similarity_value = get_user_similarity_value_for(u_index, mean_centered_ratings_matrix)
+#         similarity_matrix.append(similarity_value)
+#     return np.array(similarity_matrix)
 
 
 def predict(u_index, i_index, k,ratings_matrix,user_similarity_matrix,mean_centered_ratings_matrix):
