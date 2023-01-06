@@ -461,43 +461,21 @@ def detail(room_id):
     else:
         user_rating = 0
     print(user_rating)
-    cursor.execute("select * from danhgia")
-    temp = cursor.fetchall()
-    json_data = []
-    for row in temp:
-        temp = {}
-        temp["account_id"] = row[0]
-        temp["room_id"] = row[1]
-        temp["rating"] = row[2]
-        json_data.append(temp)
-    final_data = []
+
  ### Start recommend system
+    final_data = []
+    result = ''
+    
     try:
         user_id = session["id"]
-        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        hotel_rating_user = rating_data.pivot_table(
-            index="account_id", columns="room_id", values="rating"
-        )
-        ratings_matrix = hotel_rating_user.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(
-            mean_centered_ratings_matrix
-        )
-        result = predict_top_k_items_of_user(
-            user_id,
-            2,
-            ratings_matrix,
-            user_similarity_matrix,
-            mean_centered_ratings_matrix,
-        )
+        print('l')
+        result = get_result(int(user_id))
+        print('k')
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        # print(user_id,len(list_room_rmd))
-        
-        
+        print(user_id,len(list_room_rmd))
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
@@ -505,13 +483,14 @@ def detail(room_id):
                 inner join danhgia on danhgia.room_id = phong.room_id 
                 where phong.room_id in {} and danhgia.account_id={}
                     GROUP BY phong.room_id 
-                LIMIT 6""".format(
+                    limit 6""".format(
                 tuple(list_room_rmd), user_id
                 )
             )
         except:
             pass
         recommend_hotel = cursor.fetchall()
+        print(len(recommend_hotel))
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
