@@ -184,7 +184,7 @@ def customer_bill_detail(bill_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     cursor.execute(
-        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money
+        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money, hoadon.tinhtrang
                     from khachhang 
                     inner join datphong on datphong.customer_id = khachhang.customer_id
                     inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
@@ -519,6 +519,11 @@ def detail(room_id):
     result = ''
     
     try:
+        user_id = session["id"]
+        print('l')
+        result = get_result(int(user_id))
+        print('k')
+        print(result)
         user_id = session["id"]
         print('l')
         result = get_result(int(user_id))

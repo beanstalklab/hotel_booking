@@ -86,6 +86,7 @@ mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
 user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 
 def get_result(user_id):
-    result_predict  = predict_top_k_items_of_user(user_id, 2)
+    result_predict  = predict_top_k_items_of_user(user_id, 5)
     return result_predict
-# print(get_result(1))
+# print(get_result(31))
+
