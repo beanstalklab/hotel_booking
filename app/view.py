@@ -19,7 +19,7 @@ import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\CƠ CỞ WEB\\WEB\project\\final\\app"
+    "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
 )
 from recommendSystem import *
 
@@ -184,7 +184,7 @@ def customer_bill_detail(bill_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     cursor.execute(
-        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money
+        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money, hoadon.tinhtrang
                     from khachhang 
                     inner join datphong on datphong.customer_id = khachhang.customer_id
                     inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
@@ -517,10 +517,14 @@ def detail(room_id):
  ### Start recommend system
     final_data = []
     result = ''
-    
+    user_id = session["id"]
+    print('l')
+    result = get_result(int(user_id))
+    print('k')
+    print(result)
     try:
         user_id = session["id"]
-        print( user_id )
+        print('l')
         result = get_result(int(user_id))
         print('k')
         print(result)
@@ -528,17 +532,19 @@ def detail(room_id):
         for i in result:
             list_room_rmd.append(i[0])
         print(user_id,len(list_room_rmd))
-        cursor.execute(
-            """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
-            FROM phong 
-            inner join danhgia on danhgia.room_id = phong.room_id 
-            where phong.room_id in {} and danhgia.account_id={}
-                GROUP BY phong.room_id 
-               """.format(
-            tuple(list_room_rmd), user_id
+        try:
+            cursor.execute(
+                """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
+                FROM phong 
+                inner join danhgia on danhgia.room_id = phong.room_id 
+                where phong.room_id in {} and danhgia.account_id={}
+                    GROUP BY phong.room_id 
+                    limit 6""".format(
+                tuple(list_room_rmd), user_id
+                )
             )
-        )
-      
+        except:
+            pass
         recommend_hotel = cursor.fetchall()
         print(len(recommend_hotel))
         for row in recommend_hotel:
@@ -725,21 +731,34 @@ def full_detail_comment(room_id):
         temp["account_id"] = row[0]
         temp["room_id"] = row[1]
         temp["rating"] = row[2]
+        json_data.append(temp)
     final_data = []
  ### Start recommend system
-    user_id = session["id"]
-        # rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        # hotel_rating_user = rating_data.pivot_table(index="account_id", columns="room_id", values="rating")
-       
-    result = result_pre(1)
-    print("AAAAAAAAAAAAAAAAA", result)
     try:
-       
+        user_id = session["id"]
+        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
+        hotel_rating_user = rating_data.pivot_table(
+            index="account_id", columns="room_id", values="rating"
+        )
+        ratings_matrix = hotel_rating_user.values
+        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+        user_similarity_matrix = cosine_similarity(
+            mean_centered_ratings_matrix
+        )
+        result = predict_top_k_items_of_user(
+            user_id,
+            2,
+            ratings_matrix,
+            user_similarity_matrix,
+            mean_centered_ratings_matrix,
+        )
+        print(result)
         list_room_rmd = []
         for i in result:
-            print(i)
             list_room_rmd.append(i[0])
         # print(user_id,len(list_room_rmd))
+        
         
         try:
             cursor.execute(
