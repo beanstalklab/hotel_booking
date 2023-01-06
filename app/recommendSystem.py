@@ -88,3 +88,4 @@ user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 def get_result(user_id):
     result_predict  = predict_top_k_items_of_user(user_id, 2)
     return result_predict
+# print(get_result(1))

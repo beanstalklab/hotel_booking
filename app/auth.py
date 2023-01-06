@@ -199,7 +199,14 @@ def customer_booking(room_id):
     else:
         flash("Bổ sung thông tin cá nhân để đặt phòng!", category="alert alert-warning")
         return redirect(url_for('auth.edit_profile')) 
-
+@auth_blp.route('/customer_delete_booking/<bill_id>/<bookroom_id>')
+def customer_delete_booking(bill_id, bookroom_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    cursor.execute('delete from hoadon where id_bill = %s', (bill_id, ))
+    conn.commit()
+    cursor.execute('delete from datphong where bookroom_id = %s', (bookroom_id,))
+    return redirect(url_for('view.profile'))
 def get_date(dates):
     temp = dates.split('/')
     return  datetime.date(int(temp[2]),int(temp[0]),int(temp[1]))
