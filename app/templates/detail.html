@@ -8,13 +8,12 @@
 </head>
 
 <!-- Info -->
-{%block content%}
 {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="{{ category }}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 <div class="container my-5">
 
@@ -327,8 +326,7 @@
 
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-secondary"
-                                                    href="{{ url_for('auth.login') }}">Đăng
+                                                <a class="btn btn-secondary" href="{{ url_for('auth.login') }}">Đăng
                                                     nhập</a>
                                             </div>
                                         </div>
@@ -376,11 +374,13 @@
         {%endif%}
         {%if not full%}
         {%if num_cmt > 5%}
-        <div><a class="btn btn-primary mt-1" href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
-            {%endif%}
+        <div><a class="btn btn-primary mt-1"
+                href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
         </div>
         {%else%}
-        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
+        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a>
+        </div>
+        {%endif%}
         {%endif%}
         <h1>Đánh giá</h1>
         {%if session.id%}
