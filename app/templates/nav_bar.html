@@ -26,6 +26,7 @@
 
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/pagination.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/blog.css')}}" rel="stylesheet">
     <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
 
@@ -34,7 +35,7 @@
 <body>
     <!-- Header Start -->
     <div class="background">
-        <div class="container-xxl background-nav-bar">
+        <div class="container-xxl background-nav-bar shadow">
             <div class="row">
 
                 <div class="d-flex col-12 justify-content-end">
@@ -51,10 +52,14 @@
                         </div>
                         <div class="col-sm-3 px-3 text-end">
                             <div class="d-inline-flex align-items-center py-2">
-                                <a class="me-3" href="https://www.facebook.com/dayladauhomestaytaxua"><i class="fab fa-facebook-f text-light"></i></a>
-                                <a class="me-3" href="https://twitter.com/HiltonWaikoloa"><i class="fab fa-twitter text-light"></i></a>
-                                <a class="me-3" href="https://www.instagram.com/airbnb/"><i class="fab fa-instagram text-light"></i></a>
-                                <a class="me-3" href="https://www.youtube.com/@airbnb"><i class="fab fa-youtube text-light"></i></a>
+                                <a class="me-3" href="https://www.facebook.com/dayladauhomestaytaxua"><i
+                                        class="fab fa-facebook-f text-light"></i></a>
+                                <a class="me-3" href="https://twitter.com/HiltonWaikoloa"><i
+                                        class="fab fa-twitter text-light"></i></a>
+                                <a class="me-3" href="https://www.instagram.com/airbnb/"><i
+                                        class="fab fa-instagram text-light"></i></a>
+                                <a class="me-3" href="https://www.youtube.com/@airbnb"><i
+                                        class="fab fa-youtube text-light"></i></a>
                             </div>
                         </div>
                     </div>
@@ -106,32 +111,23 @@
                         </div>
 
                     </div>
+                </div>
 
-                    <div class="col">
-                        <nav class="navbar navbar-expand-md navbar-light">
-                            <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
-                                data-bs-target="#navbarCollapse">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarCollapse">
-                                <div class="navbar-nav text-navbar">
-                                    <a href="{{url_for('view.home')}}" class="nav-item nav-link active">Home</a>
-                                    <a href="/about" class="nav-item nav-link">About</a>
-                                    <a href="{{url_for('view.room')}}" class="nav-item nav-link">Rooms</a>
-                                    <div class="nav-item dropdown">
-                                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                                        <div class="dropdown-menu">
-                                            <a href="/our_team" class="dropdown-item">Contact</a>
-                                            <a href="/our_team" class="dropdown-item">Our Team</a>
-                                            <hr class="dropdown-divider">
-                                            <a href="/our_team" class="dropdown-item">Other</a>
-                                        </div>
-                                    </div>
-
-                                </div>
+                <div class="col">
+                    <nav class="navbar navbar-expand-md navbar-light">
+                        <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                            data-bs-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarCollapse">
+                            <div class="navbar-nav text-navbar">
+                                <a href="{{url_for('view.home')}}" class="nav-item nav-link">TRANG CHỦ</a>
+                                <a href="{{url_for('view.room')}}" class="nav-item nav-link">CÁC PHÒNG</a>
+                                <a href="/about" class="nav-item nav-link">CHÍNH SÁCH</a>
+                                <a href="/our_team" class="nav-item nav-link">HỖ TRỢ</a>
                             </div>
-                        </nav>
-                    </div>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>

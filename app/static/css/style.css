@@ -32,10 +32,10 @@
 .navbar-toggler {
     border: 2px solid #535353 !important;
 }
-
+/* 
 .navbar-toggler-icon {
     color: #CE877F !important;
-}
+} */
 
 .text-navbar {
     font-size: large;
@@ -43,7 +43,12 @@
 
 .text-navbar a {
     font-weight: bold;
-    color: #CE877F !important;
+    color: #264375 !important;
+}
+
+.text-navbar a:hover {
+    color: #5284da !important;
+    text-decoration: underline;
 }
 
 .carousel-img {
@@ -61,7 +66,8 @@
 
 .btn {
     color: #fff;
-    background-color: #CE877F;
+    font-weight: bold;
+    background-color: #5085e2;
 }
 
 table.dataTable {
@@ -165,4 +171,13 @@ table.dataTable th {
 
 .fadeIn-top {
     top: 20%;
+}
+
+.breadcrumb-item {
+    font-size: 18px;
+}
+
+.breadcrumb-item a {
+    font-weight: bold;
+    text-decoration: none;
 }

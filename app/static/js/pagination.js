@@ -1,15 +1,11 @@
-document.getElementById('evenClick').addEventListener("click", activeButton);
+function changePage() {
+    const currentPage = document.querySelectorAll('.pagination li');
+    console.log(currentPage);
 
-function activeButton() {
-    document.getElementById("pageActive").className += "active";
+    for (let i = 0; i < currentPage.length; i++) {
+        currentPage[i].addEventListener('click', () => {
+            $('.acti').addClass('activate');
+        })
+    }
 }
-
-var change = document.getElementById("pageActive");
-var activePage = change.getElementsByClassName("numPage");
-for (var i = 0; i < activePage.length; i++) {
-    activePage[i].addEventListener("click", function () {
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-    });
-}
+changePage()
