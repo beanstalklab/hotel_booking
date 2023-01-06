@@ -194,8 +194,11 @@ def customer_booking(room_id):
                 conn.commit()
         conn.close()
             
-        flash('Bạn đã đặt phòng thành công')
+        flash('Bạn đã đặt phòng thành công', category="alert alert-success")
         return redirect(url_for('view.profile'))
+    else:
+        flash("Bổ sung thông tin cá nhân để đặt phòng!", category="alert alert-warning")
+        return redirect(url_for('auth.edit_profile')) 
 
 def get_date(dates):
     temp = dates.split('/')
