@@ -10,4 +10,4 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD")
 
 HOTEL_IMAGE = os.environ.get("HOTEL_IMAGE", "D:\\hotel_image")
 USER_IMAGE = os.environ.get("USER_IMAGE","D:\\CƠ CỞ WEB\\WEB\\project\\final\\app\\static\\user_img")
-BLOG_IMAGE = os.environ.get("BLOG_IMAGE","D:\\blog_image")
+BLOG_IMAGE = os.environ.get("BLOG_IMAGE","D:\\hotel_image\\blog_image")

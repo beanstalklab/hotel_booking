@@ -176,18 +176,18 @@ def customer_booking(room_id):
         else:
              sum_service = 0
         total_money = sum_service + int(room_price[0]) * days
-        cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"))'.format(customer[0], room_id, checkin, checkout))
+        cursor.execute('insert into datphong values (NULL, {}, {}, date("{}"), date("{}"),2,0)'.format(customer[0], room_id, checkin, checkout))
         conn.commit()
         print('insert datphong ok')
         cursor.execute('select bookroom_id from datphong where customer_id = {}  and room_id = {} and time_start like "%{}%" and time_end like "%{}%"'.format(customer[0], room_id, checkin, checkout, ))
         id_datphong = cursor.fetchone()
         print(id_datphong)
         # # Generate bill_id
-        bill_id = str(id_datphong[0]) + "_" + str(customer[0])
-        print(bill_id, total_money, id_datphong[0])
-        cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,id_datphong[0], total_money,))
-        conn.commit()
-        print('Thanh cong')
+        # bill_id = str(id_datphong[0]) + "_" + str(customer[0])
+        # print(bill_id, total_money, id_datphong[0])
+        # cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,id_datphong[0], total_money,))
+        # conn.commit()
+        # print('Thanh cong')
         if len(service) > 0:
             for item in service:
                 cursor.execute('insert into ql_dichvu values (NULL, %s, %s, 1)', (item,id_datphong[0]))
@@ -199,13 +199,16 @@ def customer_booking(room_id):
     else:
         flash("Bổ sung thông tin cá nhân để đặt phòng!", category="alert alert-warning")
         return redirect(url_for('auth.edit_profile')) 
-@auth_blp.route('/customer_delete_booking/<bill_id>/<bookroom_id>')
-def customer_delete_booking(bill_id, bookroom_id):
+@auth_blp.route('/customer_delete_booking/<bookroom_id>')
+def customer_delete_booking(bookroom_id):
     conn = connect_db()
     cursor = get_cursor(conn)
-    cursor.execute('delete from hoadon where id_bill = %s', (bill_id, ))
-    conn.commit()
-    cursor.execute('delete from datphong where bookroom_id = %s', (bookroom_id,))
+    try:
+        cursor.execute('delete from datphong where bookroom_id = %s', (bookroom_id,))
+        conn.commit()
+        flash('Hủy đơn thành công', 'alert alert-success')
+    except:
+        conn.rollback()
     return redirect(url_for('view.profile'))
 def get_date(dates):
     temp = dates.split('/')

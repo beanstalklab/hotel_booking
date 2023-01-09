@@ -123,10 +123,11 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th class="thead-dark">Tên phòng</td>
-                                    <th>Thời gian bắt đầu</td>
-                                    <th>Thời gian kết thúc</td>
-                                    <th>Trạng thái</td>
+                                    <th class="thead-dark">Tên phòng</th>
+                                    <th>Thời gian bắt đầu</th>
+                                    <th>Thời gian kết thúc</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,12 +137,41 @@
                                     <td>{{row.time_start.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.status}}</td>
-                                    {%if row.status == "Đã thanh toán"%}
                                     <td><a href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
-                                    {%else%}
-                                    <td><a href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
-                                    <td><a href="{{url_for('auth.customer_delete_booking',bookroom_id = row.bookroom_id, bill_id=row.id_bill)}}">Hủy đăng ký</a></td>
-                                    {%endif%}
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="d-flex align-items-center mb-3">Danh sách đặt phòng</h5>
+
+                        {%if ds_dangky%}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="thead-dark">Tên phòng</th>
+                                    <th>Thời gian bắt đầu</th>
+                                    <th>Thời gian kết thúc</th>
+                                    <th>Trạng thái</th>
+                                    <th>Xem chi tiết</th>
+                                    <th>Hủy đăng ký</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for row in ds_dangky%}
+                                <tr>
+                                    <td>{{row.room_name}}</td>
+                                    <td>{{row.checkin.strftime("%d/%m/%Y")}}</td>
+                                    <td>{{row.checkout.strftime("%d/%m/%Y")}}</td>
+                                    <td>{{tinhtrang}}</td>
+                                    <td><a href="{{url_for('view.customer_bill_detail_before', bookroom_id=row.bookroom_id)}}">Xem chi tiết</a></td>
+                                    <td><a href="{{url_for('auth.customer_delete_booking', bookroom_id = row.bookroom_id)}}">Hủy đăng ký</a></td>
                                 </tr>
                                 {%endfor%}
                             </tbody>

@@ -64,8 +64,10 @@ def room_ajax():
         province = request.form["province"]
         print(checkin, checkout, province)
         query = """select room_id, room_name from phong INNER JOIN tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_id not in (
-SELECT distinct phong.room_id from phong inner join datphong on datphong.room_id = phong.room_id where date(datphong.time_start) or date(datphong.time_end) BETWEEN '{}' and '{}') and tinhthanh.province_name like '%{}%';""".format(
-            checkout, checkin, province)
+SELECT distinct phong.room_id from phong inner join datphong on datphong.room_id = phong.room_id where (datphong.time_start BETWEEN '{}' and  '{}') or (datphong.time_end BETWEEN '{}' and  '{}')) and tinhthanh.province_name like "%{}" and datphong.isdelete = 0;""".format(
+            checkin, checkout, checkin, checkout, province
+        )
+        print(query)
         cursor.execute(query)
         room = cursor.fetchall()
         print(room)
@@ -73,23 +75,28 @@ SELECT distinct phong.room_id from phong inner join datphong on datphong.room_id
         {"htmlresponse": render_template("admin/response/respone_room.html", room=room)}
     )
 
-@ajax_blp.route('/caculate_ajax', methods=['get','post'])
+
+@ajax_blp.route("/caculate_ajax", methods=["get", "post"])
 def caculate():
     conn = connect_db()
     cur = get_cursor(conn)
-    data = request.form['karaoke']
-    print('connect')
+    data = request.form["karaoke"]
+    print("connect")
     return
-@ajax_blp.route('/ajax_bill_search', methods=["POST", "GET"])
+
+
+@ajax_blp.route("/ajax_bill_search", methods=["POST", "GET"])
 def ajax_bill_search():
     conn = connect_db()
     cursor = get_cursor(conn)
     if request.method == "POST":
-        queryString = request.form['query']
-        cursor.execute('''select * from hoadon''')
+        queryString = request.form["query"]
+        cursor.execute("""select * from hoadon""")
         result = cursor.fetchall()
         print(queryString, result)
-    return jsonify('success')
+    return jsonify("success")
+
+
 @ajax_blp.route("/ajaxpost", methods=["POST", "GET"])
 def ajaxpost():
     conn = connect_db()

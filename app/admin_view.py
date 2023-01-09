@@ -112,7 +112,7 @@ def detail_bill(bill_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     cursor.execute(
-        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money
+        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity, hoadon.total_money, hoadon.tinhtrang
                     from khachhang 
                     inner join datphong on datphong.customer_id = khachhang.customer_id
                     inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
@@ -308,7 +308,8 @@ def room(page):
             page=total_page,
             next=next,
             prev=prev,
-            search_text=search_text, amount=total_row
+            search_text=search_text,
+            amount=total_row,
         )
     else:
         limit = 5
@@ -640,3 +641,128 @@ def filter_customer():
 @adview_blp.route("/room_booking")
 def booking_room():
     return render_template("admin/booking.html")
+
+
+@adview_blp.route("/booking_detail", defaults={"page": 1})
+@adview_blp.route("/booking_detail/<int:page>", methods=["GET", "POST"])
+def booking_detail(page):
+    search_text = request.args.get("search_text")
+
+    limit = 10
+    offset = page * limit - limit
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute("SELECT * FROM datphong")
+        conn.commit()
+    except:
+        conn.rollback()
+    total_row = cursor.rowcount
+    total_page = math.ceil(total_row / limit)
+
+    next = page + 1
+    prev = page - 1
+    try:
+        cursor.execute("SELECT * FROM datphong where datphong.isdelete = 0")
+        conn.commit()
+    except:
+        conn.rollback()
+    conn.close()
+    total_row = cursor.rowcount
+    total_page = math.ceil(total_row / limit)
+    conn = connect_db()
+    cursor = get_cursor(conn)
+
+    cursor.execute(
+        """select khachhang.customer_id, datphong.bookroom_id, concat(khachhang.first_name," ", khachhang.last_name),
+                        khachhang.customer_phone, khachhang.customer_nation, phong.room_name, phong.room_id, datphong.time_start, datphong.status from datphong 
+            inner join khachhang on khachhang.customer_id = datphong.customer_id
+            inner JOIN phong on phong.room_id = datphong.room_id
+            where datphong.isdelete = 0 order by datphong.bookroom_id LIMIT {} OFFSET {}""".format(
+            limit, offset
+        )
+    )
+    khachhang = cursor.fetchall()
+    data = []
+    status = ['Đã nhận phòng', 'Đã đặt trước', 'Đã đăng ký']
+    for row in khachhang:
+        temp = {}
+        temp["customer_id"] = row[0]
+        temp["bookroom_id"] = row[1]
+        temp["customer_name"] = row[2]
+        temp["customer_phone"] = row[3]
+        temp["customer_nation"] = row[4]
+        temp["room_name"] = row[5]
+        temp["room_id"] = row[6]
+        temp['check_in'] = row[7]
+        temp['status'] = status[int(row[8])]
+        data.append(temp)
+    return render_template(
+        "admin/booking_detail.html",
+        data=data,
+        page=total_page,
+        next=next,
+        prev=prev,
+        search_text=search_text,
+        amount=total_row,
+    )
+@adview_blp.route('/update_booking', methods=['GET', 'POST'])
+def update_booking():
+    select = request.args.get('status')
+    bookroom_id = request.args.getlist('booking')
+    customer = ''
+    if bookroom_id and select:
+        conn = connect_db()
+        cursor = get_cursor(conn)
+        print(select, bookroom_id)
+    
+        cursor.execute('UPDATE datphong set datphong.status = %s where datphong.bookroom_id in %s', (select, bookroom_id,))
+        conn.commit()
+        print(type(select))
+        if (int(select) == 0):
+            if len(bookroom_id) == 1:
+                try:
+                    cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (bookroom_id,))
+                    customer = cursor.fetchone()
+                    bill_id = str(bookroom_id[0]) + "_" + str(customer[0])
+                    days = int((customer[2] - customer[1]).days)
+                    total_money = days * customer[3]
+                    cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,bookroom_id[0], total_money,))
+                    conn.commit()
+                    cursor.execute('update datphong set datphong.isdelete = 1 where datphong.bookroom_id = %s', (bookroom_id[0]))
+                    conn.commit()
+                    cursor.execute('UPDATE phong set phong.status = "Đang phục vụ" where phong.room_id in (select datphong.room_id from datphong where datphong.bookroom_id = %s)', (bookroom_id[0]))
+                    conn.commit()
+                except:
+                    conn.rollback()
+            else:
+                for item in bookroom_id:
+                    cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (int(item),))
+                    customer = cursor.fetchone()
+                    bill_id = str(item[0]) + "_" + str(customer[0])
+                    days = int((customer[2] - customer[1]).days)
+                    total_money = days * int(customer[3])
+                    cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,int(item), total_money,))
+                    conn.commit()
+                    cursor.execute('update datphong set datphong.isdelete = 1 where datphong.bookroom_id = %s', (item))
+                    conn.commit()
+                    cursor.execute('UPDATE phong set phong.status = "Đang phục vụ" where phong.room_id in (select datphong.room_id from datphong where datphong.bookroom_id = %s', (item,))
+                    conn.commit()
+            print('Thanh cong')
+            flash("Created a bill for this booking", "alert alert-success")
+        flash("Update successfully", "alert alert-success")
+    else:
+        flash('Empty selection or actions! Please try again', "alert alert-warning")
+    # try:
+    #     cursor.execute('UPDATE datphong set datphong.status = %s where datphong.bookroom_id in %s', (select, bookroom_id,))
+    #     conn.commit()
+    #     if (select == 0):
+    #         cursor.execute('select datphong.customer_id from datphong where bookroom_id = %s', (bookroom_id,))
+    #         customer = customer.fetchone()
+    #         bill_id = str(bookroom_id) + "_" + str(customer[0])
+    #         cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,id_datphong[0], total_money,))
+    #         conn.commit()
+    #         print('Thanh cong')
+    # except:
+    #     conn.rollback()
+    return redirect('/booking_detail')

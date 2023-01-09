@@ -1,145 +1,135 @@
-{%extends 'admin_home.html'%}
+{%extends 'admin.html'%}
 {%block content%}
-<div class="col-md-12">
-    <div class="card">
-        <form id="TypeValidation" autocomplete="off" class="form-horizontal" action="#">
-            <div class="card-header card-header-text" data-background-color="rose">
-                <h4 class="card-title">Đặt phòng</h4>
+<!-- <h3><form action="" method="post" >
+            <input type="text" >
+        </form></h3> -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="container search-table">
+    <div class="search-box">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>Search Bill Customer</h5>
             </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Họ và tên</label>
-                <div class="col-sm-2">
-                    <div class="form-group label-floating">
-                        <label class="control-label"></label>
-                        <input class="form-control" type="text" name="first_name" id="first_name" value="{{temp['first']}}" required />
-                    </div>
-                </div>
-                <label class="col-sm-1 label-on-left">Tên chính</label>
-                <div class="col-sm-1">
-                    <div class="form-group label-floating column-sizing">
-                        <input class="form-control" id="last_name" name="last_name" type="text" value="{{temp['last']}}" required />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Số căn cước</label>
-                <div class="col-sm-1">
-                    <div class="form-group label-floating">
-                        <label class="control-label"></label>
-                        <input class="form-control" type="text" name="customer_identify" value="{{temp['identity']}}" maxlength="12" minlength="12"
-                            id="customer_identify" required />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Giới tính</label>
-                <div class="col-sm-10 checkbox-radios">
-                    <div>
-                        <div class="form-group label-floating">
-                            <input type="text" name="optionsRadios" value="{{temp['gender']}}" required/>
 
-                        </div>
-                        
-                    </div>
-                </div>
+            <div class="col-md-9">
+                {%if search_text%}
+                <form action="/booking_detail" autocomplete="off">
+                    <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search"
+                        value="{{search_text}}">
+                    <button class="btn" type="submit">Submit</button>
+                </form>
+                {%else%}
+                <form action="/booking_detail" autocomplete="off">
+                    <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search">
+                    <button class="btn" type="submit">Submit</button>
+                </form>
+                {%endif%}
             </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Số điện thoại</label>
-                <div class="col-sm-1">
-                    <div class="form-group label-floating">
-                        <label class="control-label"></label>
-                        <input class="form-control" type="text" name="customer_phone" value="{{temp['phone']}} " id="customer_phone" required />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Ngày đến</label>
-                <div class="col-sm-2">
-                    <div class="form-group label-floating column-sizing">
-                        <label class="control-label"></label>
-                        <input class="form-control" type="date" name="checkin" value="{{temp['end_time']}}" id="checkin" required />
-                    </div>
-                </div>
-                <label class="col-sm-1 label-on-left">Ngày đi</label>
-                <div class="col-sm-2">
-                    <div class="form-group label-floating column-sizing">
-                        <label class="control-label"></label>
-                        <input class="form-control" type="date" name="checkout" value="{{temp['start_time']}} " id="checkout" required />
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Tỉnh thành</label>
-                <div class="col-sm-2">
-                    <div class="form-group label-floating column-sizing">
-                        <label class="control-label"></label>
-                        <input class="form-control" id="room_province" name="room_province" type="text"
-                            onkeyup="suggest_province(this.value);" onblur="province_fill()" value="{{temp['province']}}" />
-                    </div>
-                    <div class="suggestionsBox" id="suggestionP">
-                        <div class="suggestionP" id="suggestionP"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <label class="col-sm-2 label-on-left">Chọn phòng</label>
-                <div class="col-sm-2">
-                    <div class="form-group label-floating column-sizing">
-                        <label class="control-label"></label>
-                        <input class="form-control" style="cursor: pointer;" id="room" name="room" type="text" onclick="suggest_room();"
-                            onblur="room_fill()" value="{{temp['room']}}" />
-                    </div>
-                    <div class="suggestionsBox"  id="suggestionR">
-                        <div class="suggestionR" style="position: absolute;" id="suggestionR"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-center">
-                <button type="submit" class="btn btn-rose btn-fill">Xác nhận</button>
-              </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<script>
-    function suggest_room() {
-        var checkin = document.getElementById('checkin').value;
-        var checkout = document.getElementById('checkout').value;
-        var province = document.getElementById('room_province').value;
-        if (!checkin || !checkout || !province) {
-            $('#suggestionR').fadeOut();
-        } else {
-            $(checkin, checkout, province).addClass('load');
-            $.post("/room_ajax", { checkin: "" + checkin + "", checkout: "" + checkout + "", province: "" + province + "" }, function (data) {
-                $('#suggestionR').fadeIn();
-                $('#suggestionR').html(data);
-                $('#suggestionR').append(data.htmlresponse);
-                $('#suggestionR').removeClass('load');
-            });
-        }
-    }
-    function room_fill(thisValue) {
-        $('#room').val(thisValue);
-        setTimeout("$('#suggestionR').fadeOut();", 700);
-    }
-    function suggest_province(inputString) {
-        if (inputString.length == 0) {
-            $('#suggestionP').fadeOut();
-        } else {
-            $('#room_province').addClass('load');
-            $.post("/ajaxpost", { queryString: "" + inputString + "" }, function (data) {
-                $('#suggestionP').fadeIn();
-                $('#suggestionsP').html(data);
-                $('#suggestionP').append(data.htmlresponse);
-                $('#room_province').removeClass('load');
-            });
-        }
-    }
-    function province_fill(thisValue) {
-        $('#room_province').val(thisValue);
-        setTimeout("$('#suggestionP').fadeOut();", 600);
-    }
-</script>
-{%include 'footer_admin.html'%}
-{%endblock%}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="purple">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Booking Manager</h4>
+                        <div class="toolbar">
+                            <!--        Here you can write extra buttons/actions for the toolbar              -->
+                        </div>
+
+                        <div class="material-datatables">
+                            <div class="material-datatables">
+                                <table id="datatables" class="table table-striped table-no-bordered table-hover"
+                                    cellspacing="0" width="100%" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã khách hàng</th>
+                                            <th>Họ và tên</th>
+                                            <th>Tên khách sạn</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Quốc tịch</th>
+                                            <th>Thời gian nhận</th>
+                                            <th>Trạng thái</th>
+                                            <th class="disabled-sorting text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <form action="/update_booking">
+                                            <select class="form-select" name="status" id="status">
+                                                <option value="" selected disabled>Tùy chọn</option>
+                                                <option value="0">Nhận phòng</option>
+                                                <option value="1">Đã đặt trước</option>
+                                                <option style="color: rgb(10, 33, 240);" value="2">Đã đăng ký
+                                                </option>
+
+                                            </select>
+                                            {%if data%}
+                                            {%for row in data%}
+                                            <tr>
+                                                <td>{{row.customer_id}}</td>
+                                                <td>{{row.customer_name}}</td>
+                                                <td>{{row.room_name}}</td>
+                                                <td>{{row.customer_phone}}</td>
+                                                <td>{{row.customer_nation}}</td>
+                                                <td>{{row.check_in.strftime("%d/%m/%Y")}}</td>
+                                                <td>{{row.status}}</td>
+                                                <td class="disabled-sorting text-right"> <input name="booking" value="{{row.bookroom_id}}"
+                                                        type="checkbox"></td>
+                                            </tr>
+                                            {%endfor%}
+                                            {%endif%}
+                                            <button class="btn" role="alert" type="submit">Ghi nhận</button>
+                                        </form>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end content-->
+                    </div>
+                    <!--  end card  -->
+                </div>
+                <!-- end col-md-12 -->
+            </div>
+            <!-- end row -->
+        </div>
+        <nav>
+            <ul class="pagination pagination-info">
+                {%if prev or next%}
+                {%if prev >= 1%}
+                <li>
+
+                    <a href="/booking_detail/{{prev}}">Previous</a>
+
+                </li>
+                {%endif%}
+                <li>
+                    {% for page in range(page)%}
+                    <span> <a href="/booking_detail/{{loop.index}}">{{loop.index}}</a></span>
+                    {%endfor%}
+                </li>
+                {% if next <= page %} <li>
+                    <a href="/booking_detail/{{next}}">Next</a>
+
+                    </li>
+                    {%endif%}
+                    {%endif%}
+
+            </ul>
+
+        </nav>
+    </div>
+    {%include 'footer_admin.html'%}
+    {%endblock%}

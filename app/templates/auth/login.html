@@ -40,8 +40,7 @@
                 <span class="error-msg" id="msg-pass"></span>
                 <br>
                 <input type="checkbox" class="fadeIn fourth" name="inputRemember"
-                    checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}"
-                    autocomplete="off">
+                    checked="{%if 'rem' in request.cookies%} {{ request.cookies.get('rem') }} {%endif%}">
                 <label for="inputRemember">Ghi nhớ</label> <br>
                 <input type="submit" class="fadeIn fourth" value="Đăng nhập" onclick="return validateLogin()">
             </form>

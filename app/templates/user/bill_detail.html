@@ -115,6 +115,16 @@
                     </div>
                 </div>
                 <hr>
+                {%if total_money%}
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tổng tiền</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{total_money}}đ
+                    </div>
+                </div>
+                {%else%}
                 <div class="row">
                     <div class="col-sm-3">
                         <h6 class="bold-text mb-0">Tổng tiền</h6>
@@ -123,6 +133,17 @@
                         {{khachhang.3}}đ
                     </div>
                 </div>
+                {%endif%}
+                {%if tinhtrang%}
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="bold-text mb-0">Tình trạng</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{tinhtrang}}
+                    </div>
+                </div>
+                {%else%}
                 <div class="row">
                     <div class="col-sm-3">
                         <h6 class="bold-text mb-0">Tình trạng</h6>
@@ -131,7 +152,13 @@
                         {{khachhang.4}}
                     </div>
                 </div>
+                {%endif%}
                 <hr>
+                <div class="row">
+                    <div class="col-sm-9 text-secondary">
+                        <a href="/profile" class="btn">Quay lại</a>
+                    </div>
+                </div>
                 <hr>
             </div>
         </div>

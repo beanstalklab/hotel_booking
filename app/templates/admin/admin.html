@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
     <link href="{{url_for('static', filename='assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+    <link href="{{url_for('static', filename='css/datepicker.css')}}" rel="stylesheet" />
+
     <!--  Material Dashboard CSS    -->
     <link href="{{url_for('static', filename='assets/css/material-dashboard.css')}}" rel="stylesheet" />
     <!--  CSS for Demo Purpose, don't include it in your project     -->
@@ -19,9 +21,7 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
 </head>
 
 <body>
@@ -39,8 +39,9 @@
                             <a class="btn" href="{{url_for('adview.dashboard')}}" style="padding: 5px 10px;">Dashboard</a>
                             <a class="btn" href="/manage_rooms" class="dropdown-item" style="padding: 5px 10px;">Room</a>
                             <a class="btn" href="/customer" class="dropdown-item" style="padding: 5px 10px;"> Customer</a>
-                            <a class="btn" href="/room_booking" class="dropdown-item" style="padding: 5px 10px;">
-                                Booking</a>
+                            <a class="btn" href="/room_booking" class="dropdown-item" style="padding: 5px 10px;">Booking </a>
+                            <a class="btn" href="/booking_detail" class="dropdown-item" style="padding: 5px 10px;"> 
+                                Manage Booking</a> 
                         </div>
                         <div class="navbar-nav">
                             <a class="btn" href="{{url_for('adview.logout')}}" style="padding: 5px 10px;">Logout</a>

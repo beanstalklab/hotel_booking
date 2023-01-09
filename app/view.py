@@ -19,7 +19,7 @@ import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
+    "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app"
 )
 from recommendSystem import *
 
@@ -43,7 +43,7 @@ def home():
         print("cannot get data")
 
     datas = cursor.fetchall()
-    print(datas)
+    # print(datas)
     conn.close()
     for data in datas:
         temp_data = {
@@ -79,7 +79,7 @@ def home():
             print("error image")
             # conn.rollback()
         img = cursor.fetchone()
-        print(img)
+        # print(img)
         idx = img[0].index("/")
         img = {"folder": img[0][0:idx], "name": img[0][idx + 1 :], "rank": img[1]}
         final_data.append((temp_data, img))
@@ -156,8 +156,27 @@ def profile():
             temp["time_end"] = row[2]
             temp["status"] = row[3]
             temp["id_bill"] = row[4]
-            temp['bookroom_id'] = row[5]
+            temp["bookroom_id"] = row[5]
             lichsu.append(temp)
+    ds_dangky = ''
+    try:
+        cursor.execute('''select datphong.bookroom_id, phong.room_name, datphong.time_start, datphong.time_end, datphong.status from datphong
+                        inner join phong on datphong.room_id = phong.room_id where datphong.customer_id = %s and datphong.isdelete = 0''', (session["customer_id"],))
+    except:
+        pass
+    ds_dangky = cursor.fetchall()
+    temp = []
+    if ds_dangky:
+        option = ['Đã nhận phòng', 'Đã đặt trước', 'Đã đăng ký']
+        for row in ds_dangky:
+            item = {}
+            item['bookroom_id'] = row[0]
+            item['room_name'] = row[1]
+            item['checkin'] = row[2]
+            item['checkout'] = row[3]
+            item['status'] = option[int(row[4])]
+            temp.append(item)
+
     try:
         cursor.execute("select * from user_image where user_id = %s", (id_account,))
         conn.commit()
@@ -177,9 +196,11 @@ def profile():
         msg=msg,
         lichsu=lichsu,
         img=img,
+        ds_dangky=temp
     )
 
-@main_blp.route('/customer_bill_detail/<bill_id>')
+
+@main_blp.route("/customer_bill_detail/<bill_id>")
 def customer_bill_detail(bill_id):
     conn = connect_db()
     cursor = get_cursor(conn)
@@ -212,7 +233,7 @@ def customer_bill_detail(bill_id):
                     inner join datphong on datphong.bookroom_id = ql_dichvu.id_dangky
                     inner join dichvu on dichvu.service_id = ql_dichvu.id_dichvu
                     inner join hoadon on hoadon.bookroom_id = datphong.bookroom_id
-                    where hoadon.id_bill = %s;""",
+                    where datphong.bookroom_id = %s;""",
         (bill_id,),
     )
     dichvu = cursor.fetchall()
@@ -226,6 +247,62 @@ def customer_bill_detail(bill_id):
         khachhang=khachhang,
         phong=phong,
     )
+@main_blp.route("/customer_bill_detail_before/<bookroom_id>")
+def customer_bill_detail_before(bookroom_id):
+    conn = connect_db()
+    cursor = get_cursor(conn)
+    cursor.execute(
+        """select khachhang.customer_id, concat(khachhang.first_name," ", khachhang.last_name),khachhang.customer_identity
+                    from khachhang 
+                    inner join datphong on datphong.customer_id = khachhang.customer_id
+                    where datphong.bookroom_id = %s""",
+        (bookroom_id,),
+    )
+    khachhang = cursor.fetchone()
+    cursor.execute(
+        """select phong.room_id, phong.room_name, phong.room_address, tinhthanh.province_name, datphong.time_start, datphong.time_end, loaiphong.room_name, phong.room_price
+                    from phong 
+                    inner join datphong on datphong.room_id = phong.room_id
+                    inner join tinhthanh on tinhthanh.province_id = phong.id_province
+                    inner join loaiphong on loaiphong.room_id = phong.id_roomtype
+                    where bookroom_id = %s
+                    """,
+        (bookroom_id,),
+    )
+    phong = cursor.fetchone()
+    # checkin = phong[4]
+    # checkout = phong[5]
+    # print(checkout - checkin)
+    cursor.execute(
+        """ select dichvu.service_name, dichvu.service_price, ql_dichvu.soluong from ql_dichvu 
+                    inner join datphong on datphong.bookroom_id = ql_dichvu.id_dangky
+                    inner join dichvu on dichvu.service_id = ql_dichvu.id_dichvu
+                    where datphong.bookroom_id = %s;""",
+        (bookroom_id,),
+    )
+    dichvu = cursor.fetchall()
+    service_money = 0
+    if dichvu:
+        for i in dichvu:
+            service_money += i[1]
+    tinhtrang = 'Chưa nhận phòng'
+    room_price = int(phong[-1])
+    days = int((phong[5] - phong[4]).days)
+    total_money = days * room_price + service_money
+
+    print(khachhang)
+    print(phong)
+    print(dichvu)
+    return render_template(
+        "user/bill_detail.html",
+        dichvu=dichvu,
+        khachhang=khachhang,
+        phong=phong,
+        total_money = total_money,
+        tinhtrang = tinhtrang,
+        hoadon='Chưa tạo hóa đơn'
+    )
+
 @main_blp.route("/blog_customer/<account_name>/<account_id>")
 def blog_customer(account_id, account_name):
     conn = connect_db()
@@ -248,9 +325,13 @@ def blog_customer(account_id, account_name):
         for img in img_list:
             if img:
                 final_img.append(img[2])
+        print(final_img)
         posts.append((temp, final_img))
     return render_template(
-        "user/blog_user.html", blogs=posts, account_name=account_name, account_blog_id=int(account_id)
+        "user/blog_user.html",
+        blogs=posts,
+        account_name=account_name,
+        account_blog_id=int(account_id),
     )
 
 
@@ -288,14 +369,26 @@ def write_blog(account_id):
         print("Thanh cong")
         flash("tạo bài viết thành công")
 
-        return redirect(url_for("view.blog_customer", account_name=session['username'], account_id=account_id))
+        return redirect(
+            url_for(
+                "view.blog_customer",
+                account_name=session["username"],
+                account_id=account_id,
+            )
+        )
 
     except:
         print("error")
         conn.rollback()
         conn.close()
         flash("Tạo bài viết không thành công")
-    return redirect(url_for("view.blog_customer", account_name=session['username'], account_id=account_id))
+    return redirect(
+        url_for(
+            "view.blog_customer",
+            account_name=session["username"],
+            account_id=account_id,
+        )
+    )
 
 
 @main_blp.route("/page", defaults={"page": 1})
@@ -394,9 +487,12 @@ def detail(room_id):
     msg = ""
     conn = connect_db()
     cursor = get_cursor(conn)
-    yeuthich = ''
-    try: 
-        cursor.execute('select * from yeuthich where room_id = %s and account_id = %s', (room_id, session['id']))
+    yeuthich = ""
+    try:
+        cursor.execute(
+            "select * from yeuthich where room_id = %s and account_id = %s",
+            (room_id, session["id"]),
+        )
         yeuthich = cursor.fetchone()
     except:
         pass
@@ -427,7 +523,7 @@ def detail(room_id):
         data["rating"] = round(rating[0], 1)
     else:
         data["rating"] = 3.1
-    
+
     try:
         cursor.execute(
             "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -467,7 +563,7 @@ def detail(room_id):
         print(mota, loaiphong, province)
     except:
         print("errro")
-    cursor.execute('select * from binhluan where binhluan.room_id = %s', (room_id, ))
+    cursor.execute("select * from binhluan where binhluan.room_id = %s", (room_id,))
     row_comment = cursor.rowcount
     cursor.execute(
         """select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, binhluan.user_id, danhgia.rating from taikhoan
@@ -514,38 +610,65 @@ def detail(room_id):
         user_rating = 0
     print(user_rating)
 
- ### Start recommend system
+    ### Start recommend system
     final_data = []
-    result = ''
+    result = ""
+    cursor.execute('select * from danhgia')
+    danhgia = cursor.fetchall()
+    data = []
+    # print(danhgia)
+    for row in danhgia:
+        temp = {}
+        temp['account_id'] = row[0]
+        temp['room_id'] = row[1]
+        temp['rating'] = row[2]
+        data.append(temp)
+    # print(data)
     user_id = session["id"]
-    print('l')
-    result = get_result(int(user_id))
-    print('k')
+    result = pd.DataFrame.from_dict(data, orient='columns')
     print(result)
+    ratings_matrix = result.values
+    print(ratings_matrix)
+    mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+    print(mean_centered_ratings_matrix)
+    mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+    print(mean_centered_ratings_matrix)
+    user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
+    print(user_similarity_matrix)
+    result  = predict_top_k_items_of_user(user_id - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
+    print("result: ",   result)
     try:
+        cursor.execute('select * from danhgia')
+        danhgia = cursor.fetchall()
+        data = []
+        for row in danhgia:
+            temp = {}
+            temp['account_id'] = row[0]
+            temp['room_id'] = row[1]
+            temp['rating'] = row[2]
+            data.append(temp)
+
         user_id = session["id"]
-        print('l')
-        result = get_result(int(user_id))
-        print('k')
-        print(result)
-        user_id = session["id"]
-        print('l')
-        result = get_result(int(user_id))
-        print('k')
+        result = pd.DataFrame.from_dict(data, orient='columns')
+        ratings_matrix = result.values
+        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+        user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
+        result  = predict_top_k_items_of_user(user_id - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        print(user_id,len(list_room_rmd))
+        print(user_id, list_room_rmd)
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
                 FROM phong 
                 inner join danhgia on danhgia.room_id = phong.room_id 
-                where phong.room_id in {} and danhgia.account_id={}
+                where phong.room_id in {}
                     GROUP BY phong.room_id 
                     limit 6""".format(
-                tuple(list_room_rmd), user_id
+                    tuple(list_room_rmd)
                 )
             )
         except:
@@ -607,7 +730,7 @@ def detail(room_id):
         user_rate=user_rating,
         num_cmt=row_comment,
         recommend=final_data,
-        yeuthich = yeuthich
+        yeuthich=yeuthich,
     )
 
 
@@ -644,7 +767,7 @@ def full_detail_comment(room_id):
         data["rating"] = round(rating[0], 1)
     else:
         data["rating"] = 3.1
-    
+
     try:
         cursor.execute(
             "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -738,7 +861,7 @@ def full_detail_comment(room_id):
         temp["rating"] = row[2]
         json_data.append(temp)
     final_data = []
- ### Start recommend system
+    ### Start recommend system
     try:
         user_id = session["id"]
         rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
@@ -748,9 +871,7 @@ def full_detail_comment(room_id):
         ratings_matrix = hotel_rating_user.values
         mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
         mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(
-            mean_centered_ratings_matrix
-        )
+        user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
         result = predict_top_k_items_of_user(
             user_id,
             2,
@@ -763,8 +884,7 @@ def full_detail_comment(room_id):
         for i in result:
             list_room_rmd.append(i[0])
         # print(user_id,len(list_room_rmd))
-        
-        
+
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
@@ -773,7 +893,7 @@ def full_detail_comment(room_id):
                 where phong.room_id in {} and danhgia.account_id={}
                     GROUP BY phong.room_id 
                 LIMIT 6""".format(
-                tuple(list_room_rmd), user_id
+                    tuple(list_room_rmd), user_id
                 )
             )
         except:
@@ -832,8 +952,8 @@ def full_detail_comment(room_id):
         province=province,
         post_list=post_list,
         user_rate=user_rating,
-        full='full',
-        recommend=final_data
+        full="full",
+        recommend=final_data,
     )
 
 
@@ -1127,28 +1247,36 @@ def write_post(id_room):
     print(id_room, user_id, post, star)
     return redirect(url_for("view.detail", room_id=id_room))
 
+
 @main_blp.route("/favorite/<room_id>/<account_id>")
 def favorite(room_id, account_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     try:
-        cursor.execute('INSERT into yeuthich values (%s, %s)', (room_id, account_id))
+        cursor.execute("INSERT into yeuthich values (%s, %s)", (room_id, account_id))
         conn.commit()
     except:
         conn.rollback()
     conn.close()
     return redirect(url_for("view.detail", room_id=room_id))
+
+
 @main_blp.route("/delete_favorite/<room_id>/<account_id>")
 def delete_favorite(room_id, account_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     try:
-        cursor.execute('DELETE FROM yeuthich WHERE room_id = %s and account_id = %s', (room_id, account_id))
+        cursor.execute(
+            "DELETE FROM yeuthich WHERE room_id = %s and account_id = %s",
+            (room_id, account_id),
+        )
         conn.commit()
     except:
         conn.rollback()
     conn.close()
     return redirect(url_for("view.detail", room_id=room_id))
+
+
 @main_blp.route("/folder_image/<folder>/<name>")
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)

@@ -117,10 +117,15 @@
             </div>
           </div>
         </div>
-
+        {%if khachhang.4 == 'Đã thanh toán'%}
+        <div class="card-footer text-center">
+          <a  class="btn btn-rose btn-fill" href="/dashboard">Quay lại</a>
+        </div>
+        {%elif khachhang.4 == 'Chưa thanh toán'%}
         <div class="card-footer text-center">
           <button style="margin-left: 20px ;" type="submit" class="btn btn-rose btn-fill">Thanh toán</button>
         </div>
+        {%endif%}
     </form>
   </div>
 </div>

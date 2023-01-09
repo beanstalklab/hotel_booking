@@ -69,11 +69,11 @@
 
             
             <div>
-                {%if img%}
                 {%for img in blog[1]%}
+                {%if img%}
                 <img class="mx-1 zoom" src="{{url_for('view.blog_image', name=img)}}" style="height: 12%; width: 12%; border-radius: 2px;" alt="">
-                {%endfor%}
                 {%endif%}
+                {%endfor%}
             </div>
         </div>
     </div>
