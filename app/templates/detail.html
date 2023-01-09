@@ -265,7 +265,8 @@
                                 <div type="button" class="btn" onclick="calc()">Ghi nhận</div>
 
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-12 col-xxl-6 fomat-money">{{data['room_price']}} <span id="days"></span> </div>
+                                    <div class="col-sm-6 col-md-12 col-xxl-6 fomat-money">{{data['room_price']}} <span
+                                            id="days"></span> </div>
                                     <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-room">0 VNĐ</div>
 
 
@@ -353,6 +354,7 @@
     </div>
 
     <hr class="dropdown-divider my-5">
+    <h1>Phản hồi</h1>
     {%if full%}
     <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
     {%endif%}
@@ -383,7 +385,7 @@
         {%endif%}
         {%if not full%}
         {%if num_cmt > 5%}
-        <div><a class="btn btn-primary mt-1"
+        <div><a class="btn btn-primary mt-3"
                 href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
         </div>
         {%else%}
@@ -391,7 +393,9 @@
         </div>
         {%endif%}
         {%endif%}
-        <h1>Đánh giá</h1>
+        <hr class="dropdown-divider my-5">
+
+        <h1 class="mt-5">Đánh giá cá nhân</h1>
         {%if session.id%}
         <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
             <div class="stars">
