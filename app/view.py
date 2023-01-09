@@ -12,7 +12,8 @@ from flask import (
     send_from_directory,
     jsonify,
 )
-from app.db_utils import connect_db, get_cursor
+# from app.db_utils import connect_db, get_cursor
+
 from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE
 from app.sql import *
 import pandas as pd
@@ -21,7 +22,8 @@ import sys
 sys.path.append(
     "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app"
 )
-from recommendSystem import *
+from recommendSystem import get_result, connect_db, get_cursor
+
 
 main_blp = Blueprint(
     "view", __name__, template_folder="templates", static_folder="static"
@@ -81,7 +83,8 @@ def home():
         img = cursor.fetchone()
         # print(img)
         idx = img[0].index("/")
-        img = {"folder": img[0][0:idx], "name": img[0][idx + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:idx],
+               "name": img[0][idx + 1:], "rank": img[1]}
         final_data.append((temp_data, img))
     conn.close()
     return render_template("home.html", data=final_data)
@@ -178,7 +181,8 @@ def profile():
             temp.append(item)
 
     try:
-        cursor.execute("select * from user_image where user_id = %s", (id_account,))
+        cursor.execute(
+            "select * from user_image where user_id = %s", (id_account,))
         conn.commit()
     except:
         conn.rollback()
@@ -186,7 +190,7 @@ def profile():
     # print(img[2])
     if img:
         index = img[2].index("/")
-        img = {"folder": img[2][0:index], "name": img[2][index + 1 :]}
+        img = {"folder": img[2][0:index], "name": img[2][index + 1:]}
     print(img)
     conn.close()
     return render_template(
@@ -309,7 +313,8 @@ def blog_customer(account_id, account_name):
     cursor = get_cursor(conn)
     posts = ""
     cursor.execute(
-        "select * from baiviet where account_id = %s and status = 0", (account_id,)
+        "select * from baiviet where account_id = %s and status = 0", (
+            account_id,)
     )
     data = cursor.fetchall()
     posts = []
@@ -319,7 +324,8 @@ def blog_customer(account_id, account_name):
         temp["title"] = row[2]
         temp["body"] = row[3]
         temp["time"] = row[4]
-        cursor.execute("select * from blog_image where post_id = %s", (row[0],))
+        cursor.execute(
+            "select * from blog_image where post_id = %s", (row[0],))
         img_list = cursor.fetchall()
         final_img = []
         for img in img_list:
@@ -470,7 +476,7 @@ def room(page):
             index = img[0].index("/")
             img = {
                 "folder": img[0][0:index],
-                "name": img[0][index + 1 :],
+                "name": img[0][index + 1:],
                 "rank": img[1],
             }
             final_data.append((temp_data, img))
@@ -547,7 +553,8 @@ def detail(room_id):
     for img in imgs:
 
         index = img[0].index("/")
-        img = {"folder": img[0][0:index], "name": img[0][index + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:index],
+               "name": img[0][index + 1:], "rank": img[1]}
         list_img.append(img)
     try:
         cursor.execute(
@@ -557,7 +564,8 @@ def detail(room_id):
         )
         mota = cursor.fetchall()
         cursor.execute(
-            """select room_note from loaiphong where room_id = %s""", (room_id,)
+            """select room_note from loaiphong where room_id = %s""", (
+                room_id,)
         )
         loaiphong = cursor.fetchone()
         print(mota, loaiphong, province)
@@ -610,33 +618,8 @@ def detail(room_id):
         user_rating = 0
     print(user_rating)
 
-    ### Start recommend system
+ # Start recommend system
     final_data = []
-    result = ""
-    cursor.execute('select * from danhgia')
-    danhgia = cursor.fetchall()
-    data = []
-    # print(danhgia)
-    for row in danhgia:
-        temp = {}
-        temp['account_id'] = row[0]
-        temp['room_id'] = row[1]
-        temp['rating'] = row[2]
-        data.append(temp)
-    # print(data)
-    user_id = session["id"]
-    result = pd.DataFrame.from_dict(data, orient='columns')
-    print(result)
-    ratings_matrix = result.values
-    print(ratings_matrix)
-    mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-    print(mean_centered_ratings_matrix)
-    mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-    print(mean_centered_ratings_matrix)
-    user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
-    print(user_similarity_matrix)
-    result  = predict_top_k_items_of_user(user_id - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
-    print("result: ",   result)
     try:
         cursor.execute('select * from danhgia')
         danhgia = cursor.fetchall()
@@ -649,17 +632,11 @@ def detail(room_id):
             data.append(temp)
 
         user_id = session["id"]
-        result = pd.DataFrame.from_dict(data, orient='columns')
-        ratings_matrix = result.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
-        result  = predict_top_k_items_of_user(user_id - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
+        result = get_result(int(user_id))
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        print(user_id, list_room_rmd)
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
@@ -667,14 +644,13 @@ def detail(room_id):
                 inner join danhgia on danhgia.room_id = phong.room_id 
                 where phong.room_id in {}
                     GROUP BY phong.room_id 
-                    limit 6""".format(
-                    tuple(list_room_rmd)
+                    limit 8""".format(
+                tuple(list_room_rmd)
                 )
             )
         except:
             pass
         recommend_hotel = cursor.fetchall()
-        print(len(recommend_hotel))
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
@@ -690,7 +666,6 @@ def detail(room_id):
                 temp_data["rating"] = math.ceil(rating[0])
             else:
                 temp_data["rating"] = 3
-            # print(rating)
             try:
                 cursor.execute(
                     "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -705,13 +680,12 @@ def detail(room_id):
                 index = img[0].index("/")
                 img = {
                     "folder": img[0][0:index],
-                    "name": img[0][index + 1 :],
+                    "name": img[0][index + 1:],
                     "rank": img[1],
                 }
                 final_data.append((temp_data, img))
             else:
                 continue
-        print(len(final_data))
     # End recommend system
     except:
         pass
@@ -791,7 +765,8 @@ def full_detail_comment(room_id):
     for img in imgs:
 
         index = img[0].index("/")
-        img = {"folder": img[0][0:index], "name": img[0][index + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:index],
+               "name": img[0][index + 1:], "rank": img[1]}
         list_img.append(img)
     try:
         cursor.execute(
@@ -801,7 +776,8 @@ def full_detail_comment(room_id):
         )
         mota = cursor.fetchall()
         cursor.execute(
-            """select room_note from loaiphong where room_id = %s""", (room_id,)
+            """select room_note from loaiphong where room_id = %s""", (
+                room_id,)
         )
         loaiphong = cursor.fetchone()
         print(mota, loaiphong, province)
@@ -860,40 +836,24 @@ def full_detail_comment(room_id):
         temp["room_id"] = row[1]
         temp["rating"] = row[2]
         json_data.append(temp)
+ # Start recommend system
     final_data = []
-    ### Start recommend system
     try:
         user_id = session["id"]
-        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        hotel_rating_user = rating_data.pivot_table(
-            index="account_id", columns="room_id", values="rating"
-        )
-        ratings_matrix = hotel_rating_user.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
-        result = predict_top_k_items_of_user(
-            user_id,
-            2,
-            ratings_matrix,
-            user_similarity_matrix,
-            mean_centered_ratings_matrix,
-        )
+        result = get_result(int(user_id))
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        # print(user_id,len(list_room_rmd))
-
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
                 FROM phong 
                 inner join danhgia on danhgia.room_id = phong.room_id 
-                where phong.room_id in {} and danhgia.account_id={}
+                where phong.room_id in {}
                     GROUP BY phong.room_id 
-                LIMIT 6""".format(
-                    tuple(list_room_rmd), user_id
+                    limit 8""".format(
+                tuple(list_room_rmd)
                 )
             )
         except:
@@ -914,7 +874,6 @@ def full_detail_comment(room_id):
                 temp_data["rating"] = math.ceil(rating[0])
             else:
                 temp_data["rating"] = 3
-            # print(rating)
             try:
                 cursor.execute(
                     "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -929,13 +888,12 @@ def full_detail_comment(room_id):
                 index = img[0].index("/")
                 img = {
                     "folder": img[0][0:index],
-                    "name": img[0][index + 1 :],
+                    "name": img[0][index + 1:],
                     "rank": img[1],
                 }
                 final_data.append((temp_data, img))
             else:
                 continue
-        print(len(final_data))
     # End recommend system
     except:
         pass
@@ -1082,7 +1040,7 @@ def room_filter(page):
             index = img[0].index("/")
             img = {
                 "folder": img[0][0:index],
-                "name": img[0][index + 1 :],
+                "name": img[0][index + 1:],
                 "rank": img[1],
             }
             final_data.append((temp_data, img))
@@ -1149,7 +1107,7 @@ def filter_local():
                     index = img[0].index("/")
                     img = {
                         "folder": img[0][0:index],
-                        "name": img[0][index + 1 :],
+                        "name": img[0][index + 1:],
                         "rank": img[1],
                     }
                     final_data.append((temp_data, img))

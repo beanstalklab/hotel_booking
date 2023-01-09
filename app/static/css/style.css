@@ -181,3 +181,42 @@ table.dataTable th {
     font-weight: bold;
     text-decoration: none;
 }
+/* 
+.comment {
+
+} */
+
+.user-name {
+    font-weight: bold;
+}
+
+.star {
+    color: rgb(180, 129, 0);
+    font-size: 18px;
+}
+
+.comment {
+    font-size: 20px;
+    font-weight: 200;
+    margin-left: 5px;
+}
+
+.status {
+    font-weight: 500;
+    text-decoration: none;
+    color: #ca7e21;
+}
+
+.reject {
+    font-weight: 500;
+    color: #442675;
+    text-decoration: none;
+}
+
+.status:hover {
+    color: #9e7e56;
+}
+
+.reject:hover {
+    color: #c00202;
+}

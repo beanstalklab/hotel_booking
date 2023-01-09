@@ -2,11 +2,11 @@
 
 {%block content%}
 {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="{{ category }}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 <!-- profile -->
 <div class="container">
@@ -96,7 +96,7 @@
                             <div class="col-sm-3">
                                 <h6 class="bold-text mb-0">Địa chỉ thường trú</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary"> 
+                            <div class="col-sm-9 text-secondary">
                                 {%if khachhang.customer_address%}
                                 {{khachhang.customer_address}}
                                 {%endif%}
@@ -106,7 +106,9 @@
                         <div class="row">
                             <div class="col-12 mb-1">
                                 <a class="btn my-1" href="/edit_profile">Cập nhật thông tin</a>
-                                <a class="btn mx-2" href="{{url_for('view.blog_customer', account_id = info['account_id'], account_name=info['user_name'])}}">Bài viết</a>
+                                <a class="btn mx-2"
+                                    href="{{url_for('view.blog_customer', account_id = info['account_id'], account_name=info['user_name'])}}">Bài
+                                    viết</a>
                             </div>
                         </div>
                     </div>
