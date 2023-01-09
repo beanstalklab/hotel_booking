@@ -23,7 +23,7 @@
             <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
             <li class="breadcrumb-item"><a href="{{url_for('view.room')}}">Các phòng</a></li>
             <li class="breadcrumb-item active">Chi tiết</li>
-            
+
         </ol>
     </nav>
     <!-- End Breadcrumb -->
@@ -48,16 +48,18 @@
         </div>
 
         <div class="col-6 py-2 d-flex justify-content-end">
-            
+
             {%if session.id%}
             <div class="mx-4">
                 {%if yeuthich%}
-                <a href="{{url_for('view.delete_favorite', room_id = data['room_id'], account_id=session.id)}}" class="text-dark text-decoration-none">
+                <a href="{{url_for('view.delete_favorite', room_id = data['room_id'], account_id=session.id)}}"
+                    class="text-dark text-decoration-none">
                     <i class="fas fa-heart"></i>
                     <span>Đã yêu thích</span>
                 </a>
                 {%else%}
-                <a href="{{url_for('view.favorite', room_id = data['room_id'], account_id=session.id)}}" class="text-dark text-decoration-none">
+                <a href="{{url_for('view.favorite', room_id = data['room_id'], account_id=session.id)}}"
+                    class="text-dark text-decoration-none">
                     <i class="fas fa-heart"></i>
                     <span>Yêu thích</span>
                 </a>
@@ -184,7 +186,7 @@
                     <div class=" d-flex justify-content-center">
                         <form autocomplete="off"
                             action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-auto">
                                     <small class="fomat-money" id="price">{{data['room_price']}}</small>
                                     <span>đ/đêm</span>
@@ -357,22 +359,24 @@
     <div>
         {%if post_list%}
         {%for data in post_list%}
-        <div style="background-color: antiquewhite; margin-bottom: 10px;">
-            <div class="container">
-                <p style="font-weight: bold;">{{data['user_name']}}</p>
-                <i class="fas fa-star"></i>
-                <small>{{data['rating']}} </small>
-                <small>{{data['date_post'].strftime("%d/%m/%Y")}}</small>
-            </div>
+        <div class="rounded card shadow" style="background-color: rgb(237, 236, 235); margin-bottom: 10px;">
+            <div class="card-body">
+                <div class="d-flex">
+                    <h5 class="user-name">{{data['user_name']}}</h5>
+                    <small class="px-2 py-1">{{data['date_post'].strftime("%d/%m/%Y")}}</small>
+                    <h6 class="px-1 py-1 rated">{{data['rating']}} </h6>
+                    <i class="py-1 star fas fa-star"></i>
+                </div>
 
-            <p>{{data['post'] | safe}}</p>
-            {%if data['user_id'] == session.id %}
-            <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
-                class="btn btn-primary mt-1">Xóa</a>
-            {%else%}
-            <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
-                class="btn btn-primary mt-1">Xem trang cá nhân</a>
-            {%endif%}
+                <p class="my-2 comment">{{data['post'] | safe}}</p>
+                {%if data['user_id'] == session.id %}
+                <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
+                    class="btn btn-primary">Xóa</a>
+                {%else%}
+                <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
+                    class="btn btn-primary">Xem trang cá nhân</a>
+                {%endif%}
+            </div>
         </div>
 
         {%endfor%}
@@ -470,11 +474,12 @@
     </div>
 </div>
 <div>
+    <h1>Đề xuất</h1>
     <div class="row gy-4">
         {%if recommend%}
         {%for item in recommend %}
         {%if item %}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-md-6 col-lg-4 col-xxl-3">
             <div class="shadow rounded cart-image">
                 <div class="content position-relative" style="height: 50%;">
                     <a href="{{url_for('view.detail', room_id = item[0]['room_id'])}}" target="_blank">
@@ -484,7 +489,7 @@
                             alt="room image">
                         <div class="content-details fadeIn-top">
                             <h3>{{item[0]['room_name']}}</h3>
-                            <p>Give you a wonderfull holiday!</p>
+                            <p>Mang đến cho bạn một kỳ nghỉ tuyệt vời!</p>
                         </div>
                     </a>
                     <small
@@ -494,7 +499,7 @@
                 </div>
                 <div class="p-4 mt-2 resize-info" style="height: 50%;">
                     <div class="d-flex justify-content-between mb-3" style="height: 15%">
-                        <h5 class="mb-0">{{item[0]['room_name']}}</h5>
+                        <h6 class="mb-0">{{item[0]['room_name']}}</h6>
                         <div class="d-flex">
                             {%if item[0]['rating']%}
                             {%for i in range(item[0]['rating'])%}

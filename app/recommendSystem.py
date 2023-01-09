@@ -47,6 +47,7 @@ def predict(u_index, i_index, k):
     # ta có thể tùy chọn giá trị k này
     users_mean_rating = all_user_mean_ratings(ratings_matrix)
     
+    
     similarity_value = user_similarity_matrix[u_index]
     sorted_users_similar = np.argsort(similarity_value)
     sorted_users_similar = np.flip(sorted_users_similar, axis=0)
@@ -69,16 +70,17 @@ def predict(u_index, i_index, k):
     return np.round(r_hat, 3)
 
 
+
 def predict_top_k_items_of_user(u_index, k_users):
+    
     items = []
     for i_index in range(ratings_matrix.shape[1]):
         if np.isnan(ratings_matrix[u_index][i_index]):
             rating = predict(u_index, i_index, k_users)
-            items.append((i_index, rating))
+            items.append((i_index + 1, rating))
     items = sorted(items, key=lambda tup: tup[1])
     items = list(reversed(items))
-    return items[:6]
-
+    return items[:8]
 
 ratings_matrix = importData()
 mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
@@ -87,6 +89,6 @@ user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 
 
 def get_result(user_id):
-    result_predict  = predict_top_k_items_of_user(user_id, 5)
+    result_predict  = predict_top_k_items_of_user(user_id - 1, 2)
     return result_predict
-print(get_result(21))
+# print(get_result(21))

@@ -12,7 +12,8 @@ from flask import (
     send_from_directory,
     jsonify,
 )
-from app.db_utils import connect_db, get_cursor
+# from app.db_utils import connect_db, get_cursor
+
 from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE
 from app.sql import *
 import pandas as pd
@@ -21,7 +22,8 @@ import sys
 sys.path.append(
     "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
 )
-from recommendSystem import *
+from recommendSystem import get_result, connect_db, get_cursor
+
 
 main_blp = Blueprint(
     "view", __name__, template_folder="templates", static_folder="static"
@@ -81,7 +83,8 @@ def home():
         img = cursor.fetchone()
         print(img)
         idx = img[0].index("/")
-        img = {"folder": img[0][0:idx], "name": img[0][idx + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:idx],
+               "name": img[0][idx + 1:], "rank": img[1]}
         final_data.append((temp_data, img))
     conn.close()
     return render_template("home.html", data=final_data)
@@ -159,7 +162,8 @@ def profile():
             temp['bookroom_id'] = row[5]
             lichsu.append(temp)
     try:
-        cursor.execute("select * from user_image where user_id = %s", (id_account,))
+        cursor.execute(
+            "select * from user_image where user_id = %s", (id_account,))
         conn.commit()
     except:
         conn.rollback()
@@ -167,7 +171,7 @@ def profile():
     # print(img[2])
     if img:
         index = img[2].index("/")
-        img = {"folder": img[2][0:index], "name": img[2][index + 1 :]}
+        img = {"folder": img[2][0:index], "name": img[2][index + 1:]}
     print(img)
     conn.close()
     return render_template(
@@ -178,6 +182,7 @@ def profile():
         lichsu=lichsu,
         img=img,
     )
+
 
 @main_blp.route('/customer_bill_detail/<bill_id>')
 def customer_bill_detail(bill_id):
@@ -226,13 +231,16 @@ def customer_bill_detail(bill_id):
         khachhang=khachhang,
         phong=phong,
     )
+
+
 @main_blp.route("/blog_customer/<account_name>/<account_id>")
 def blog_customer(account_id, account_name):
     conn = connect_db()
     cursor = get_cursor(conn)
     posts = ""
     cursor.execute(
-        "select * from baiviet where account_id = %s and status = 0", (account_id,)
+        "select * from baiviet where account_id = %s and status = 0", (
+            account_id,)
     )
     data = cursor.fetchall()
     posts = []
@@ -242,7 +250,8 @@ def blog_customer(account_id, account_name):
         temp["title"] = row[2]
         temp["body"] = row[3]
         temp["time"] = row[4]
-        cursor.execute("select * from blog_image where post_id = %s", (row[0],))
+        cursor.execute(
+            "select * from blog_image where post_id = %s", (row[0],))
         img_list = cursor.fetchall()
         final_img = []
         for img in img_list:
@@ -377,7 +386,7 @@ def room(page):
             index = img[0].index("/")
             img = {
                 "folder": img[0][0:index],
-                "name": img[0][index + 1 :],
+                "name": img[0][index + 1:],
                 "rank": img[1],
             }
             final_data.append((temp_data, img))
@@ -395,8 +404,9 @@ def detail(room_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     yeuthich = ''
-    try: 
-        cursor.execute('select * from yeuthich where room_id = %s and account_id = %s', (room_id, session['id']))
+    try:
+        cursor.execute(
+            'select * from yeuthich where room_id = %s and account_id = %s', (room_id, session['id']))
         yeuthich = cursor.fetchone()
     except:
         pass
@@ -427,7 +437,7 @@ def detail(room_id):
         data["rating"] = round(rating[0], 1)
     else:
         data["rating"] = 3.1
-    
+
     try:
         cursor.execute(
             "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -451,7 +461,8 @@ def detail(room_id):
     for img in imgs:
 
         index = img[0].index("/")
-        img = {"folder": img[0][0:index], "name": img[0][index + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:index],
+               "name": img[0][index + 1:], "rank": img[1]}
         list_img.append(img)
     try:
         cursor.execute(
@@ -461,13 +472,15 @@ def detail(room_id):
         )
         mota = cursor.fetchall()
         cursor.execute(
-            """select room_note from loaiphong where room_id = %s""", (room_id,)
+            """select room_note from loaiphong where room_id = %s""", (
+                room_id,)
         )
         loaiphong = cursor.fetchone()
         print(mota, loaiphong, province)
     except:
         print("errro")
-    cursor.execute('select * from binhluan where binhluan.room_id = %s', (room_id, ))
+    cursor.execute(
+        'select * from binhluan where binhluan.room_id = %s', (room_id, ))
     row_comment = cursor.rowcount
     cursor.execute(
         """select binhluan.id, binhluan.room_id, taikhoan.user_name, binhluan.post, binhluan.date_post, binhluan.user_id, danhgia.rating from taikhoan
@@ -514,39 +527,29 @@ def detail(room_id):
         user_rating = 0
     print(user_rating)
 
- ### Start recommend system
+ # Start recommend system
     final_data = []
-    result = ''
-    user_id = session["id"]
-    print('l')
-    result = get_result(int(user_id))
-    print('k')
-    print(result)
     try:
         user_id = session["id"]
-        print('l')
         result = get_result(int(user_id))
-        print('k')
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        print(user_id,len(list_room_rmd))
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
                 FROM phong 
                 inner join danhgia on danhgia.room_id = phong.room_id 
-                where phong.room_id in {} and danhgia.account_id={}
+                where phong.room_id in {}
                     GROUP BY phong.room_id 
-                    limit 6""".format(
-                tuple(list_room_rmd), user_id
+                    limit 8""".format(
+                tuple(list_room_rmd)
                 )
             )
         except:
             pass
         recommend_hotel = cursor.fetchall()
-        print(len(recommend_hotel))
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
@@ -562,7 +565,6 @@ def detail(room_id):
                 temp_data["rating"] = math.ceil(rating[0])
             else:
                 temp_data["rating"] = 3
-            # print(rating)
             try:
                 cursor.execute(
                     "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -577,13 +579,12 @@ def detail(room_id):
                 index = img[0].index("/")
                 img = {
                     "folder": img[0][0:index],
-                    "name": img[0][index + 1 :],
+                    "name": img[0][index + 1:],
                     "rank": img[1],
                 }
                 final_data.append((temp_data, img))
             else:
                 continue
-        print(len(final_data))
     # End recommend system
     except:
         pass
@@ -602,7 +603,7 @@ def detail(room_id):
         user_rate=user_rating,
         num_cmt=row_comment,
         recommend=final_data,
-        yeuthich = yeuthich
+        yeuthich=yeuthich
     )
 
 
@@ -639,7 +640,7 @@ def full_detail_comment(room_id):
         data["rating"] = round(rating[0], 1)
     else:
         data["rating"] = 3.1
-    
+
     try:
         cursor.execute(
             "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -663,7 +664,8 @@ def full_detail_comment(room_id):
     for img in imgs:
 
         index = img[0].index("/")
-        img = {"folder": img[0][0:index], "name": img[0][index + 1 :], "rank": img[1]}
+        img = {"folder": img[0][0:index],
+               "name": img[0][index + 1:], "rank": img[1]}
         list_img.append(img)
     try:
         cursor.execute(
@@ -673,7 +675,8 @@ def full_detail_comment(room_id):
         )
         mota = cursor.fetchall()
         cursor.execute(
-            """select room_note from loaiphong where room_id = %s""", (room_id,)
+            """select room_note from loaiphong where room_id = %s""", (
+                room_id,)
         )
         loaiphong = cursor.fetchone()
         print(mota, loaiphong, province)
@@ -732,43 +735,24 @@ def full_detail_comment(room_id):
         temp["room_id"] = row[1]
         temp["rating"] = row[2]
         json_data.append(temp)
+ # Start recommend system
     final_data = []
- ### Start recommend system
     try:
         user_id = session["id"]
-        rating_data = pd.DataFrame.from_dict(json_data, orient="columns")
-        hotel_rating_user = rating_data.pivot_table(
-            index="account_id", columns="room_id", values="rating"
-        )
-        ratings_matrix = hotel_rating_user.values
-        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-        user_similarity_matrix = cosine_similarity(
-            mean_centered_ratings_matrix
-        )
-        result = predict_top_k_items_of_user(
-            user_id,
-            2,
-            ratings_matrix,
-            user_similarity_matrix,
-            mean_centered_ratings_matrix,
-        )
+        result = get_result(int(user_id))
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
-        # print(user_id,len(list_room_rmd))
-        
-        
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
                 FROM phong 
                 inner join danhgia on danhgia.room_id = phong.room_id 
-                where phong.room_id in {} and danhgia.account_id={}
+                where phong.room_id in {}
                     GROUP BY phong.room_id 
-                LIMIT 6""".format(
-                tuple(list_room_rmd), user_id
+                    limit 8""".format(
+                tuple(list_room_rmd)
                 )
             )
         except:
@@ -789,7 +773,6 @@ def full_detail_comment(room_id):
                 temp_data["rating"] = math.ceil(rating[0])
             else:
                 temp_data["rating"] = 3
-            # print(rating)
             try:
                 cursor.execute(
                     "SELECT image_link, image_rank from hinhanh where room_id = % s;",
@@ -804,13 +787,12 @@ def full_detail_comment(room_id):
                 index = img[0].index("/")
                 img = {
                     "folder": img[0][0:index],
-                    "name": img[0][index + 1 :],
+                    "name": img[0][index + 1:],
                     "rank": img[1],
                 }
                 final_data.append((temp_data, img))
             else:
                 continue
-        print(len(final_data))
     # End recommend system
     except:
         pass
@@ -957,7 +939,7 @@ def room_filter(page):
             index = img[0].index("/")
             img = {
                 "folder": img[0][0:index],
-                "name": img[0][index + 1 :],
+                "name": img[0][index + 1:],
                 "rank": img[1],
             }
             final_data.append((temp_data, img))
@@ -1024,7 +1006,7 @@ def filter_local():
                     index = img[0].index("/")
                     img = {
                         "folder": img[0][0:index],
-                        "name": img[0][index + 1 :],
+                        "name": img[0][index + 1:],
                         "rank": img[1],
                     }
                     final_data.append((temp_data, img))
@@ -1122,28 +1104,35 @@ def write_post(id_room):
     print(id_room, user_id, post, star)
     return redirect(url_for("view.detail", room_id=id_room))
 
+
 @main_blp.route("/favorite/<room_id>/<account_id>")
 def favorite(room_id, account_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     try:
-        cursor.execute('INSERT into yeuthich values (%s, %s)', (room_id, account_id))
+        cursor.execute('INSERT into yeuthich values (%s, %s)',
+                       (room_id, account_id))
         conn.commit()
     except:
         conn.rollback()
     conn.close()
     return redirect(url_for("view.detail", room_id=room_id))
+
+
 @main_blp.route("/delete_favorite/<room_id>/<account_id>")
 def delete_favorite(room_id, account_id):
     conn = connect_db()
     cursor = get_cursor(conn)
     try:
-        cursor.execute('DELETE FROM yeuthich WHERE room_id = %s and account_id = %s', (room_id, account_id))
+        cursor.execute(
+            'DELETE FROM yeuthich WHERE room_id = %s and account_id = %s', (room_id, account_id))
         conn.commit()
     except:
         conn.rollback()
     conn.close()
     return redirect(url_for("view.detail", room_id=room_id))
+
+
 @main_blp.route("/folder_image/<folder>/<name>")
 def image_file(folder, name):
     return send_from_directory(os.path.join(HOTEL_IMAGE, folder), name)
