@@ -1,5 +1,6 @@
 import datetime
 import math
+from datetime import datetime
 from flask import (
     Blueprint,
     redirect,
@@ -81,7 +82,8 @@ def dashboard():
                         from hoadon 
                         inner join datphong on datphong.bookroom_id = hoadon.bookroom_id
                         inner join khachhang on khachhang.customer_id = datphong.customer_id
-                        inner join phong on datphong.room_id = phong.room_id;
+                        inner join phong on datphong.room_id = phong.room_id
+                        order by hoadon.time_commit desc;
         """
         )
         data = cursor.fetchall()
@@ -277,7 +279,7 @@ def room(page):
         phong = ""
         try:
             cursor.execute(
-                """select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province 
+                """select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name,  phong.status  from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province 
             where phong.room_isdelete = 1 and LOWER(phong.room_name) like "%{}%" or LOWER(tinhthanh.province_name) like "%{}%" or LOWER(phong.room_address) like "%{}%" order by phong.room_id LIMIT {} OFFSET {};""".format(
                     temp, temp, temp, limit, offset
                 )
@@ -298,10 +300,10 @@ def room(page):
             temp["room_type"] = row[5]
             temp["room_province"] = row[6]
             temp["room_isdelete"] = "Active"
-
+            temp["status"] = row[7]
             final_data.append(temp)
         conn.close()
-        # print(final_data)
+        print(final_data)
         return render_template(
             "admin/room.html",
             data=final_data,
@@ -340,7 +342,7 @@ def room(page):
         phong = ""
         try:
             cursor.execute(
-                'select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name, room_isdelete from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id LIMIT %s OFFSET %s;',
+                'select phong.room_id, phong.room_name,room_address, room_performence, room_price,loaiphong.room_name as "room_type" ,province_name,  phong.status from phong inner join loaiphong on loaiphong.room_id = phong.id_roomtype inner join tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_isdelete = 1 order by phong.room_id LIMIT %s OFFSET %s;',
                 (
                     limit,
                     offset,
@@ -360,7 +362,7 @@ def room(page):
             temp["room_price"] = row[4]
             temp["room_type"] = row[5]
             temp["room_province"] = row[6]
-            temp["room_isdelete"] = "Active"
+            temp["status"] = row[7]
 
             final_data.append(temp)
         conn.close()
@@ -714,42 +716,51 @@ def update_booking():
     if bookroom_id and select:
         conn = connect_db()
         cursor = get_cursor(conn)
-        print(select, bookroom_id)
-    
+        print(select, bookroom_id[0])
         cursor.execute('UPDATE datphong set datphong.status = %s where datphong.bookroom_id in %s', (select, bookroom_id,))
         conn.commit()
-        print(type(select))
+        print(int(select))
         if (int(select) == 0):
             if len(bookroom_id) == 1:
                 try:
-                    cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (bookroom_id,))
+                    cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (bookroom_id[0],))
                     customer = cursor.fetchone()
                     bill_id = str(bookroom_id[0]) + "_" + str(customer[0])
                     days = int((customer[2] - customer[1]).days)
                     total_money = days * customer[3]
-                    cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,bookroom_id[0], total_money,))
+                    print(bill_id, total_money)
+                    cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán', %s)",(bill_id,bookroom_id[0], total_money,datetime.now(),))
                     conn.commit()
+                    print('bill ok')
                     cursor.execute('update datphong set datphong.isdelete = 1 where datphong.bookroom_id = %s', (bookroom_id[0]))
                     conn.commit()
+                    print('isdelete')
                     cursor.execute('UPDATE phong set phong.status = "Đang phục vụ" where phong.room_id in (select datphong.room_id from datphong where datphong.bookroom_id = %s)', (bookroom_id[0]))
                     conn.commit()
+                    print('Thanh cong')
+                    flash("Created a bill for this booking", "alert alert-success")
                 except:
                     conn.rollback()
+                    flash("Fail to create a bill for this booking", "alert alert-danger")
             else:
                 for item in bookroom_id:
-                    cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (int(item),))
-                    customer = cursor.fetchone()
-                    bill_id = str(item[0]) + "_" + str(customer[0])
-                    days = int((customer[2] - customer[1]).days)
-                    total_money = days * int(customer[3])
-                    cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán')",(bill_id,int(item), total_money,))
-                    conn.commit()
-                    cursor.execute('update datphong set datphong.isdelete = 1 where datphong.bookroom_id = %s', (item))
-                    conn.commit()
-                    cursor.execute('UPDATE phong set phong.status = "Đang phục vụ" where phong.room_id in (select datphong.room_id from datphong where datphong.bookroom_id = %s', (item,))
-                    conn.commit()
-            print('Thanh cong')
-            flash("Created a bill for this booking", "alert alert-success")
+                    try:
+                        cursor.execute('select datphong.customer_id, datphong.time_start, datphong.time_end, phong.room_price from datphong inner join phong on phong.room_id = datphong.room_id where bookroom_id = %s', (int(item),))
+                        customer = cursor.fetchone()
+                        bill_id = str(item[0]) + "_" + str(customer[0])
+                        days = int((customer[2] - customer[1]).days)
+                        total_money = days * int(customer[3])
+                        cursor.execute("insert into hoadon VALUES (%s,%s,%s, 'Chưa thanh toán', %s)",(bill_id,int(item), total_money,datetime.now(),))
+                        conn.commit()
+                        cursor.execute('update datphong set datphong.isdelete = 1 where datphong.bookroom_id = %s', (item))
+                        conn.commit()
+                        cursor.execute('UPDATE phong set phong.status = "Đang phục vụ" where phong.room_id in (select datphong.room_id from datphong where datphong.bookroom_id = %s', (item,))
+                        conn.commit()
+                    except:
+                        conn.rollback()
+                        flash("Fail to create bills for this booking", "alert alert-danger")
+                print('Thanh cong')
+                flash("Created bills for these booking", "alert alert-success")
         flash("Update successfully", "alert alert-success")
     else:
         flash('Empty selection or actions! Please try again', "alert alert-warning")

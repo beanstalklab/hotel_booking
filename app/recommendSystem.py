@@ -42,7 +42,7 @@ def get_mean_centered_ratings_matrix(ratings_matrix):
     mean_centered_ratings_matrix = np.around(ratings_matrix - np.reshape(users_mean_rating, (-1, 1)), 3)
     return mean_centered_ratings_matrix
 
-def predict(u_index, i_index, k, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix):
+def predict(u_index, i_index, k):
     # k là số lượng người dùng giống với người dùng cần dự đoán
     # ta có thể tùy chọn giá trị k này
     users_mean_rating = all_user_mean_ratings(ratings_matrix)

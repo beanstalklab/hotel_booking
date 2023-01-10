@@ -103,6 +103,7 @@ def our_team():
 @main_blp.route("/profile", methods=["GET"])
 def profile():
     msg = {}
+    print(session['id'])
     id_account = session["id"]
     conn = connect_db()
     cursor = get_cursor(conn)
@@ -121,12 +122,12 @@ def profile():
         "account_isdelete": info[5],
     }
     try:
+        # print(user["get_customer_info"] % (id_account,))
         cursor.execute(user["get_customer_info"] % (id_account,))
         conn.commit()
     except:
         conn.rollback()
     khachhang = cursor.fetchone()
-
     if khachhang:
         session["customer_id"] = khachhang[0]
         khachhang = {
@@ -146,8 +147,7 @@ def profile():
         cursor.execute(user["info_action"] % (session["customer_id"],))
         conn.commit()
     except:
-        conn.rollback()
-
+        pass
     # print(session['customer_id'])
     hoatdong = cursor.fetchall()
     lichsu = []
@@ -162,6 +162,7 @@ def profile():
             temp["bookroom_id"] = row[5]
             lichsu.append(temp)
     ds_dangky = ''
+    print(lichsu)
     try:
         cursor.execute('''select datphong.bookroom_id, phong.room_name, datphong.time_start, datphong.time_end, datphong.status from datphong
                         inner join phong on datphong.room_id = phong.room_id where datphong.customer_id = %s and datphong.isdelete = 0''', (session["customer_id"],))
@@ -618,25 +619,16 @@ def detail(room_id):
         user_rating = 0
     print(user_rating)
 
- # Start recommend system
+#  # Start recommend system
     final_data = []
     try:
-        cursor.execute('select * from danhgia')
-        danhgia = cursor.fetchall()
-        data = []
-        for row in danhgia:
-            temp = {}
-            temp['account_id'] = row[0]
-            temp['room_id'] = row[1]
-            temp['rating'] = row[2]
-            data.append(temp)
-
         user_id = session["id"]
         result = get_result(int(user_id))
         print(result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
+        print(list_room_rmd)
         try:
             cursor.execute(
                 """SELECT phong.room_id, phong.room_name, phong.room_address, phong.room_performence, phong.room_price, phong.id_roomtype, AVG(danhgia.rating) 
@@ -651,6 +643,7 @@ def detail(room_id):
         except:
             pass
         recommend_hotel = cursor.fetchall()
+        print(recommend_hotel)
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
@@ -686,6 +679,7 @@ def detail(room_id):
                 final_data.append((temp_data, img))
             else:
                 continue
+        print(final_data)
     # End recommend system
     except:
         pass

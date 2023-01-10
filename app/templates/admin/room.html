@@ -118,7 +118,7 @@
                                                 <td>{{row.room_type}}</td>
                                                 <td>{{row.room_price}}</td>
                                                 <td>{{row.room_province}}</td>
-                                                <td>{{row.room_isdelete}}</td>
+                                                <td>{{row.status}}</td>
                                                 <td class="text-center">
                                                     <input type="checkbox" name="restore" value="{{row.room_id}}">
                                                 </td>
@@ -137,7 +137,7 @@
                                             <td>{{row.room_type}}</td>
                                             <td>{{row.room_price}}</td>
                                             <td>{{row.room_province}}</td>
-                                            <td>{{row.room_isdelete}}</td>
+                                            <td>{{row.status}}</td>
                                             <td class="text-right">
                                                 <a href="{{url_for('admin.edit_room',id = row.room_id)}}"
                                                     class="btn btn-simple btn-warning btn-icon edit">Edit</a>

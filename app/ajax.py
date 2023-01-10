@@ -64,7 +64,7 @@ def room_ajax():
         province = request.form["province"]
         print(checkin, checkout, province)
         query = """select room_id, room_name from phong INNER JOIN tinhthanh on tinhthanh.province_id = phong.id_province where phong.room_id not in (
-SELECT distinct phong.room_id from phong inner join datphong on datphong.room_id = phong.room_id where (datphong.time_start BETWEEN '{}' and  '{}') or (datphong.time_end BETWEEN '{}' and  '{}')) and tinhthanh.province_name like "%{}" and datphong.isdelete = 0;""".format(
+SELECT distinct phong.room_id from phong inner join datphong on datphong.room_id = phong.room_id where (datphong.time_start BETWEEN '{}' and  '{}') or (datphong.time_end BETWEEN '{}' and  '{}') and datphong.isdelete = 0) and tinhthanh.province_name like "%{}" ;""".format(
             checkin, checkout, checkin, checkout, province
         )
         print(query)

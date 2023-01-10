@@ -342,4 +342,6 @@ def logout():
     session.pop('id', None)
     session.pop('username', None)
     session.pop('password', None)
+    session.pop('role_id', None)
+    session.pop('customer_id', None)
     return redirect(url_for('view.home'))
