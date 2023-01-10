@@ -227,7 +227,55 @@
                                                 Ngày đi
                                             </label>
 
+        </div>
+        <!-- right (BOOKING) -->
+
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow rounded m-0 p-3">
+                <div class="card-body">
+                    <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
+                    <div class=" d-flex justify-content-center">
+                        <form autocomplete="off"
+                            action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
+                            <div class="row mb-2">
+                                <div class="col-auto">
+                                    <small class="fomat-money" id="price">{{data['room_price']}}</small>
+                                    <span>VNĐ/đêm</span>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-star"></i>
+                                    <small>Rating: {{data['rating']}} </small>
+                                </div>
+                            </div>
+
+                            <div class="row g-1">
+                                <div class="col-12 d-flex justify-content-center p-0">
+                                    <div class="row input-daterange" id="flight-datepicker">
+                                        <!-- Set Check In -->
+                                        <div class="col-6 px-1">
+                                            <div class="form-floating">
+                                                <input type="text" class="datepicker form-control" id="start-date"
+                                                    name="start" placeholder="Check In" />
+                                                <label for="start-date" style="font-size: 13px;">
+                                                    <i class="fa-solid fa-calendar-days"></i> Ngày đến
+                                                </label>
+                                            </div>
                                         </div>
+                                        <!-- End Set Check In -->
+
+                                        <!-- Set Check Out -->
+                                        <div class="col-6 px-1">
+                                            <div class="form-floating">
+                                                <input type="text" class="datepicker form-control" id="end-date"
+                                                    name="end" placeholder="Check Out" />
+                                                <label for="end-date">
+                                                    <i class="fa-solid fa-calendar-days" style="font-size: 13px;"></i>
+                                                    Ngày đi
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                        <!-- End Set Check Out -->
                                     </div>
                                     <!-- End Set Check Out -->
                                 </div>
@@ -374,24 +422,129 @@
                 <h6 class="px-1 py-1 rated">{{data['rating']}} </h6>
                 <i class="py-1 star fas fa-star"></i>
             </div>
-
-            <p class="my-2 comment">{{data['post'] | safe}}</p>
-            {%if data['user_id'] == session.id %}
-            <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
-                class="btn btn-primary">Xóa</a>
-            {%else%}
-            <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
-                class="btn btn-primary">Xem trang cá nhân</a>
-            {%endif%}
         </div>
     </div>
 
-    {%endfor%}
+    <hr class="dropdown-divider my-5">
+    <h1>Phản hồi</h1>
+    {%if full%}
+    <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt <i class="fa-solid fa-caret-up"></i></a></div>
     {%endif%}
-    {%if not full%}
-    {%if num_cmt > 5%}
-    <div><a class="btn btn-primary mt-3" href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển
-            thị thêm</a>
+    <div>
+        {%if post_list%}
+        {%for data in post_list%}
+        <div class="rounded card shadow" style="background-color: rgb(237, 236, 235); margin-bottom: 10px;">
+            <div class="card-body">
+                <div class="d-flex">
+                    <h5 class="user-name">{{data['user_name']}}</h5>
+                    <small class="px-2 py-1">{{data['date_post'].strftime("%d/%m/%Y")}}</small>
+                    <h6 class="px-1 py-1 rated">{{data['rating']}} </h6>
+                    <i class="py-1 star fas fa-star"></i>
+                </div>
+
+                <p class="my-2 comment">{{data['post'] | safe}}</p>
+                {%if data['user_id'] == session.id %}
+                <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
+                    class="btn btn-primary">Xóa</a>
+                {%else%}
+                <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
+                    class="" style="text-decoration: none; font-size: 18px;">Xem trang cá nhân</a>
+                {%endif%}
+            </div>
+        </div>
+
+        {%endfor%}
+        {%endif%}
+        {%if not full%}
+        {%if num_cmt > 5%}
+        <div><a class="btn btn-primary mt-3"
+                href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm <i class="fa-solid fa-caret-down"></i></a>
+        </div>
+        {%endif%}
+        {%else%}
+        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt <i class="fa-solid fa-caret-up"></i></a>
+        </div>
+        {%endif%}
+        <hr class="dropdown-divider my-3">
+        {%if session.id%}
+        <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
+            <div class="stars">
+                {%if user_rate == 5%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" checked />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+                {%elif user_rate == 4%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" checked />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+                {%elif user_rate == 3%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" checked />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+                {%elif user_rate == 2%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" checked />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+                {%elif user_rate == 1%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" checked />
+                <label class="star star-1" for="star-1"></label>
+                {%else%}
+                <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
+                <label class="star star-5" for="star-5"></label>
+                <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
+                <label class="star star-4" for="star-4"></label>
+                <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
+                <label class="star star-3" for="star-3"></label>
+                <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
+                <label class="star star-2" for="star-2"></label>
+                <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
+                <label class="star star-1" for="star-1"></label>
+                {%endif%}
+            </div>
+            <div class="form-group">
+                <h5 for="input-post">Nhập nội dung đánh giá</h5>
+                <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-1">Ghi nhận</button>
+        </form>
+        <div id="result-form"></div>
+        {%endif%}
     </div>
     {%endif%}
     {%else%}
