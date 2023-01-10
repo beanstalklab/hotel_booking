@@ -369,10 +369,10 @@
                 <p class="my-2 comment">{{data['post'] | safe}}</p>
                 {%if data['user_id'] == session.id %}
                 <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
-                    class="btn btn-primary">Xóa</a>
+                    class="btn btn-primary">Xóa bình luân</a>
                 {%else%}
                 <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
-                    class="btn btn-primary">Xem trang cá nhân</a>
+                    class="" style="text-decoration: none; font-size: 18px;">Xem trang cá nhân</a>
                 {%endif%}
             </div>
         </div>
