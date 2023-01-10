@@ -19,7 +19,7 @@ from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE, RCM_SYS
 from app.sql import *
 import pandas as pd
 import sys
-
+import numpy as np
 sys.path.append(
     RCM_SYS
 )
@@ -461,7 +461,7 @@ def room(page):
         )
         rating = cursor.fetchone()
         if rating:
-            temp_data["rating"] = math.ceil(rating[0])
+            temp_data["rating"] = round(rating[0])
         else:
             temp_data["rating"] = 3
         print(rating)
@@ -619,8 +619,8 @@ def detail(room_id):
         user_rating = round(user_rating[0])
     else:
         user_rating = 0
-    print(user_rating)
-    print(data)
+    # print(user_rating)
+    # print(data)
 #  # Start recommend system
     final_data = []
 
@@ -642,17 +642,17 @@ def detail(room_id):
         result = pd.DataFrame.from_dict(data_rating, orient='columns')
         hotel_rating_user =result.pivot_table(index='account_id', columns='room_id', values='rating')
 
-        # print(result)
+        print(result)
         ratings_matrix = hotel_rating_user.values
+        print(ratings_matrix.shape)
         print(ratings_matrix)
-        # print(ratings_matrix)
         mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
         # print(mean_centered_ratings_matrix)
         mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
         # print(mean_centered_ratings_matrix)
         user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
         # print(user_similarity_matrix)
-        result  = predict_top_k_items_of_user(int(user_id) - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
+        result  = predict_top_k_items_of_user(int(user_id) - 2, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
         print("result: ",   result)
         list_room_rmd = []
         for i in result:
@@ -672,7 +672,7 @@ def detail(room_id):
         except:
             pass
         recommend_hotel = cursor.fetchall()
-        print(recommend_hotel)
+        # print(recommend_hotel)
         for row in recommend_hotel:
             temp_data = {
                 "room_id": row[0],
@@ -712,7 +712,7 @@ def detail(room_id):
     except:
         pass
     conn.close()
-    print(list_img)
+    # print(list_img)
     return render_template(
         "detail.html",
         data=data,
@@ -893,7 +893,7 @@ def full_detail_comment(room_id):
             }
             room_id = int(row[0])
             if temp_data["rating"]:
-                temp_data["rating"] = math.ceil(rating[0])
+                temp_data["rating"] = round(rating[0])
             else:
                 temp_data["rating"] = 3
             try:
@@ -1044,7 +1044,7 @@ def room_filter(page):
         )
         rating = cursor.fetchone()
         if rating:
-            temp_data["rating"] = math.ceil(rating[0])
+            temp_data["rating"] = round(rating[0])
         else:
             temp_data["rating"] = 3
         print(rating)
@@ -1115,6 +1115,17 @@ def filter_local():
                     "room_isdelete": data[6],
                 }
                 room_id = int(data[0])
+                cursor.execute(
+                    """select avg(danhgia.rating) from danhgia
+                                    where danhgia.room_id = %s
+                                    GROUP BY danhgia.room_id; """,
+                    (room_id,),
+                )
+                rating = cursor.fetchone()
+                if rating:
+                    temp_data["rating"] = round(rating[0])
+                else:
+                    temp_data["rating"] = 3
                 try:
                     cursor.execute(
                         "SELECT image_link, image_rank from hinhanh where room_id = % s;",

@@ -73,13 +73,15 @@ def predict(u_index, i_index, k, ratings_matrix,user_similarity_matrix, mean_cen
 
 def predict_top_k_items_of_user(u_index, k_users,  ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix):
     items = []
+    print(u_index)
+    print(np.isnan(ratings_matrix[u_index][0]))
     for i_index in range(ratings_matrix.shape[1]):
         if np.isnan(ratings_matrix[u_index][i_index]):
             rating = predict(u_index, i_index, k_users,  ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
-            items.append((i_index + 1, rating))
+            items.append((i_index, rating))
     items = sorted(items, key=lambda tup: tup[1])
     items = list(reversed(items))
-    return items[:8]
+    return items[:10]
 
 # ratings_matrix = importData()
 # mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
@@ -88,6 +90,6 @@ def predict_top_k_items_of_user(u_index, k_users,  ratings_matrix,user_similarit
 
 
 def get_result(user_id):
-    result_predict  = predict_top_k_items_of_user(user_id - 1, 2)
+    result_predict  = predict_top_k_items_of_user(user_id - 2, 2)
     return result_predict
 # print(get_result(21))

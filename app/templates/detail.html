@@ -79,153 +79,111 @@
             <!-- The slideshow/carousel -->
             <div class="wrapper">
                 {% if img%}
-                {%if num < 8%} {%for index in range(num)%} <div class="image">
+                {%if num < 8%}
+                {%for index in range(num)%}
+                <div class="image">
                     <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
                         alt="" />
+                </div>
+                {%endfor%}
+                {%else%}
+                {%for index in range(8)%}
+                <div class="image">
+                    <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
+                        alt="" />
+                </div>
+                {%endfor%}
+                {%endif%}
+                {%endif%}
             </div>
-            {%endfor%}
-            {%else%}
-            {%for index in range(8)%}
-            <div class="image">
-                <img src="{{url_for('view.image_file', name = img[index]['name'], folder=img[index]['folder'])}}"
-                    alt="" />
-            </div>
-            {%endfor%}
-            {%endif%}
-            {%endif%}
-        </div>
-    </div>
-    <div class="gallery">
-        <span class="control prev">
-            <i class="fas fa-chevron-left"></i>
-        </span>
-        <span class="control next">
-            <i class="fas fa-chevron-right"></i>
-        </span>
-        <div class="gallery-inner">
-            <img src="" alt="" />
-        </div>
-        <i class="fas fa-times close"></i>
-    </div>
-</div>
 
-
-
-<!-- general -->
-<div class="row p-0 my-5 d-flex justify-content-between">
-    <!-- left -->
-    <div class="col-md-7 col-lg-7 mb-2">
-        <div class="card shadow rounded">
-            <div class="card-body">
-                <h1>Mô tả</h1>
-                <div>
-                    <ul>
-                        {%if loaiphong %}
-                        <li>
-                            {{loaiphong[0]}}
-                        </li>
-                        {%endif%}
-                        {%if mota%}
-                        {%for row in mota%}
-                        <li> {{row.1}} {{row.0}} </li>
-                        {%endfor%}
-                        {%endif%}
-                    </ul>
+            <div class="gallery">
+                <span class="control prev">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                <span class="control next">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                <div class="gallery-inner">
+                    <img src="" alt="" />
                 </div>
-                <div>
-                    {{data['room_performance']}}
-                </div>
-                <hr class="dropdown-divider">
-
-                <div>
-                    <h2>Tiện Nghi</h2>
-                    <div>
-                        <i class="fas fa-water"></i>
-                        <span>Hướng nhìn ra đại dương</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-wine-bottle"></i>
-                        <span>Bếp</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-wifi"></i>
-                        <span>Wi-fi</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-briefcase"></i>
-                        <span>Không gian riêng để làm việc</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-car"></i>
-                        <span>Chỗ đỗ xe miễn phí tại nơi ở</span>
-                    </div>
-                </div>
-
-                <hr class="dropdown-divider">
-                <div>
-                    <h2>Quyền lợi</h2>
-                    <div>
-                        <i class="fas fa-user-shield"></i>
-                        <span>An ninh tuyệt đối</span>
-                    </div>
-                    <div>
-                        <i class="far fa-thumbs-up"></i>
-                        <span>Trải nghiệm nhận phòng tuyệt vời</span>
-                    </div>
-                    <div>
-                        <i class="far fa-calendar-alt"></i>
-                        <span>Hủy miễn phí trong 48 giờ.</span>
-                    </div>
-
-                </div>
-
+                <i class="fas fa-times close"></i>
             </div>
         </div>
 
     </div>
-    <!-- right (BOOKING) -->
 
-    <div class="col-md-5 col-lg-4">
-        <div class="card shadow rounded m-0 p-3">
-            <div class="card-body">
-                <h1 class=" d-flex justify-content-md-center">Đặt phòng</h1>
-                <div class=" d-flex justify-content-center">
-                    <form autocomplete="off" action="{{url_for('auth.customer_booking',room_id = data['room_id'] )}}">
-                        <div class="row mb-2">
-                            <div class="col-auto">
-                                <small class="fomat-money" id="price">{{data['room_price']}}</small>
-                                <span>đ/đêm</span>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-star"></i>
-                                <small>Rating: {{data['rating']}} </small>
-                            </div>
+
+    <!-- general -->
+    <div class="row p-0 my-5 d-flex justify-content-between">
+        <!-- left -->
+        <div class="col-md-7 col-lg-7 mb-2">
+            <div class="card shadow rounded">
+                <div class="card-body">
+                    <h1>Mô tả</h1>
+                    <div>
+                        <ul>
+                            {%if loaiphong %}
+                            <li>
+                                {{loaiphong[0]}}
+                            </li>
+                            {%endif%}
+                            {%if mota%}
+                            {%for row in mota%}
+                            <li> {{row.1}} {{row.0}} </li>
+                            {%endfor%}
+                            {%endif%}
+                        </ul>
+                    </div>
+                    <div>
+                        {{data['room_performance']}}
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <div>
+                        <h2>Tiện Nghi</h2>
+                        <div>
+                            <i class="fas fa-water"></i>
+                            <span>Hướng nhìn ra đại dương</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-wine-bottle"></i>
+                            <span>Bếp</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-wifi"></i>
+                            <span>Wi-fi</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-briefcase"></i>
+                            <span>Không gian riêng để làm việc</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-car"></i>
+                            <span>Chỗ đỗ xe miễn phí tại nơi ở</span>
+                        </div>
+                    </div>
+
+                    <hr class="dropdown-divider">
+                    <div>
+                        <h2>Quyền lợi</h2>
+                        <div>
+                            <i class="fas fa-user-shield"></i>
+                            <span>An ninh tuyệt đối</span>
+                        </div>
+                        <div>
+                            <i class="far fa-thumbs-up"></i>
+                            <span>Trải nghiệm nhận phòng tuyệt vời</span>
+                        </div>
+                        <div>
+                            <i class="far fa-calendar-alt"></i>
+                            <span>Hủy miễn phí trong 48 giờ.</span>
                         </div>
 
-                        <div class="row g-1">
-                            <div class="col-12 d-flex justify-content-center p-0">
-                                <div class="row input-daterange" id="flight-datepicker">
-                                    <!-- Set Check In -->
-                                    <div class="col-6 px-1">
-                                        <div class="form-floating">
-                                            <input type="text" class="datepicker form-control" id="start-date"
-                                                name="start" placeholder="Check In" />
-                                            <label for="start-date" style="font-size: 13px;">
-                                                <i class="fa-solid fa-calendar-days"></i> Ngày đến
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <!-- End Set Check In -->
+                    </div>
 
-                                    <!-- Set Check Out -->
-                                    <div class="col-6 px-1">
-                                        <div class="form-floating">
-                                            <input type="text" class="datepicker form-control" id="end-date" name="end"
-                                                placeholder="Check Out" />
-                                            <label for="end-date">
-                                                <i class="fa-solid fa-calendar-days" style="font-size: 13px;"></i>
-                                                Ngày đi
-                                            </label>
+                </div>
+            </div>
 
         </div>
         <!-- right (BOOKING) -->
@@ -277,150 +235,125 @@
                                         </div>
                                         <!-- End Set Check Out -->
                                     </div>
-                                    <!-- End Set Check Out -->
                                 </div>
-                            </div>
-                            <!-- End Check out -->
+                                <!-- End Check out -->
 
-                            <!-- Service -->
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseService">
-                                    Dịch vụ đi kèm
-                                </button>
-                                <div class="collapse" id="collapseService">
-                                    <div class="card card-body">
-                                        <div class="list-group">
-                                            <label class="list-group-item">
-                                                <input name="service" class="form-check-input me-1" id="service1"
-                                                    type="checkbox" value="2">
-                                                Tiệc nướng BBQ
-                                            </label>
-                                            <label class="list-group-item">
-                                                <input name="service" class="form-check-input me-1" id="service2"
-                                                    type="checkbox" value="1">
-                                                Loa kéo Karaoke
-                                            </label>
-                                            <label class="list-group-item">
-                                                <input name="service" class="form-check-input me-1" id="service3"
-                                                    type="checkbox" value="4">
-                                                Tổ chức sự kiện
-                                            </label>
+                                <!-- Service -->
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseService">
+                                        Dịch vụ đi kèm
+                                    </button>
+                                    <div class="collapse" id="collapseService">
+                                        <div class="card card-body">
+                                            <div class="list-group">
+                                                <label class="list-group-item">
+                                                    <input name="service" class="form-check-input me-1" id="service1"
+                                                        type="checkbox" value="2">
+                                                    Tiệc nướng BBQ
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input name="service" class="form-check-input me-1" id="service2"
+                                                        type="checkbox" value="1">
+                                                    Loa kéo Karaoke
+                                                </label>
+                                                <label class="list-group-item">
+                                                    <input name="service" class="form-check-input me-1" id="service3"
+                                                        type="checkbox" value="4">
+                                                    Tổ chức sự kiện
+                                                </label>
+
+                                            </div>
 
                                         </div>
+                                    </div>
 
+                                </div>
+                                <!-- End service -->
+
+                                <div type="button" class="btn" onclick="calc()">Ghi nhận</div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12 col-xxl-6 fomat-money">{{data['room_price']}} <span
+                                            id="days"></span> </div>
+                                    <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-room">0 VNĐ</div>
+
+
+                                    <div class="col-sm-6 col-md-12 col-xxl-6">Phí dịch vụ:</div>
+                                    <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-service">0 VNĐ</div>
+                                </div>
+                                <hr class="dropdown-divider">
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-12 col-xxl-6">Tổng trước thuế:</div>
+                                    <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-all"></div>
+                                </div>
+                                <div class="col-12 my-3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop" style="width: 100%;">
+                                        <span>Booking</span>
+                                    </button>
+                                    {%if session.id %}
+                                    <!-- Submit booking-->
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông
+                                                        báo
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    XÁC NHẬN ĐẶT PHÒNG/KHÁCH SẠN
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" id="submit_btn"
+                                                        class="btn btn-primary">Booking</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                            </div>
-                            <!-- End service -->
-
-                            <div type="button" class="btn" onclick="calc()">Ghi nhận</div>
-
-                            <div class="row">
-                                <div class="col-sm-6 col-md-12 col-xxl-6 fomat-money">{{data['room_price']}} <span
-                                        id="days"></span> </div>
-                                <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-room">0 VNĐ</div>
-
-
-                                <div class="col-sm-6 col-md-12 col-xxl-6">Phí dịch vụ:</div>
-                                <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-service">0 VNĐ</div>
-                            </div>
-                            <hr class="dropdown-divider">
-
-                            <div class="row">
-                                <div class="col-sm-6 col-md-12 col-xxl-6">Tổng trước thuế:</div>
-                                <div class="col-sm-6 col-md-12 col-xxl-6" id="calc-all"></div>
-                            </div>
-                            <div class="col-12 my-3">
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop" style="width: 100%;">
-                                    <span>Booking</span>
-                                </button>
-                                {%if session.id %}
-                                <!-- Submit booking-->
-                                <!-- Modal -->
+                                <!-- End Submit booking -->
+                                {%else%}
                                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                                     aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông
-                                                    báo
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo
+                                                    đăng
+                                                    nhập
                                                 </h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                XÁC NHẬN ĐẶT PHÒNG/KHÁCH SẠN
+                                                Bạn chưa đăng nhập rồi! Đăng nhập trước nhé
 
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" id="submit_btn"
-                                                    class="btn btn-primary">Booking</button>
+                                                <a class="btn btn-secondary" href="{{ url_for('auth.login') }}">Đăng
+                                                    nhập</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- End Submit booking -->
-                            {%else%}
-                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Thông báo
-                                                đăng
-                                                nhập
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Bạn chưa đăng nhập rồi! Đăng nhập trước nhé
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a class="btn btn-secondary" href="{{ url_for('auth.login') }}">Đăng
-                                                nhập</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {%endif%}
-
-                    </form>
+                            {%endif%}
+                        </form>
+                    </div>
                 </div>
-
-
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<hr class="dropdown-divider my-5">
-<h1>Phản hồi</h1>
-{%if full%}
-<div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
-{%endif%}
-<div>
-    {%if post_list%}
-    {%for data in post_list%}
-    <div class="rounded card shadow" style="background-color: rgb(237, 236, 235); margin-bottom: 10px;">
-        <div class="card-body">
-            <div class="d-flex">
-                <h5 class="user-name">{{data['user_name']}}</h5>
-                <small class="px-2 py-1">{{data['date_post'].strftime("%d/%m/%Y")}}</small>
-                <h6 class="px-1 py-1 rated">{{data['rating']}} </h6>
-                <i class="py-1 star fas fa-star"></i>
             </div>
         </div>
     </div>
@@ -445,7 +378,7 @@
                 <p class="my-2 comment">{{data['post'] | safe}}</p>
                 {%if data['user_id'] == session.id %}
                 <a href="{{url_for('view.delete_comment', room_id = data['room_id'], post_id=data['post_id'])}}"
-                    class="btn btn-primary">Xóa</a>
+                    class="btn btn-primary">Xóa bình luân</a>
                 {%else%}
                 <a href="{{url_for('view.blog_customer', account_id=data['user_id'], account_name=data['user_name'])}}"
                     class="" style="text-decoration: none; font-size: 18px;">Xem trang cá nhân</a>
@@ -546,94 +479,6 @@
         <div id="result-form"></div>
         {%endif%}
     </div>
-    {%endif%}
-    {%else%}
-    <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a>
-    </div>
-    {%endif%}
-    <hr class="dropdown-divider my-5">
-
-    <h1 class="mt-5">Đánh giá cá nhân</h1>
-    {%if session.id%}
-    <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
-        <div class="stars">
-            {%if user_rate == 5%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" checked />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
-            <label class="star star-1" for="star-1"></label>
-            {%elif user_rate == 4%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" checked />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
-            <label class="star star-1" for="star-1"></label>
-            {%elif user_rate == 3%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" checked />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
-            <label class="star star-1" for="star-1"></label>
-            {%elif user_rate == 2%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" checked />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
-            <label class="star star-1" for="star-1"></label>
-            {%elif user_rate == 1%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" checked />
-            <label class="star star-1" for="star-1"></label>
-            {%else%}
-            <input class="star star-5" id="star-5" type="radio" value="5" name="star" />
-            <label class="star star-5" for="star-5"></label>
-            <input class="star star-4" id="star-4" type="radio" value="4" name="star" />
-            <label class="star star-4" for="star-4"></label>
-            <input class="star star-3" id="star-3" type="radio" value="3" name="star" />
-            <label class="star star-3" for="star-3"></label>
-            <input class="star star-2" id="star-2" type="radio" value="2" name="star" />
-            <label class="star star-2" for="star-2"></label>
-            <input class="star star-1" id="star-1" type="radio" value='1' name="star" />
-            <label class="star star-1" for="star-1"></label>
-            {%endif%}
-        </div>
-        <div class="form-group">
-            <label for="input-post">Nhập nội dung đánh giá</label>
-            <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary mt-1">Ghi nhận</button>
-    </form>
-    <div id="result-form"></div>
-    {%endif%}
-</div>
 </div>
 <div>
     <h1>Đề xuất</h1>
