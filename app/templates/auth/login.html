@@ -22,6 +22,17 @@
                 <img src="{{url_for('static', filename='user_img/user-286.png')}}" id="icon" alt="User Icon" />
             </div>
 
+            <!-- msg -->
+            <div>
+                {%with messages = get_flashed_messages()%}
+                {%if messages %}
+                {%for message in messages%}
+                <div name="msg" class="fadeIn second flashed_messages">{{messages[0]}}</div>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+            </div>
+
             <!-- Login Form -->
             {%if msg%}
             <div style="color:greenyellow" class="fadeIn first">{{msg}}</div>
@@ -45,16 +56,7 @@
                 <input type="submit" class="fadeIn fourth" value="Đăng nhập" onclick="return validateLogin()">
             </form>
 
-            <div>
-                {%with messages = get_flashed_messages()%}
-                {%if messages %}
-                {%for message in messages%}
-                <div name="msg" class="fadeIn second" style="color: red;">{{messages[0]}}</div>
-                {%endfor%}
-                {%endif%}
-                {%endwith%}
-            </div>
-
+            
             <!-- Remind Passowrd -->
             <span>(*) Trường bắt buộc</span>
             <div id="formFooter">

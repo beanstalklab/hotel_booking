@@ -66,14 +66,14 @@ def login_submit():
                     resp.set_cookie('password', password, max_age=COOKIE_TIME_OUT)
                     resp.set_cookie('rem', 'checked', max_age=COOKIE_TIME_OUT)
                     return resp
-                flash("Login successfully")
+                flash("Đăng nhập thành công")
                 print(session['role_id'])
                 return redirect('/home')
             else:
-                flash('Invalid Password')
+                flash('Mật khẩu không chính xác')
                 return redirect('/login')
         else:
-            flash("Account does not exist")
+            flash("Tài khoản không tồn tại")
             return redirect('/login')
     else:
         flash('Invalid Email or Password')
@@ -100,7 +100,7 @@ def resetpass():
                 return redirect(url_for('auth.login'))
 
             else:
-                flash('Mật khẩu chưa khớp')
+                flash('Mật khẩu không khớp')
         else:
             flash('Tài khoản không tồn tại')
             return redirect(url_for('auth.resetpass'))
@@ -126,15 +126,15 @@ def register_submit():
         if account:
             flash('Email đã tồn tại!')
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            flash('Invalid email address !')
+            flash('Địa chỉ email không chính xác!')
         elif not re.match(r'[A-Za-z0-9]+', username):
-            flash('Username must contain only characters and numbers !')
+            flash('Username chỉ chứa kí tự và số!')
         elif not re.match(r'^(?=\S{8,18}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])', password):
-            flash('Password is uncomfortable')
+            flash('Mật khẩu gồm 8-18 kí tự bao gồm viết thường(a-z), viết hoa(A-Z), số(0-9)')
         elif not username or not password or not email:
-            flash('Please fill out the form !')
+            flash('Không được để trống!')
         elif not (repassword == password):
-            flash('Invalid password, please try again')
+            flash('Mật khẩu không trùng khớp, vui lòng thử lại')
         else:
             password_hash = generate_password_hash(password)
             cursor.execute('INSERT INTO taikhoan VALUES (NULL, %s, %s, %s, 2, 0)',

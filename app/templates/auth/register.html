@@ -25,6 +25,17 @@
                     id="icon" alt="User Icon" />
             </div>
 
+            <!-- msg -->
+            <div>
+                {%with messages = get_flashed_messages()%}
+                {%if messages %}
+                {%for message in messages%}
+                <div class = 'fadeIn fourth flashed_messages' style="motion-rotation: 70minutes;">{{messages[0]}}</div>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+            </div>
+
             <!-- Login Form -->
             <form method="post" action="/register_submit" autocomplete="off">
                 <label for="email"><b>EMAIL (*)</b></label>
@@ -47,15 +58,6 @@
                 <br>
                 <input type="submit" class="fadeIn fourth" value="Tạo tài khoản" onclick="return validateRegister()">
             </form>
-            <div>
-                {%with messages = get_flashed_messages()%}
-                {%if messages %}
-                {%for message in messages%}
-                <div class = 'fadeIn fourth' style="color: red; motion-rotation: 70minutes;" role="alert">{{messages[0]}}</div>
-                {%endfor%}
-                {%endif%}
-                {%endwith%}
-            </div>
 
             <span>(*) Trường bắt buộc</span>
             <!-- Remind Passowrd -->

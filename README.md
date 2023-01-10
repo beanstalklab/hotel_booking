@@ -1,3 +1,54 @@
+## PHẦN HƯỚNG DẪN CHẠY CHƯƠNG TRÌNH
+
+# Chuẩn bị dữ liệu
+Cấu trúc thư mục dữ được chia trên ổ của hệ điều hành Windown,nên thầy cô dùng Windown và làm theo hướng dẫn:
+• B1: Đưa thư mục có tên "hotel_image" vào trong ổ D: 
+(D:/hotel_image)
+• B2: Mở folder chứa source code, và cài một số thư viện python liên quan
+• B3: Mở Terminal cài các thư viện sau: pymysql, flask,
+• B4: Cài đặt venv cho thư mục lưu trữ source code
+Bên trên là các bước cài thư viện và chuẩn bị dữ liệu
+
+# Hướng dẫn đặt đường dẫn
+Chúng ta thay đổi các đường dẫn sau nhằm phù hợp với đường dẫn máy tính hiện tại
+Trong file set_env.ps1: (dòng 9-11)
+$Env:HOTEL_IMAGE="D:\\hotel_image" 
+$Env:USER_IMAGE="D:\\...\\app\\static\\user_img"
+$Env:BLOG_IMAGE="D:\\hotel_image\\blog_image"
+
+Trong file view.py: (dòng 22-24)
+sys.path.append(
+    "D:\\...\\app"
+)
+
+Trong file config.py: (dòng 11-13)
+HOTEL_IMAGE = os.environ.get("HOTEL_IMAGE", "D:\\hotel_image")
+USER_IMAGE = os.environ.get("USER_IMAGE","D:\\...\\app\\static\\user_img")
+BLOG_IMAGE = os.environ.get("BLOG_IMAGE","D:\\hotel_image\\blog_image")
+
+
+# Cách chạy các file trên thư mục
+- Chúng ta chỉ chạy một file duy nhất là "application.py" và "set_env.ps1" trong folder
+- Các bước chạy như sau:
+B1: Mở terminal trong VScode, di chuyển đến thư mục chưa file set_env.ps1 và application.py
+B2: Gõ lệnh sau trong terminal: '.\set_env.ps1' (hoặc gõ 'set' rồi ấn tab) và enter
+Lệnh trên thực hiện việc kết nối vs database
+B3: Gõ lệnh: 'python application.py'. Được hiện thị bên dưới
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://localhost:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 389-649-
+ 
+- Bạn giữ ctrl và nhấn vô đường dẫn 'http://localhost:5000' sẽ khởi tạo trình duyệt web của ta.
+Vậy là ta vừa có thể sử dụng các file, phần sau sẽ hướng dẫn về database
+
+
+## PHẦN MÔ TẢ CÁC FILE
+
 # hootel_booking
 Cách sử phân chia cấu trúc thư mục:
 - thư mục 'venv' là để khởi chạy môi trường ảo
@@ -30,21 +81,3 @@ Nếu đã xem video hẳn mọi người đã biết workflow của github, mì
 - Vậy là hoàn thành việc cập nhật file từ local lên github. 
 * Lưu ý: Mọi người cần phải cập nhật ghi chú đầy đủ, để thành viên nắm rõ.
 
-# Các chạy các file trên thư mục
-- Chúng ta chỉ chạy một file duy nhất là "application.py" và "set_env.ps1" trong folder
-- Các bước chạy như sau:
-B1: Mở terminal trong VScode, di chuyển đến thư mục chưa file set_env.ps1 và application.py
-B2: Gõ lệnh sau trong terminal: `.\set_env.ps1` (hoặc gõ 'set' rồi ấn tab) và enter
-Lệnh trên thực hiện việc kết nối vs database
-B3: Gõ lệnh: `python application.py`. Được hiện thị bên dưới
- * Serving Flask app 'app'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://localhost:5000
-Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 389-649-
- 
-- Bạn giữ ctrl và nhấn vô đường dẫn 'http://localhost:5000' sẽ khởi tạo trình duyệt web của ta.
-Vậy là ta vừa có thể sử dụng các file, phần sau sẽ hướng dẫn về database

@@ -345,3 +345,8 @@ i {
     top: -22px;
     position: absolute;
 }
+
+.flashed_messages {
+    color: red;
+    margin-bottom: 10px;
+}
