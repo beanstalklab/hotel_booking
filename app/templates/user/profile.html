@@ -171,7 +171,7 @@
                                     <td>{{row.room_name}}</td>
                                     <td>{{row.checkin.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.checkout.strftime("%d/%m/%Y")}}</td>
-                                    <td>{{tinhtrang}}</td>
+                                    <td>{{row.status}}</td>
                                     <td><a href="{{url_for('view.customer_bill_detail_before', bookroom_id=row.bookroom_id)}}">Xem chi tiết</a></td>
                                     <td><a href="{{url_for('auth.customer_delete_booking', bookroom_id = row.bookroom_id)}}">Hủy đăng ký</a></td>
                                 </tr>
