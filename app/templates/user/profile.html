@@ -139,7 +139,7 @@
                                     <td>{{row.time_start.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.time_end.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.status}}</td>
-                                    <td><a href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
+                                    <td><a class="btn btn-primary mt-1" href="{{url_for('view.customer_bill_detail', bill_id=row.id_bill)}}">Xem chi tiết</a></td>
                                 </tr>
                                 {%endfor%}
                             </tbody>
@@ -172,8 +172,8 @@
                                     <td>{{row.checkin.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.checkout.strftime("%d/%m/%Y")}}</td>
                                     <td>{{row.status}}</td>
-                                    <td><a href="{{url_for('view.customer_bill_detail_before', bookroom_id=row.bookroom_id)}}">Xem chi tiết</a></td>
-                                    <td><a href="{{url_for('auth.customer_delete_booking', bookroom_id = row.bookroom_id)}}">Hủy đăng ký</a></td>
+                                    <td><a class="btn btn-primary mt-1" href="{{url_for('view.customer_bill_detail_before', bookroom_id=row.bookroom_id)}}">Xem chi tiết</a></td>
+                                    <td><a class="btn btn-primary mt-1" href="{{url_for('auth.customer_delete_booking', bookroom_id = row.bookroom_id)}}">Hủy đăng ký</a></td>
                                 </tr>
                                 {%endfor%}
                             </tbody>

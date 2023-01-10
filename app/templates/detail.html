@@ -386,10 +386,10 @@
         <div><a class="btn btn-primary mt-1"
                 href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
         </div>
+        {%endif%}
         {%else%}
         <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a>
         </div>
-        {%endif%}
         {%endif%}
         <h1>Đánh giá</h1>
         {%if session.id%}
