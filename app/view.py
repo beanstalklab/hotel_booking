@@ -20,7 +20,7 @@ import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app"
+    "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
 )
 from recommendSystem import get_result, connect_db, get_cursor
 
