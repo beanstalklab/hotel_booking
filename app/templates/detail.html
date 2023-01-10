@@ -352,7 +352,7 @@
     <hr class="dropdown-divider my-5">
     <h1>Phản hồi</h1>
     {%if full%}
-    <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a></div>
+    <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt <i class="fa-solid fa-caret-up"></i></a></div>
     {%endif%}
     <div>
         {%if post_list%}
@@ -382,16 +382,14 @@
         {%if not full%}
         {%if num_cmt > 5%}
         <div><a class="btn btn-primary mt-3"
-                href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm</a>
+                href="{{url_for('view.full_detail_comment', room_id=data['room_id'])}}">Hiển thị thêm <i class="fa-solid fa-caret-down"></i></a>
         </div>
         {%endif%}
         {%else%}
-        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt </a>
+        <div><a class="btn btn-primary mt-1" href="{{url_for('view.detail', room_id=data['room_id'])}}">Ẩn bớt <i class="fa-solid fa-caret-up"></i></a>
         </div>
         {%endif%}
-        <hr class="dropdown-divider my-5">
-
-        <h1 class="mt-5">Đánh giá cá nhân</h1>
+        <hr class="dropdown-divider my-3">
         {%if session.id%}
         <form action="{{url_for('view.write_post', id_room=data['room_id'])}}" id="write-post">
             <div class="stars">
@@ -464,7 +462,7 @@
                 {%endif%}
             </div>
             <div class="form-group">
-                <label for="input-post">Nhập nội dung đánh giá</label>
+                <h5 for="input-post">Nhập nội dung đánh giá</h5>
                 <textarea name="body" id="body-text" class="form-control" placeholder="Nhập nội dung"></textarea>
             </div>
             <button type="submit" class="btn btn-primary mt-1">Ghi nhận</button>

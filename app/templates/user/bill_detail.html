@@ -1,162 +1,175 @@
 {%extends 'nav_bar.html'%}
 {%block content%}
-<div class="container">
+<div class="container my-4">
+
+    <!-- Breadcrumb -->
+    <nav class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{url_for('view.home')}}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{url_for('view.room')}}">Cá nhân</a></li>
+            <li class="breadcrumb-item active">Hóa đơn</li>
+
+        </ol>
+    </nav>
+    <!-- End Breadcrumb -->
+
     <div class="col-md-12">
         <div class="card mb-3 shadow">
             <div class="card-body bold-text">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Mã hóa đơn</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{hoadon}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tên khách hàng</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{khachhang.1}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Số CCCD/CMT</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{khachhang.2}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tên khách sạn</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{phong.1}}
                     </div>
                 </div>
                 <hr>
-
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Loại phòng</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{phong.6}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Địa chỉ khách sạn</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{phong.2}}
-                    </div>
-                    <hr>
-                    <div class="col-sm-3">
-                        <h6 class="bold-text mb-0">Tỉnh thành</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        {{phong.3}}
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <h6 class="bold-text mb-0">Dịch vụ</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        <ul>
-                            {%if dichvu%}
-                                {%for item in dichvu%}
-                            <li>
-                                {{item.0}}: {{item.1}}đ
-                            </li>
-                            {%endfor%}
-                                {%endif%}
-                        </ul>
-                        
                     </div>
                     
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
+                        <h6 class="bold-text mb-0">Tỉnh thành</h6>
+                    </div>
+                    <div class="col-8 col-md-9 text-secondary">
+                        {{phong.3}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4 col-md-3">
+                        <h6 class="bold-text mb-0">Dịch vụ</h6>
+                    </div>
+                    <div class="col-8 col-md-9 text-secondary">
+                        <ol style="padding-left: 1rem;">
+                            {%if dichvu%}
+                                {%for item in dichvu%}
+                            <li class="fomat-money">
+                                {{item.0}}: {{item.1}} VNĐ
+                            </li>
+                            {%endfor%}
+                                {%endif%}
+                        </ol>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Ngày đến</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{phong.4.strftime("%d/%m/%Y")}}
                     </div>
-                    <div class="col-sm-3">
-                        <h6 class="bold-text mb-0">Ngày đi</h6>
+                    <div class="col-4 col-md-3">
+                        <h6 class="bold-text my-2">Ngày đi</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary my-2">
                         {{phong.5.strftime("%d/%m/%Y")}}
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tổng số ngày</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                        {{(phong.5 - phong.4).days}} ngày/đêm
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Giá phòng</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
-                        {{phong.7}}đ
+                    <div class="col-8 col-md-9 text-secondary fomat-money">
+                        {{phong.7}} VNĐ
                     </div>
                 </div>
                 <hr>
                 {%if total_money%}
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tổng tiền</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
-                        {{total_money}}đ
+                    <div class="col-8 col-md-9 text-secondary fomat-money">
+                        {{total_money}} VNĐ
                     </div>
                 </div>
                 {%else%}
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tổng tiền</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
-                        {{khachhang.3}}đ
+                    <div class="col-8 col-md-9 text-secondary fomat-money">
+                        {{khachhang.3}} VNĐ
                     </div>
                 </div>
                 {%endif%}
                 {%if tinhtrang%}
+                <hr>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tình trạng</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{tinhtrang}}
                     </div>
                 </div>
                 {%else%}
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-4 col-md-3">
                         <h6 class="bold-text mb-0">Tình trạng</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-8 col-md-9 text-secondary">
                         {{khachhang.4}}
                     </div>
                 </div>
                 {%endif%}
                 <hr>
                 <div class="row">
-                    <div class="col-sm-9 text-secondary">
-                        <a href="/profile" class="btn">Quay lại</a>
+                    <div class="col-8 col-md-9 text-secondary">
+                        <a href="/profile" class="btn"><i class="fa-solid fa-caret-left"></i> Quay lại</a>
                     </div>
                 </div>
                 <hr>
