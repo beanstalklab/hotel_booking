@@ -1,3 +1,4 @@
+# Import libarby
 import math
 from sklearn.metrics.pairwise import cosine_similarity
 import os
@@ -12,19 +13,20 @@ from flask import (
     send_from_directory,
     jsonify,
 )
-# from app.db_utils import connect_db, get_cursor
+from app.db_utils import connect_db, get_cursor
 
-from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE
+from app.config import HOTEL_IMAGE, USER_IMAGE, BLOG_IMAGE, RCM_SYS
 from app.sql import *
 import pandas as pd
 import sys
 
 sys.path.append(
-    "D:\\CƠ CỞ WEB\\WEB\\project\\final\\app"
+    RCM_SYS
 )
-from recommendSystem import get_result, connect_db, get_cursor
+# import python code recommend
+from recommendSystem import *
 
-
+# Craete 
 main_blp = Blueprint(
     "view", __name__, template_folder="templates", static_folder="static"
 )
@@ -68,7 +70,7 @@ def home():
         )
         rating = cursor.fetchone()
         if rating:
-            temp_data["rating"] = math.ceil(rating[0])
+            temp_data["rating"] = round(rating[0])
         else:
             temp_data["rating"] = 3
         try:
@@ -185,7 +187,7 @@ def profile():
         cursor.execute(
             "select * from user_image where user_id = %s", (id_account,))
         conn.commit()
-    except:
+    except: 
         conn.rollback()
     img = cursor.fetchone()
     # print(img[2])
@@ -614,17 +616,44 @@ def detail(room_id):
 
     user_rating = cursor.fetchone()
     if user_rating:
-        user_rating = int(user_rating[0])
+        user_rating = round(user_rating[0])
     else:
         user_rating = 0
     print(user_rating)
-
+    print(data)
 #  # Start recommend system
     final_data = []
+
     try:
+        result = ""
+        cursor.execute('select * from danhgia')
+        danhgia = cursor.fetchall()
+        data_rating = []
+        # print(danhgia)
+        for row in danhgia:
+            temp = {}
+            temp['account_id'] = row[0]
+            temp['room_id'] = row[1]
+            temp['rating'] = row[2]
+            data_rating.append(temp)
+        # print(data)
         user_id = session["id"]
-        result = get_result(int(user_id))
-        print(result)
+        print(user_id)
+        result = pd.DataFrame.from_dict(data_rating, orient='columns')
+        hotel_rating_user =result.pivot_table(index='account_id', columns='room_id', values='rating')
+
+        # print(result)
+        ratings_matrix = hotel_rating_user.values
+        print(ratings_matrix)
+        # print(ratings_matrix)
+        mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+        # print(mean_centered_ratings_matrix)
+        mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+        # print(mean_centered_ratings_matrix)
+        user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
+        # print(user_similarity_matrix)
+        result  = predict_top_k_items_of_user(int(user_id) - 1, 2, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
+        print("result: ",   result)
         list_room_rmd = []
         for i in result:
             list_room_rmd.append(i[0])
@@ -656,7 +685,7 @@ def detail(room_id):
             }
             room_id = int(row[0])
             if temp_data["rating"]:
-                temp_data["rating"] = math.ceil(rating[0])
+                temp_data["rating"] = round(row[6])
             else:
                 temp_data["rating"] = 3
             try:
@@ -679,12 +708,11 @@ def detail(room_id):
                 final_data.append((temp_data, img))
             else:
                 continue
-        print(final_data)
     # End recommend system
     except:
         pass
     conn.close()
-    # print(data)
+    print(list_img)
     return render_template(
         "detail.html",
         data=data,
@@ -732,9 +760,9 @@ def full_detail_comment(room_id):
     )
     rating = cursor.fetchone()
     if rating:
-        data["rating"] = round(rating[0], 1)
+        data["rating"] = round(rating[0])
     else:
-        data["rating"] = 3.1
+        data["rating"] = 3
 
     try:
         cursor.execute(

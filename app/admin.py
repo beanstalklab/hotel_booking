@@ -102,30 +102,26 @@ def submit_add_room():
     room_type = request.args.get('room_type')
     room_price = request.args.get('room_price')
     room_province = request.args.get('room_province')
-    room_image = request.args.get('image')
-    room_image = 'Ảnh test' + "/" + room_image
+    room_image = request.args.getlist('image')
     print(room_type, room_province, room_image)
     
     try:
-        sql1 = '''select room_id from loaiphong where room_name like "%{}%" '''
-        cursor.execute(sql1.format(room_type))
-        conn.commit()
-        id_type = cursor.fetchone()
-        print('catch id_type', id_type[0])
         sql2 = '''select province_id from tinhthanh where province_name like "%{}%"'''
         cursor.execute(sql2.format(room_province))
-        conn.commit()
         id_province = cursor.fetchone()
         print('catch id_province', str(id_province))
         cursor.execute('''INSERT INTO `phong` VALUES (NULL,%s, %s, %s, %s,%s,%s, "Trống",1) ;''', 
-        (room_name, room_address, room_performance, room_price, id_type[0],id_province[0]))
+        (room_name, room_address, room_performance, room_price, room_type,id_province[0]))
         conn.commit()
         print("Add successful")
         cursor.execute('select room_id from phong where room_name like "%{}%"'.format(room_name))
         conn.commit()
         room_id = cursor.fetchone()
-        cursor.execute('insert into hinhanh values (NULL, %s, %s, 1,1)', (room_id, room_image))
-        conn.commit()
+        for img in room_image:
+            item_image = 'Ảnh test' + "/" + img
+            cursor.execute('insert into hinhanh values (NULL, %s, %s, 1,1)', (room_id, item_image))
+            conn.commit()
+            
         conn.close()
         return redirect ('/manage_rooms')
     except:

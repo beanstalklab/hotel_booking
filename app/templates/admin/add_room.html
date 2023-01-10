@@ -11,8 +11,8 @@
           <label class="col-sm-2 label-on-left">Tên phòng</label>
           <div class="col-sm-7">
             <div class="form-group label-floating">
-              <label class="control-label"></label>
-              <input class="form-control" type="text" name="room_name" id="room_name" value="" />
+              <label class="control-label"></label> 
+              <input class="form-control" type="text" name="room_name" id="room_name" required value="" />
             </div>
           </div>
         </div>
@@ -21,8 +21,7 @@
           <div class="col-sm-7">
             <div class="form-group label-floating">
               <label class="control-label"></label>
-              <input class="form-control" type="text" id="room_address" name="room_address"
-                value="" />
+              <input class="form-control" type="text" id="room_address" name="room_address" value="" />
             </div>
           </div>
 
@@ -32,8 +31,7 @@
           <div class="col-sm-7">
             <div class="form-group label-floating">
               <label class="control-label"></label>
-              <input class="form-control" type="text" id="room_price" name="room_price" number="true"
-                value="" />
+              <input class="form-control" type="text" id="room_price" name="room_price" required number="true" value="" />
             </div>
           </div>
 
@@ -42,12 +40,14 @@
           <label class="col-sm-2 label-on-left">Loại phòng</label>
           <div class="col-sm-7">
             <div class="form-group label-floating">
-              <label class="control-label"></label>
-              <input class="form-control" type="text" name="room_type" id="room_type" url="true"
-                value="" onkeyup="suggest_roomtype(this.value);" onblur="room_fill()"/>
-            </div>
-            <div class="suggestionsBox" id="suggestions_room">
-              <div class="suggestionList" id="suggestionsList_room"></div>
+              <label class="control-label" id="choose"> </label>
+              <select class="form-select form-select-lg mb-3" name="room_type" style="cursor: pointer;" required>
+                <option selected disabled>Chọn loại phòng</option>
+                <option value="1" class="list-group-item" >Phòng đơn</option>
+                <option value="2" class="list-group-item">Phòng đôi</option>
+                <option value="3" class="list-group-item" >Phòng gia đình</option>
+                <option value="4" class="list-group-item">Phòng sinh hoạt chung</option>
+              </select>
             </div>
           </div>
         </div>
@@ -56,15 +56,14 @@
           <div class="col-sm-3">
             <div class="form-group label-floating column-sizing">
               <label class="control-label"></label>
-              <input class="form-control" id="room_performance" name="room_performance" type="text"
-                value="" />
+              <input class="form-control" id="room_performance" name="room_performance" type="text" value="" />
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group label-floating column-sizing">
               <label class="control-label"></label>
-              <input class="form-control" id="room_province" name="room_province" type="text"
-                value="" onkeyup="suggest_province(this.value);" onblur="province_fill()" placeholder="Tỉnh thành"/>
+              <input class="form-control" id="room_province" name="room_province" type="text" value=""
+                onkeyup="suggest_province(this.value);" onblur="province_fill()" placeholder="Tỉnh thành" required/>
             </div>
             <div class="suggestionsBox" id="suggestions">
               <div class="suggestionList" id="suggestionsList"></div>
@@ -75,12 +74,12 @@
       <div class="row">
         <label class="col-sm-2 label-on-left">Thêm ảnh</label>
         <div class="col-sm-3">
-            <label class="control-label">Drop file here</label>
-            <input class="form-control" id="image" accept="image/*" name="image" type="file"/>
+          <label class="control-label">Drop file here</label>
+          <input class="form-control" id="image" accept="image/*" name="image" multiple type="file" required />
         </div>
-      <div class="card-footer text-center">
-        <button type="submit" class="btn btn-rose btn-fill">Validate Inputs</button>
-      </div>
+        <div class="card-footer text-center">
+          <button type="submit" class="btn btn-rose btn-fill">Validate Inputs</button>
+        </div>
     </form>
   </div>
 </div>
@@ -102,25 +101,11 @@
     $('#room_province').val(thisValue);
     setTimeout("$('#suggestions').fadeOut();", 600);
   }
-  </script>
-  <script>
-  function suggest_roomtype(inputString) {
-    if (inputString.length == 0) {
-      $('#suggestions_room').fadeOut();
-    } else {
-      $('#room_type').addClass('load');
-      $.post("/type_room_ajax", { queryString: "" + inputString + "" }, function (data) {
-        $('#suggestions_room').fadeIn();
-        $('#suggestionsList_room').html(data);
-        $('#suggestionsList_room').append(data.htmlresponse);
-        $('#room_type').removeClass('load');
-      });
-    }
-  }
-  function room_fill(thisValue) {
-    $('#room_type').val(thisValue);
-    setTimeout("$('#suggestions_room').fadeOut();", 600);
-  }
+</script>
+<script>
+  $('#choose').click(function(){
+    $(this).siblings('select').css('width', $(this).outerWidth(true)).toggle();
+});
 </script>
 {%include 'footer_admin.html'%}
 {%endblock%}

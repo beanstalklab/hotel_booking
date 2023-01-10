@@ -3,27 +3,27 @@ import numpy as np
 import pymysql
 from sklearn.metrics.pairwise import cosine_similarity
 
-def connect_db():
-    conn = pymysql.connect(
-        host='localhost',
-        user='root',
-        password='',
-        database='quanlykhachsan'
-    )
-    return conn
+# def connect_db():
+#     conn = pymysql.connect(
+#         host='localhost',
+#         user='root',
+#         password='',
+#         database='quanlykhachsan'
+#     )
+#     return conn
 
-def get_cursor(conn):
-    conn.begin()
-    cur = conn.cursor()
-    return cur
+# def get_cursor(conn):
+#     conn.begin()
+#     cur = conn.cursor()
+#     return cur
 
-def importData():
-    conn = connect_db()
-    query = "select * from danhgia;"
-    rating_data = pd.read_sql(query, conn)
+# def importData():
+#     conn = connect_db()
+#     query = "select * from danhgia;"
+#     rating_data = pd.read_sql(query, conn)
 
-    hotel_rating_user =rating_data.pivot_table(index='account_id', columns='room_id', values='rating')
-    return hotel_rating_user.values
+#     hotel_rating_user =rating_data.pivot_table(index='account_id', columns='room_id', values='rating')
+#     return hotel_rating_user.values
 
 # indices for vector (lấy ra chỉ số đc rating của các vector)
 def specified_rating_indices(u):
@@ -42,7 +42,7 @@ def get_mean_centered_ratings_matrix(ratings_matrix):
     mean_centered_ratings_matrix = np.around(ratings_matrix - np.reshape(users_mean_rating, (-1, 1)), 3)
     return mean_centered_ratings_matrix
 
-def predict(u_index, i_index, k):
+def predict(u_index, i_index, k, ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix ):
     # k là số lượng người dùng giống với người dùng cần dự đoán
     # ta có thể tùy chọn giá trị k này
     users_mean_rating = all_user_mean_ratings(ratings_matrix)
@@ -71,21 +71,20 @@ def predict(u_index, i_index, k):
 
 
 
-def predict_top_k_items_of_user(u_index, k_users):
-    
+def predict_top_k_items_of_user(u_index, k_users,  ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix):
     items = []
     for i_index in range(ratings_matrix.shape[1]):
         if np.isnan(ratings_matrix[u_index][i_index]):
-            rating = predict(u_index, i_index, k_users)
+            rating = predict(u_index, i_index, k_users,  ratings_matrix,user_similarity_matrix, mean_centered_ratings_matrix)
             items.append((i_index + 1, rating))
     items = sorted(items, key=lambda tup: tup[1])
     items = list(reversed(items))
     return items[:8]
 
-ratings_matrix = importData()
-mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
-mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
-user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
+# ratings_matrix = importData()
+# mean_centered_ratings_matrix = get_mean_centered_ratings_matrix(ratings_matrix)
+# mean_centered_ratings_matrix[np.isnan(mean_centered_ratings_matrix)] = 0
+# user_similarity_matrix = cosine_similarity(mean_centered_ratings_matrix)
 
 
 def get_result(user_id):

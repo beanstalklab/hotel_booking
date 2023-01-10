@@ -20,7 +20,8 @@
             <div class="col-md-9">
                 {%if search_text%}
                 <form action="/dashboard" autocomplete="off">
-                    <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search" value="{{search_text}}"> 
+                    <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search"
+                        value="{{search_text}}">
                     <button class="btn" type="submit">Search</button>
                 </form>
                 {%else%}
@@ -44,9 +45,13 @@
                         <i class="material-icons">assignment</i>
                     </div>
                     <div class="card-content">
-                        <h4 class="card-title">Dashboard</h4>
+                        {%if total_money%}
+                        <h4 class="card-title">Dashboard - Revenue: <strong class="fomat-money">{{total_money}} VNĐ</strong> </h4>
+                        {%else%}
+                        <h4 class="card-title">Dashboard </h4>
+
+                        {%endif%}
                         <div class="toolbar">
-                            <!--        Here you can write extra buttons/actions for the toolbar              -->
                         </div>
 
                         <div class="material-datatables">
@@ -70,7 +75,7 @@
                                             <td>{{row.bill_id}}</td>
                                             <td>{{row.customer_name}}</td>
                                             <td>{{row.room_id}}</td>
-                                            <td>{{row.total_money}}</td>
+                                            <td class="fomat-money">{{row.total_money}} VNĐ</td>
                                             <td>{{row.tinhtrang}}</td>
                                             <td><a href="{{url_for('adview.detail_bill',bill_id = row.bill_id)}}">View
                                                     details</a>
@@ -116,5 +121,13 @@
 
         </nav>
     </div>
-    {%include 'footer_admin.html'%}
-    {%endblock%}
+</div>
+<script>
+    let nodeList = document.querySelectorAll(".fomat-money");
+
+    for (let i = 0; i < nodeList.length; i++) {
+        nodeList[i].innerHTML = nodeList[i].innerHTML.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+    }
+</script>
+{%include 'footer_admin.html'%}
+{%endblock%}

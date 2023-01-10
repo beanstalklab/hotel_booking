@@ -47,6 +47,7 @@ def dashboard():
         temp = search_text.lower()
         conn = connect_db()
         cursor = get_cursor(conn)
+        
         cursor.execute(
             """select hoadon.id_bill, concat(khachhang.first_name," ", khachhang.last_name), phong.room_id, hoadon.total_money, hoadon.tinhtrang
                         from hoadon 
@@ -96,11 +97,17 @@ def dashboard():
             temp["total_money"] = row[3]
             temp["tinhtrang"] = row[4]
             final_data.append(temp)
+        cursor.execute(''' select sum(hoadon.total_money) from hoadon where hoadon.tinhtrang = "Đã thanh toán";
+        ''')
+        total_money = cursor.fetchone()
+        conn.close()
         return render_template(
             "admin/dashboard.html",
             title="Dashboard",
             data=final_data,
             search_text=search_text,
+            total_money = total_money[0]
+
         )
 
 

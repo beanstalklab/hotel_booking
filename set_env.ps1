@@ -9,3 +9,4 @@ $Env:APP_SECRET_KEY="nopassword"
 $Env:HOTEL_IMAGE="D:\\hotel_image"
 $Env:USER_IMAGE="D:\\CƠ CỞ WEB\\WEB\\project\\final\\app\\static\\user_img"
 $Env:BLOG_IMAGE="D:\\hotel_image\\blog_image"
+$Env:RCM_SYS='D:\\dulieuD\\Program Language\\Python_2021\\final_exam\\hotel_booking\\app'
