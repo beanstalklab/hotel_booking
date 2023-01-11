@@ -27,7 +27,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <div class="text-center">
-                                {%if img %}
+                                {%if img['name'] %}
                                 <img src="{{url_for('view.image_file', name=img['name'], folder=img['folder'])}}"
                                     alt="User" class="image-profile">
                                 {%else%}
