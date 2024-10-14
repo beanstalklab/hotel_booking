@@ -70,7 +70,7 @@ Giải thích sơ lược về các sử dụng file
 - Sau khi tải git, bắt đầu tiến hành kết nối
 B1: Tạo 1 folder mới để kết nối, đặt tên tùy ý <br>
 B2: Di chuyển vào folder, mở terminal gõ lệnh: git init <br>
-B3: Gõ lệnh sau vào terminal: git remote add origin https://github.com/VanhhNe/hootel_booking.git <br>
+B3: Gõ lệnh sau vào terminal: git remote add origin https://github.com/supehungay/hootel_booking.git <br>
 B4: sau khi gõ ko thấy lỗi gì, gõ tiếp lệnh để tải hết các file trên github về để làm việc: git pull origin master <br>
 Vậy là bên trên đã hướng dẫn kết nối với github, sau đây là hướng dẫn cách làm việc chung:
 # Hướng dẫn sử dụng github
